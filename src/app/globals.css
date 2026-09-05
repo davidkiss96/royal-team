@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — docs/design-system.md Section 2.
+ *
+ * The site is dark-only (confirmed decision, no light mode, no theme toggle).
+ * These are the single, permanent source of truth for color. Values are taken
+ * directly from the approved reference app's dark-mode token set; there is no
+ * light-mode counterpart to maintain in production.
+ *
+ * Font custom properties (--font-heading etc.) are populated by next/font in
+ * src/app/layout.tsx, not hardcoded here — see that file for the actual
+ * typeface loading.
+ */
+@theme {
+  --color-background: #080808;
+  --color-foreground: #f0ede5;
+  --color-card: #111111;
+  --color-card-foreground: #f0ede5;
+
+  /* Gold is the single, theme-independent brand accent (docs/design-system.md
+     Section 2) — named directly rather than inherited "primary/accent" shadcn
+     naming, since this is a clean rebuild, not a port of the reference app's
+     token structure. Reference this token everywhere gold is needed; do not
+     hardcode the hex value in components (the reference app's own mistake,
+     documented in docs/design-system.md Section 2, is exactly what this
+     token exists to prevent). */
+  --color-gold: #c9a84c;
+  --color-gold-bright: #e8c040;
+
+  --color-secondary: #1a1a1a;
+  --color-muted: #1e1e1e;
+  --color-muted-foreground: #888880;
+
+  /* Gold-tinted, not neutral — a deliberate warm-dark detail from the
+     approved design (docs/design-system.md Section 2), not an accident. */
+  --color-border: rgba(201, 168, 76, 0.12);
+
+  --color-destructive: oklch(0.396 0.141 25.723);
+
+  /* Effectively square corners — a firm design constraint, not a default to
+     soften (docs/design-system.md Section 1). Exposed as `rounded-sharp`
+     rather than overriding the bare `rounded` utility, since Tailwind v4's
+     exact CSS-variable convention for overriding that particular default
+     wasn't something I could verify with confidence — an explicit, named
+     utility is unambiguous and avoids a silent styling bug either way.
+     Components should use `rounded-sharp` (or no rounding at all) and
+     should not introduce any other radius value. */
+  --radius-sharp: 0.0625rem;
+
+  /* Populated by next/font (src/app/layout.tsx). Declared here so the
+     font-heading / font-mono-label / font-body utilities exist even before
+     the variables are set, and so this file remains the single place that
+     documents the three-typeface system (docs/design-system.md Section 3). */
+  --font-heading: var(--font-rajdhani), sans-serif;
+  --font-mono-label: var(--font-jetbrains-mono), monospace;
+  --font-body: var(--font-dm-sans), sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
