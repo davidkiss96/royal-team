@@ -1,38 +1,15 @@
-import {
-  AlertTriangle,
-  ArrowRight,
-  Cpu,
-  Droplets,
-  Filter,
-  Settings,
-  Wrench,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
-import { FEATURED_SERVICES } from "@/lib/mock/services";
-
-/**
- * Per-service icon, keyed by the real `slug` field. `Service` has no icon
- * field in the approved schema (docs/content-model.md Section 2) — this
- * mirrors design-system.md Section 12's recommendation to keep icon
- * selection a presentation-layer mapping maintained in code, not content.
- */
-const SERVICE_ICONS: Record<string, LucideIcon> = {
-  "dpf-szuro-tisztitas": Filter,
-  "elektronikai-diagnosztika": Cpu,
-  "futomu-beallitas": Settings,
-  "altalanos-karbantartas": Wrench,
-  "fekrendszer-szerviz": AlertTriangle,
-  "olajcsere-szerviz": Droplets,
-};
+import { ALL_SERVICES } from "@/lib/mock/services";
+import { SERVICE_ICONS } from "@/lib/service-icons";
 
 export function ServicesOverview() {
-  const activeServices = FEATURED_SERVICES.filter((service) => service.isActive);
+  const activeServices = ALL_SERVICES.filter((service) => service.isActive);
 
   return (
     <section className="bg-background py-24">

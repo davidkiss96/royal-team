@@ -3,9 +3,18 @@ import type { ImageWithAlt } from "@/lib/types";
 /**
  * Mock data shaped to match the approved `Service` document
  * (docs/content-model.md Section 2). No `subtitle`/tagline field exists on
- * the real schema (only `title`/`summary`/`body`) — the reference design's
- * short mono-font tagline under each service title has no content-model
- * home and is dropped here rather than invented as an extra field.
+ * the real schema (only `title`/`summary`/`body`), and no `benefits`/
+ * highlights list field either — the reference design's short mono-font
+ * tagline and per-service bulleted benefits list have no content-model
+ * home and are dropped rather than invented as extra fields.
+ *
+ * This represents the full `Service` catalog (what `/szolgaltatasok` would
+ * query — "all published Service documents, ordered by displayOrder", per
+ * docs/design-system.md Section 8), not `Homepage.featuredServices`'
+ * curated subset. The homepage currently renders all of them too, but
+ * that's a coincidence of this mock catalog being small, not a query
+ * relationship — a real `Homepage.featuredServices` reference array would
+ * be its own (possibly smaller) curated list.
  */
 export interface ServiceSummary {
   slug: string;
@@ -16,7 +25,7 @@ export interface ServiceSummary {
   displayOrder: number;
 }
 
-export const FEATURED_SERVICES: ServiceSummary[] = [
+export const ALL_SERVICES: ServiceSummary[] = [
   {
     slug: "dpf-szuro-tisztitas",
     title: "DPF Szűrő Tisztítás",
