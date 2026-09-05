@@ -217,7 +217,7 @@ Direct application of the architectural boundary stated in your instructions —
 
 | Hardcoded in reference app | Becomes Sanity content | Notes |
 |---|---|---|
-| `SERVICES` array (6 services, each with icon, title, subtitle, description, image, benefits list) | `Service` documents | The `Icon` field (a Lucide icon component reference) is presentation, not content — see note below. |
+| `SERVICES` array (6 services, each with icon, title, subtitle, description, image, benefits list) | `Service` documents | The `Icon` field (a Lucide icon component reference) is presentation, not content — see note below. **Confirmed resolved:** `subtitle` and `benefits list` map to `Service.tagline` and `Service.highlights` respectively (`docs/content-model.md` Section 2) — both were absent from the original approved schema and added once Next.js implementation of the Services pages surfaced the gap. |
 | `REVIEWS` array | `Review` documents | |
 | `FAQS` array (general, homepage) + DPF-specific FAQ array | `Service.faq` (per-service embedded array) | **Confirmed resolved:** FAQ display is per-`Service` only. The reference app's two independent hardcoded FAQ arrays should not both survive into production — both should resolve to specific services' `faq` data. |
 | `ARTICLES` array | `BlogPost` documents | |

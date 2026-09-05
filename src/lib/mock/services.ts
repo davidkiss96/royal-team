@@ -2,11 +2,10 @@ import type { ImageWithAlt } from "@/lib/types";
 
 /**
  * Mock data shaped to match the approved `Service` document
- * (docs/content-model.md Section 2). No `subtitle`/tagline field exists on
- * the real schema (only `title`/`summary`/`body`), and no `benefits`/
- * highlights list field either — the reference design's short mono-font
- * tagline and per-service bulleted benefits list have no content-model
- * home and are dropped rather than invented as extra fields.
+ * (docs/content-model.md Section 2), including `tagline` and `highlights` —
+ * approved additions once Next.js implementation of the Services pages
+ * surfaced them as real, repeated design elements with no existing field
+ * to source them from (docs/content-model.md Section 0, item 7).
  *
  * This represents the full `Service` catalog (what `/szolgaltatasok` would
  * query — "all published Service documents, ordered by displayOrder", per
@@ -19,7 +18,9 @@ import type { ImageWithAlt } from "@/lib/types";
 export interface ServiceSummary {
   slug: string;
   title: string;
+  tagline: string;
   summary: string;
+  highlights: string[];
   heroImage: ImageWithAlt;
   isActive: boolean;
   displayOrder: number;
@@ -29,8 +30,14 @@ export const ALL_SERVICES: ServiceSummary[] = [
   {
     slug: "dpf-szuro-tisztitas",
     title: "DPF Szűrő Tisztítás",
+    tagline: "Részecskeszűrő regenerálás",
     summary:
       "Professzionális DPF/FAP szűrő tisztítás és regenerálás ultrahangos technológiával — drága csere nélkül.",
+    highlights: [
+      "Üzemanyag-takarékosság",
+      "Csökkentett emisszió",
+      "Motortartósság növelése",
+    ],
     heroImage: {
       url: "/placeholders/photo-placeholder.svg",
       alt: "DPF részecskeszűrő tisztítása ultrahangos berendezéssel",
@@ -41,8 +48,14 @@ export const ALL_SERVICES: ServiceSummary[] = [
   {
     slug: "elektronikai-diagnosztika",
     title: "Elektronikai Diagnosztika",
+    tagline: "OBD & multirendszer analízis",
     summary:
       "Legmodernebb diagnosztikai eszközökkel feltérképezzük gépjárműve összes elektronikus rendszerét.",
+    highlights: [
+      "Pontos hibakód olvasás",
+      "Összes rendszer ellenőrzése",
+      "Részletes hibajegyzőkönyv",
+    ],
     heroImage: {
       url: "/placeholders/photo-placeholder.svg",
       alt: "OBD diagnosztikai eszköz csatlakoztatva egy gépjárműhöz",
@@ -53,8 +66,14 @@ export const ALL_SERVICES: ServiceSummary[] = [
   {
     slug: "futomu-beallitas",
     title: "Futómű Beállítás",
+    tagline: "3D kerékbeállítás és geometria",
     summary:
       "Legmodernebb 3D-s mérőrendszerrel precíziós futómű-geometria és tengelybeállítás.",
+    highlights: [
+      "Egyenes kormányzás",
+      "Gumiabroncs-kímélés",
+      "Stabilitás javítás",
+    ],
     heroImage: {
       url: "/placeholders/photo-placeholder.svg",
       alt: "3D kerékbeállító rendszer működés közben",
@@ -65,8 +84,14 @@ export const ALL_SERVICES: ServiceSummary[] = [
   {
     slug: "altalanos-karbantartas",
     title: "Általános Karbantartás",
+    tagline: "Teljes körű szerviz",
     summary:
       "Átfogó gépjármű karbantartás a gyári előírások szerint, OEM minőségű alkatrészekkel.",
+    highlights: [
+      "Gyári előírások szerinti",
+      "OEM alkatrészek",
+      "Garanciális munka",
+    ],
     heroImage: {
       url: "/placeholders/photo-placeholder.svg",
       alt: "Gépjármű általános karbantartás közben az emelőn",
@@ -77,8 +102,14 @@ export const ALL_SERVICES: ServiceSummary[] = [
   {
     slug: "fekrendszer-szerviz",
     title: "Fékrendszer Szerviz",
+    tagline: "Teljesítményfékek és szériafékek",
     summary:
       "Prémium fékbetét, tárcsa és folyadék csere — sportfék opciókkal teljesítményautókhoz.",
+    highlights: [
+      "Maximális fékerő",
+      "Sportfékek elérhetők",
+      "Biztonsági ellenőrzés",
+    ],
     heroImage: {
       url: "/placeholders/photo-placeholder.svg",
       alt: "Teljesítmény fékrendszer szerelés közben",
@@ -89,8 +120,10 @@ export const ALL_SERVICES: ServiceSummary[] = [
   {
     slug: "olajcsere-szerviz",
     title: "Olajcsere Szerviz",
+    tagline: "Prémium szintetikus olajok",
     summary:
       "Prémium szintetikus motorolaj csere, szűrő csere és összes folyadék ellenőrzése.",
+    highlights: ["Szintetikus olaj", "Szűrő csere", "Összes folyadék ellenőrzés"],
     heroImage: {
       url: "/placeholders/photo-placeholder.svg",
       alt: "Szintetikus motorolaj csere közben",

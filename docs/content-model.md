@@ -22,6 +22,10 @@ Scope: Conceptual Sanity content model — document types, fields, relationships
    - The real logo asset (`base_logo_transparent_background 1.svg`, provided alongside the design revision) is confirmed as the logo to use in production, replacing the procedurally-generated placeholder logo still present in the design reference code. This doesn't change any content-model field (`BusinessSettings.logo` already exists as an `imageWithAlt`) — it's a content/asset decision, not a schema change.
    - The contact page's map and the `/projektek/[slug]` detail routing are both confirmed to remain in their current placeholder/single-instance form within the design prototype — a real map embed and real per-project routing are implementation-phase work for the Next.js build, not something to resolve in the design or content-model documents now.
 6. **Booking** — not implemented. `docs/database.md` and `docs/schema-design.md` remain under their deferred-scope banners, untouched by this document.
+7. **Following the Next.js implementation of the Services pages, two small, approved additions to `Service` (Section 2):**
+   - `tagline` (string, optional) — the short mono-font subtitle shown under the service title in both the homepage service-card grid and the services index page's alternating rows (e.g., "Részecskeszűrő regenerálás"). Implementation surfaced this as a real, repeated design element with no existing field to source it from.
+   - `highlights` (array of strings, optional) — the "Főbb előnyök" bulleted benefits list on the services index page (e.g., "Üzemanyag-takarékosság," "Csökkentett emisszió"). Plain strings, not label/value pairs like `Project.specs` — each item is a short, self-contained phrase with no second value to pair it with.
+   - Both were deliberately left out of the original model and only added once their absence was concretely felt against the approved design, per this project's own "extract on proven need, not anticipated need" principle — not an oversight corrected in hindsight, but the intended process working as designed.
 
 **On challenging the list per your instruction:** I don't have a concrete reason to add or remove a type beyond what's already been decided. The one place I reconsidered was whether `Review` needs any structural change given the Homepage-curation rework below — it doesn't; it stays as previously designed, just no longer self-managing its own "featured" state (Section 5 explains why that responsibility moved to `Homepage`).
 
@@ -65,8 +69,10 @@ Restated from the prior version because it remains the single most important pla
 |---|---|---|---|
 | `title` | string | Yes | |
 | `slug` | slug | Yes | Generated from `title` once, at creation. See "Slug stability" below for the safety behavior around editing it afterward. |
+| `tagline` | string | No, **approved addition** | Short subtitle shown under the title in the homepage service-card grid and the services index page (e.g., "Részecskeszűrő regenerálás") — a brief, more specific descriptor than `title`, distinct from `summary`'s longer descriptive sentence. Added once implementation surfaced it as a real, repeated design element (Section 0, item 7). |
 | `summary` | text | No | Listing-card text and meta-description fallback. |
 | `body` | Portable Text | Warning-level validation | Warning, not hard error, because content is built incrementally — an editor should be able to save an in-progress draft without a scolding error blocking them. |
+| `highlights` | array of strings | No, **approved addition** | The "Főbb előnyök" bulleted benefits list on the services index page (e.g., "Üzemanyag-takarékosság," "Csökkentett emisszió," "Motortartósság növelése"). Plain strings, not label/value pairs like `Project.specs` (Section 4) — each item is a short, self-contained phrase with nothing to pair it with. A field description should nudge editors toward 3–4 items, the same soft-guidance approach used on `Homepage.secondaryCtas` (Section 8) — editorial guidance, not a hard validation limit. |
 | `faq` | array of `faqItem` | No | Kept here (not a separate type) per the long-standing approved decision — FAQ content is always read/edited together with its service, never independently. |
 
 **Group: Media**
@@ -97,6 +103,7 @@ Restated from the prior version because it remains the single most important pla
 - **SEO:** standard `seo` object, including the rarely-used `noIndex` escape hatch.
 - **FAQ:** embedded array field, unchanged.
 - **Hero/gallery:** both present, using the shared `imageWithAlt` object.
+- **Tagline/highlights:** `tagline` (short subtitle string) and `highlights` (array of short benefit strings) — approved additions, Section 0 item 7.
 
 ---
 
@@ -439,7 +446,7 @@ Raised explicitly because you asked for it to be considered: Sanity offers **sch
 `Homepage` (singleton), `BusinessSettings` (singleton), `Service`, `BlogPost`, `Project`, `Review`, `Author`, `AboutPage` (singleton), `PriceCategory` — **nine types**, confirmed final. `Project` includes two fields added during the Figma design review (`specs`, `relatedServices` — see item 2); `AboutPage` (Section 9) closes the previously-open About-page content-model gap; `PriceCategory` (Section 10) closes the previously-open pricing gap.
 
 ### 2. Fields for each type
-Detailed in Sections 2–10 above, with per-field justification. Two corrections from the Figma design review are final: `Project.relatedService` (single reference) is **`Project.relatedServices`** (array of references), and `Project` gained a `specs` field (array of label/value pairs) — both in Section 4. **`AboutPage`** (Section 9) mirrors `Homepage`'s singleton pattern: hero, `ownerStory` (Portable Text), `philosophyValues`, `stats` (reusing `Project.specs`'s label/value shape), `photoGallery`, a single `cta`, and `seo`. **`PriceCategory`** (Section 10) is the approved type: `title`, `displayOrder`, `isActive`, and a required, minimum-one-item `items` array of embedded price-item objects (`name`, `note`, `priceType`, `amount`, `isActive`) — fully independent of `Service`, per your explicit instruction.
+Detailed in Sections 2–10 above, with per-field justification. Two corrections from the Figma design review are final: `Project.relatedService` (single reference) is **`Project.relatedServices`** (array of references), and `Project` gained a `specs` field (array of label/value pairs) — both in Section 4. `Service` gained `tagline` (string) and `highlights` (array of strings) once Next.js implementation of the Services pages surfaced them as real, repeated design elements with no existing field to source (Section 0 item 7, Section 2). **`AboutPage`** (Section 9) mirrors `Homepage`'s singleton pattern: hero, `ownerStory` (Portable Text), `philosophyValues`, `stats` (reusing `Project.specs`'s label/value shape), `photoGallery`, a single `cta`, and `seo`. **`PriceCategory`** (Section 10) is the approved type: `title`, `displayOrder`, `isActive`, and a required, minimum-one-item `items` array of embedded price-item objects (`name`, `note`, `priceType`, `amount`, `isActive`) — fully independent of `Service`, per your explicit instruction.
 
 ### 3. Editor UX decisions
 - Field grouping (tabs/sections) for `Service`, `BlogPost`, `Project`, `BusinessSettings`, `Homepage` — flat/ungrouped for the smaller `Review` and `Author` types, deliberately, since grouping adds friction below a certain field count rather than reducing it.

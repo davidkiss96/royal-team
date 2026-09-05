@@ -1,3 +1,4 @@
+import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/button";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
@@ -16,10 +17,6 @@ interface ServiceRowProps {
  * explicitly flagged as fragile and not to be copied (Section 5/7/14 #7);
  * this uses an explicit `reverse` prop + CSS `order` instead, exactly the
  * mechanism the doc recommends in its place.
- *
- * No tagline or benefits-list content is rendered here — `Service` has
- * neither field in the approved schema (docs/content-model.md Section 2);
- * see the implementation report for that content-model gap.
  */
 export function ServiceRow({ service, reverse, delayMs }: ServiceRowProps) {
   const Icon = SERVICE_ICONS[service.slug];
@@ -40,13 +37,37 @@ export function ServiceRow({ service, reverse, delayMs }: ServiceRowProps) {
         <div
           className={`flex flex-col justify-center bg-card p-8 lg:p-12 ${reverse ? "lg:order-1" : ""}`}
         >
-          {Icon && <Icon size={20} className="mb-5 text-gold" />}
+          <div className="mb-5 flex items-center gap-3">
+            {Icon && <Icon size={20} className="text-gold" />}
+            <span className="font-mono-label text-[10px] tracking-[0.3em] text-gold uppercase">
+              {service.tagline}
+            </span>
+          </div>
           <h2 className="mb-4 font-heading text-2xl font-black text-foreground md:text-3xl">
             {service.title}
           </h2>
-          <p className="mb-8 text-sm leading-relaxed text-foreground/50">
+          <p className="mb-6 text-sm leading-relaxed text-foreground/50">
             {service.summary}
           </p>
+
+          {service.highlights.length > 0 && (
+            <div className="mb-8">
+              <p className="mb-3 text-[10px] tracking-widest text-foreground/35 uppercase">
+                Főbb előnyök
+              </p>
+              <div className="space-y-2">
+                {service.highlights.map((highlight) => (
+                  <div
+                    key={highlight}
+                    className="flex items-center gap-2 text-sm text-foreground/60"
+                  >
+                    <CheckCircle size={13} className="flex-shrink-0 text-gold" />
+                    {highlight}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center gap-3">
             {service.isActive && (
