@@ -2,11 +2,11 @@ import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/button";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
-import type { ServiceSummary } from "@/lib/mock/services";
+import type { Service } from "@/lib/mock/services";
 import { SERVICE_ICONS } from "@/lib/service-icons";
 
 interface ServiceRowProps {
-  service: ServiceSummary;
+  service: Service;
   reverse: boolean;
   delayMs: number;
 }
