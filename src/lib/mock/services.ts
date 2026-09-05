@@ -484,3 +484,16 @@ export const ALL_SERVICES: Service[] = [
     displayOrder: 6,
   },
 ];
+
+/**
+ * Resolves `Project.relatedServices` (an array of `Service` slugs) to real
+ * `Service` documents — the mock equivalent of dereferencing a Sanity
+ * reference array. Used by the Projects pages; unknown slugs are silently
+ * dropped rather than erroring, matching how a real reference to a deleted
+ * document would just disappear from a resolved query result.
+ */
+export function getServicesBySlugs(slugs: string[]): Service[] {
+  return slugs
+    .map((slug) => ALL_SERVICES.find((service) => service.slug === slug))
+    .filter((service): service is Service => Boolean(service));
+}

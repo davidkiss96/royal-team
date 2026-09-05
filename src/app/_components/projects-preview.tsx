@@ -4,11 +4,12 @@ import Link from "next/link";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import { FEATURED_PROJECTS } from "@/lib/mock/projects";
 import { getIsoYear } from "@/lib/format-date";
+import { ALL_PROJECTS } from "@/lib/mock/projects";
+import { getServicesBySlugs } from "@/lib/mock/services";
 
 export function ProjectsPreview() {
-  const [featured, ...rest] = FEATURED_PROJECTS;
+  const [featured, ...rest] = ALL_PROJECTS;
   if (!featured) return null;
 
   return (
@@ -50,7 +51,9 @@ export function ProjectsPreview() {
                 {featured.title}
               </h3>
               <p className="mb-4 text-xs text-white/45">
-                {featured.tags.join(" · ")}
+                {getServicesBySlugs(featured.relatedServices)
+                  .map((service) => service.title)
+                  .join(" · ")}
               </p>
               <div className="flex items-center gap-1.5 text-[10px] text-gold transition-all group-hover:gap-3">
                 <span className="font-heading font-bold tracking-wider uppercase">
