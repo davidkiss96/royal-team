@@ -112,6 +112,17 @@ This section replaces the original "Admin Architecture" section.
 
 **Status: v1 requirement**, Studio deployment topology open (low-stakes).
 
+### 6.1 Frontend Sanity Client & Query Foundation (implemented)
+
+The Next.js side of the integration (as opposed to Studio itself, Section 6 above) is deliberately minimal — this is infrastructure only; no page consumes it yet (that's a separate, later migration step, per this document's own scope discipline).
+
+- **Package choice: `@sanity/client` + `@sanity/image-url` directly, not `next-sanity`.** `next-sanity` was evaluated and rejected for this step specifically: its peer dependencies pull in the full `sanity` package (^6.0.0) and `styled-components` — appropriate for embedding Sanity Studio as a Next.js route or wiring up Visual Editing, neither of which this project does (Studio is a separate app, Section 6; Visual Editing is explicitly deferred, `content-model.md` Section 12). `@sanity/client` alone already supports everything this foundation needs: GROQ queries, and forwarding Next.js's `{ next: { revalidate } }` fetch option for ISR. `next-sanity` remains a reasonable future addition if the embedded-Studio or Visual-Editing paths are ever adopted — not a closed door, just not justified now (`docs/development-guidelines.md` Section 21).
+- **Client location:** `src/lib/sanity/client.ts` — a single `sanityClient` (read-only, `useCdn: true`), configured from `NEXT_PUBLIC_SANITY_PROJECT_ID`/`NEXT_PUBLIC_SANITY_DATASET` only. No write-capable token exists anywhere in this app (Section 15).
+- **Image handling:** `src/lib/sanity/image.ts` exports `urlForImage()`, a thin wrapper around `@sanity/image-url`'s builder, returning the chainable builder (not a bare string) so callers apply per-context transforms before reading `.url()` into `next/image`'s `src` (Section 12, `development-guidelines.md` Section 9).
+- **Query organization (reserved, not yet populated):** `src/lib/sanity/queries/` is the intended location for one GROQ query module per content-model domain (`services.ts`, `homepage.ts`, etc., `development-guidelines.md` Section 19) — not created yet, since no page queries Sanity yet and an empty scaffold would just be unused code.
+- **Caching/revalidation strategy:** time-based ISR only, via Next.js's fetch-cache integration — `sanityClient.fetch(query, params, { next: { revalidate: N } })`, with `N` chosen per content type once real queries exist (a homepage hero and a legal-adjacent page don't need the same staleness tolerance). Combined with `useCdn: true`, this satisfies "content changes should eventually be reflected without a full deploy" (Section 4) without webhook-triggered on-demand revalidation, which stays explicitly out of scope for now (Section 5).
+- **Verified:** a temporary, since-removed Route Handler confirmed Next.js's server runtime can reach the real Sanity `production` dataset end-to-end (connect → query → typed response) before this foundation was considered done.
+
 ---
 
 ## 7. Authentication and Authorization Approach

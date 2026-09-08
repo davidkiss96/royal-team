@@ -181,8 +181,8 @@ Scope: engineering rules and conventions for building the approved v1 product �
 ## 19. File/Folder Organization
 
 - Standard Next.js App Router layout: `app/` for routes, with route-specific components colocated only when they're genuinely specific to that route; a shared `components/` directory for the cross-route reusable set identified in `design-system.md` Section 7.
-- A clearly separated location (e.g., `lib/sanity/`) holds the Sanity client setup, GROQ queries, and derived types — not scattered per-component or duplicated per page.
-- **Query/type organization mirrors `content-model.md`'s seven content types** (`Homepage`, `BusinessSettings`, `Service`, `BlogPost`, `Project`, `Review`, `Author`) — one predictable module per content type is the default, so "where do I find how we fetch a Service" always has an obvious answer.
+- **Finalized:** `src/lib/sanity/` holds the Sanity integration foundation — `client.ts` (the read-only `sanityClient`) and `image.ts` (`urlForImage()`, `@sanity/client`/`@sanity/image-url` were chosen over `next-sanity` for this foundation, `architecture.md` Section 6.1) — not scattered per-component or duplicated per page.
+- **Query/type organization mirrors `content-model.md`'s content types** (`Homepage`, `BusinessSettings`, `Service`, `BlogPost`, `Project`, `Review`, `Author`, `AboutPage`, `PriceCategory`) — one predictable module per content type under `src/lib/sanity/queries/` is the default once a page actually needs it, so "where do I find how we fetch a Service" always has an obvious answer. Not created until the first real query exists (`architecture.md` Section 6.1) — an empty per-type scaffold would be exactly the unused-code pattern Section 2 warns against.
 - Start flat; introduce deeper nesting only once a directory's flat file count genuinely becomes hard to navigate — the same "don't abstract before it's proven necessary" principle from Section 2, applied to file structure specifically.
 
 ---
