@@ -1,16 +1,14 @@
 import { Clock, MapPin, Phone, type LucideIcon } from "lucide-react";
 import { Container } from "@/components/container";
+import { BUSINESS_SETTINGS } from "@/lib/mock/business-settings";
 import { PHONE_DISPLAY } from "@/lib/site-config";
 
 /**
  * Static site copy standing in for `BusinessSettings` (docs/content-model.md
- * Section 7) — address/hours aren't wired to real data yet since Sanity
- * isn't introduced in this step. The address shown is still the reference
- * prototype's unconfirmed placeholder ("Ercsi, Autó utca 12."), not the
- * confirmed real address (Móricz Zsigmond utca 60.) recorded in the docs —
- * left as-is here since BusinessSettings itself doesn't exist yet to source
- * it from, and swapping in the real address piecemeal risks it drifting
- * from that single future source of truth.
+ * Section 7) — sourced from the shared `BUSINESS_SETTINGS` mock so the
+ * address shown here can't drift from the Contact page/legal pages. Hours
+ * aren't part of the confirmed business data yet, so that copy stays as
+ * placeholder text pending a real value.
  */
 const CONTACT_STRIP_ITEMS: {
   icon: LucideIcon;
@@ -27,8 +25,8 @@ const CONTACT_STRIP_ITEMS: {
   {
     icon: MapPin,
     label: "Cím",
-    value: "Ercsi, Autó utca 12.",
-    detail: "1XXX Ercsi",
+    value: `${BUSINESS_SETTINGS.address.city}, ${BUSINESS_SETTINGS.address.addressLine1}`,
+    detail: `${BUSINESS_SETTINGS.address.postalCode} ${BUSINESS_SETTINGS.address.city}`,
   },
   {
     icon: Clock,

@@ -131,7 +131,9 @@ These are deliberately excluded, not merely deferred in the sense of "coming soo
 - Blog / Knowledge Center (index + post)
 - Reviews (can be a dedicated page and/or a surfaced section on relevant pages)
 - Contact (contact form, phone, address — the sole conversion mechanism in v1, replacing the previously-planned booking flow)
-- Legal: Privacy Policy, Impresszum (Hungarian legal notice), Cookie Policy
+- Legal: Privacy Policy (`/adatvedelem`), Impresszum (Hungarian legal notice, `/impresszum`)
+
+**Confirmed, closing a previously-open item:** there is **no separate Cookie Policy page/route**. Since v1 sets no analytics, marketing, or visitor-tracking cookies of any kind (see Section 12), a full dedicated Cookie Policy would describe processing that doesn't exist. A short cookie section is folded directly into the Privacy Policy (`/adatvedelem`) instead, covering the one real exception: the Contact page's Google Maps embed, which only contacts Google (and only then may involve Google's own cookies) after the visitor explicitly clicks to load it.
 
 **Removed:** the previously-listed "Booking flow" entry point no longer exists. Every service page's call-to-action now points to the contact form/phone rather than a booking flow.
 
@@ -188,7 +190,7 @@ Unchanged from the original scope — SEO was never dependent on the booking sys
 - Statically generated or incrementally regenerated content pages, prioritizing strong Core Web Vitals and fast mobile performance.
 - Strong internal linking between related services, problem-focused landing pages, and blog content.
 - A small, high-quality set of problem-focused landing pages for v1 (DPF-focused), with additional pages added later based on actual Google Search Console performance data.
-- Privacy-respecting analytics/search-performance tracking in place from launch.
+- **Search-performance tracking via Google Search Console only — confirmed, no analytics tool in v1.** Google Search Console requires no cookies or client-side tracking script (verification is domain/DNS or meta-tag based), so it doesn't conflict with Section 13's confirmed no-cookies decision. A separate analytics tool (GA4, Plausible, Umami, etc.) was previously an open decision (`docs/architecture.md` Section 13) — it's now confirmed **out of v1 scope entirely**, not merely deferred pending tool selection; see Section 15 below.
 
 ---
 
@@ -216,8 +218,8 @@ Unchanged:
 ## 15. GDPR / Privacy Considerations
 
 - The platform operates in Hungary/EU. **The personal-data surface is now substantially smaller than under the original scope**, since there is no booking system and no database of customer contact records maintained by this platform.
-- Required legal pages: Privacy Policy and Impresszum (Hungarian legal notice requirement) — still required, unchanged.
-- Cookie consent is required if any analytics or marketing cookies are used — unchanged.
+- Required legal pages: Privacy Policy (`/adatvedelem`) and Impresszum (`/impresszum`, Hungarian legal notice requirement) — still required, unchanged. **Confirmed: no separate Cookie Policy page** — see Section 8's sitemap note.
+- **Confirmed: v1 sets no visitor cookies of any kind** — no analytics cookies, no marketing/advertising cookies, no session cookies for tracking purposes, and no `localStorage`/`sessionStorage` use for visitor data. Because there's nothing to consent to, **no cookie-consent banner is built in v1** — this isn't a deferred nice-to-have, it's the correct behavior for a site with zero non-essential cookies. The Privacy Policy's cookie section states this plainly rather than describing a consent mechanism that would exist for cookies the site doesn't set. The one nuance, stated in the Privacy Policy: the Contact page's Google Maps embed is click-to-load (not automatic), and only after a visitor explicitly clicks to load it does the browser contact Google directly, which may then involve Google's own cookies under Google's own privacy policy — this is Google's processing, not a cookie this site sets itself, and it never happens without that explicit click.
 - **Important nuance, stated plainly rather than glossed over:** "no customer data is stored in our own database" does not mean customer personal data disappears entirely. A contact-form submission is still personal data (name, contact details, message content) at the moment it's processed, and it still exists afterward — in the transactional email provider's delivery logs, and in the recipient mailbox the message is forwarded to. GDPR obligations (lawful basis, data minimization, retention awareness, honoring access/deletion requests) still apply to that data wherever it lives; this project simply isn't the system responsible for storing or managing it long-term. The Privacy Policy should describe this accurately (data is forwarded by email to the business, not stored in an application database) rather than implying no processing occurs at all.
 - Reviews entered by the admin should retain an honest "source" attribution, unchanged.
 - No HIPAA, PCI, or SOC2-level compliance is required or in scope.
@@ -242,10 +244,13 @@ Specific numeric targets (traffic volume, inquiry conversion rate, etc.) are int
 
 ## Open Items Carried Forward (not resolved by this document)
 
-- Production hosting provider decision for the Next.js frontend (still open; Vercel Hobby remains unusable for commercial use — see `docs/architecture.md`).
+**Resolved since originally listed here:**
+- ~~Production hosting provider~~ — **CONFIRMED: Cloudflare** (`docs/architecture.md` Section 17).
+- ~~Whether legal pages should be owner-editable through Sanity or static~~ — **CONFIRMED: static**, developer-controlled pages (Privacy Policy at `/adatvedelem`, Impresszum at `/impresszum`; no separate Cookie Policy page — see Section 8/15 above).
+
+**Still open:**
 - Exact initial set of DPF-focused problem landing pages (content-planning scope, not this document).
 - Sanity plan/tier confirmation once real usage patterns are known (see `docs/architecture.md` Section 18 for current cost analysis).
-- Whether legal pages (Privacy Policy, Impresszum, Cookie Policy) should be owner-editable through Sanity or maintained as static, developer/legal-reviewed pages in the codebase — a genuine open question raised in `docs/architecture.md` and `docs/content-model.md`, not resolved here.
 
 ## Deferred / Future Scope (see dedicated documents)
 

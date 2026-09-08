@@ -147,7 +147,7 @@ Replaces the original "Booking Architecture" section (Section 9) in full — boo
 **Flow:**
 1. Customer fills out the contact form (name, contact method, message) on the Contact page or from a service page's call-to-action.
 2. Client-side validation provides immediate feedback; **server-side validation is the actual integrity boundary** (a Server Action re-validates everything regardless of client-side checks).
-3. On successful validation, the Server Action sends the message via a transactional email provider to the business owner's designated address.
+3. On successful validation, the Server Action sends the message via **Resend** (confirmed transactional email provider, Section 11) to the business owner's designated address (`szerviz@royalteam.hu`, received in the business's **Google Workspace** mailbox — confirmed, Section 11).
 4. The customer sees an on-screen success confirmation. No database write occurs — there is no `Booking`-equivalent record created anywhere in this application.
 5. On validation failure, the customer sees field-level error feedback and can correct and resubmit.
 
@@ -156,6 +156,21 @@ Replaces the original "Booking Architecture" section (Section 9) in full — boo
 **No delivery guarantee beyond the transactional email provider's own reliability** — since there's no database fallback/retry-queue in this architecture (that would be disproportionate complexity for this scope), a transient email-provider outage could mean a lost inquiry. This is an accepted risk at this scale, but worth naming rather than silently assuming email delivery is infallible — if this ever becomes a real problem in practice, a lightweight fallback (e.g., logging failed sends somewhere reviewable) would be a proportionate, small addition, not a reason to reintroduce a database now.
 
 **Status: v1 requirement.**
+
+### 9.1 Map/Location Integration (confirmed, closes a previously-open gap)
+
+The Contact page includes an interactive Google Maps embed of the workshop
+location (Móricz Zsigmond utca 60., 2451 Ercsi), implemented as
+**click-to-load**: the page renders a styled placeholder (no iframe, no
+request to Google) until the visitor explicitly clicks a "Térkép betöltése"
+button, at which point the Google Maps iframe mounts and an external
+"Megnyitás Google Térképen" link is shown alongside it. This requires no
+Google Maps API key (a plain `google.com/maps?...&output=embed` iframe
+source), so it adds no new billing/credential surface. `docs/development-guidelines.md`'s
+previously-flagged "map/location integration approach" gap is resolved by
+this decision.
+
+**Status: v1 requirement — implemented.**
 
 ---
 
@@ -169,11 +184,12 @@ Replaces the original "Booking Architecture" section (Section 9) in full — boo
 
 Narrower than the original scope, but still required:
 
-- A transactional email provider (e.g., Resend or equivalent) is needed for exactly one purpose in v1: **forwarding contact-form submissions** to the business owner. The original plan's other email needs (booking confirmation, cancellation, admin magic-link) no longer exist.
-- Given the much lower email volume (contact-form submissions only, likely a handful per week at most for a small local business), a free tier on essentially any transactional email provider should comfortably cover this — cost risk here is very low.
+- **Resend (confirmed)** is the transactional email provider, needed for exactly one purpose in v1: **forwarding contact-form submissions** to the business owner. The original plan's other email needs (booking confirmation, cancellation, admin magic-link) no longer exist. This was previously an open decision (candidates included Resend "or equivalent") — Resend is now the confirmed choice, not merely a placeholder example.
+- **Google Workspace (confirmed)** is the receiving mailbox: Resend forwards each submission to `szerviz@royalteam.hu`, a business mailbox hosted on Google Workspace. Google Workspace is the system that actually stores the resulting email — this application never persists the submission itself (Section 9), consistent with `docs/product.md` Section 15's nuance that the data still exists somewhere (here: in Resend's delivery logs and in this Workspace mailbox), just not in an application-controlled database.
+- Given the much lower email volume (contact-form submissions only, likely a handful per week at most for a small local business), Resend's free tier should comfortably cover this — cost risk here is very low.
 - Templates: a single simple email template (the forwarded contact-form content) is sufficient.
 
-**Status: v1 requirement**, provider selection still open but now genuinely low-stakes given the reduced volume and scope.
+**Status: v1 requirement — provider and receiving mailbox both confirmed, no longer open decisions.**
 
 ---
 
@@ -198,9 +214,9 @@ Unchanged in substance from the original plan — SEO requirements never depende
 - Structured data (JSON-LD) rendered server-side per page type: `LocalBusiness`/`AutoRepair`, `Service`, `BreadcrumbList`, `FAQPage` where applicable — generated from the same Sanity content driving the visible page.
 - Rendering strategy: SSG/ISR, sourced from Sanity, with revalidation triggered either on a time interval or (optionally) via a Sanity webhook calling a revalidation Route Handler when content is published (see Section 5's note on this being a plausible, optional Route Handler use case).
 - `sitemap.xml` and `robots.txt` generated programmatically from Sanity content.
-- Analytics: **still an OPEN DECISION**, unchanged from before — candidates remain Plausible, Umami, GA4-with-consent, or another suitable option, deferred until production infrastructure is evaluated. The requirement is unchanged: privacy-conscious, Search-Console-compatible, minimal cost.
+- **Analytics: confirmed — none in v1.** Previously an open decision between Plausible, Umami, and GA4-with-consent; now resolved as no analytics tool at all for v1 (`docs/product.md` Section 12/15). Search-performance visibility comes from Google Search Console alone, which needs no client-side script or cookie. This also means no cookie-consent banner is needed (`docs/product.md` Section 15) — there's nothing non-essential to consent to.
 
-**Status: v1 requirement**, analytics tool selection remains open (carried forward unchanged).
+**Status: v1 requirement** — analytics tool selection is resolved (none), not merely deferred.
 
 ---
 
@@ -236,26 +252,28 @@ Narrower in scope, but not lower in rigor for what remains:
 | Purpose | Recommendation | Status |
 |---|---|---|
 | Content management | **Sanity** (hosted content API, image CDN, Sanity Studio) | v1 requirement — new in this revision |
-| Transactional email | Resend or equivalent (contact-form forwarding only) | OPEN DECISION — provider, low-stakes given volume |
-| Analytics | Self-hosted/free-tier privacy-respecting tool, or GA4 with consent gating | OPEN DECISION (unchanged, Section 13) |
+| Hosting | **Cloudflare** (Section 17) | CONFIRMED |
+| Transactional email | **Resend** (contact-form forwarding only) | CONFIRMED (Section 11) |
+| Receiving mailbox | **Google Workspace** (`szerviz@royalteam.hu`) | CONFIRMED (Section 11) |
+| Maps/location | **Google Maps**, click-to-load embed on the Contact page, no API key required | CONFIRMED (Section 9.1) |
+| Analytics | None in v1 | CONFIRMED — no analytics tool (Section 13) |
 | Search performance | Google Search Console | v1 requirement, no cost |
 
 **Removed entirely:** managed PostgreSQL, object storage (R2 or equivalent), and any auth-related service — none are needed in this scope.
 
-**Status: simplified — one fewer open decision than before (database), one new fixed requirement (Sanity), two open decisions carried forward unchanged (email provider, analytics).**
+**Status: simplified and largely settled — the database is removed entirely, Sanity is a new fixed requirement, and hosting/email/receiving-mailbox/maps/analytics are now all confirmed rather than open decisions.**
 
 ---
 
 ## 17. Production / Deployment Considerations
 
-Still an **OPEN DECISION**, but now narrower in what it needs to cover:
+**CONFIRMED: Cloudflare** is the hosting provider for the Next.js frontend — previously the most consequential open decision in this document, now resolved.
 
-- The Next.js frontend still needs a hosting provider, and the Vercel Hobby-tier commercial-use restriction still applies unchanged (this constraint has nothing to do with the booking system — it's about the frontend hosting itself).
-- **What's changed:** the hosting decision no longer needs to account for database connection pooling concerns (no Prisma, no Postgres — the entire "Prisma + serverless connection pooling" concern from the original architecture is now moot), and no longer needs to account for object storage integration ergonomics (Sanity handles media independently of wherever the frontend is hosted).
-- This makes the hosting decision **somewhat simpler** than before — it's now purely about "where does a content-fetching, mostly-static Next.js site run within budget," without the added constraint of a specific database's serverless-compatibility quirks.
-- The same realistic candidates remain relevant: Cloudflare Pages/Workers, a small VPS (e.g., Hetzner), or a Railway/Render-style PaaS — the same tradeoffs discussed previously still apply (Cloudflare's Next.js runtime edge cases, a VPS's DevOps burden vs. cost/learning benefit, PaaS pricing needing verification at decision time).
+- The Next.js frontend deploys to Cloudflare (Pages/Workers, per Cloudflare's Next.js runtime), avoiding the Vercel Hobby-tier commercial-use restriction that ruled Vercel's free tier out for this project.
+- The hosting decision doesn't need to account for database connection pooling concerns (no Prisma, no Postgres) or object storage integration ergonomics (Sanity handles media independently of wherever the frontend is hosted).
+- Cloudflare's own Next.js runtime edge cases (noted as a tradeoff when this was still an open decision) should be verified during initial project setup, but don't change the decision itself.
 
-**Status: OPEN DECISION — should be resolved before the first production deploy, narrower in scope than before but not yet simpler in urgency.**
+**Status: v1 requirement — confirmed, no longer an open decision.**
 
 ---
 
@@ -263,7 +281,7 @@ Still an **OPEN DECISION**, but now narrower in what it needs to cover:
 
 Updated analysis — the target (~0–5,000 HUF/month excluding domain) is **now more comfortably achievable**:
 
-- Hosting: still the main open lever (Section 17) — potentially $0 on a free tier or a cheap VPS.
+- Hosting: **Cloudflare, confirmed** (Section 17) — Cloudflare's free tier is expected to cover this site's scale, though exact usage should be verified once real traffic exists.
 - **Database: removed entirely — $0, not a line item at all.** This was previously a "likely $0 on a free tier" item with some uncertainty; now there's no database to provision in the first place.
 - **Object storage: removed entirely — $0, not a line item.** Sanity's asset storage/CDN is included in its own pricing (see below), not a separate cost.
 - **Sanity CMS: new line item.** Based on current published pricing (verified via web search, July 2026 sources), Sanity's free tier is genuinely production-viable for a project at this scale — no cost for hosting the content lake itself, a meaningful free allotment of API requests and bandwidth, and (per most sources checked) enough free non-admin project members to cover the owner + one content editor. Some sources disagree on the exact free-tier seat count (reports ranged from 2 to 20 depending on the source and how recently it was verified against Sanity's actual pricing page) — this should be **confirmed directly against Sanity's current pricing page** before final commitment, but even the most conservative figures found are sufficient for this project's two-editor need. If usage ever exceeds free-tier limits, Sanity's paid "Growth" tier starts at $15/seat/month — a real cost, but well above what a small local-business site is likely to need.
@@ -336,9 +354,13 @@ Restated for the current scope:
 
 ## Open Decisions Requiring Explicit Resolution
 
-1. **Production hosting provider** for the Next.js frontend (Section 17) — narrower in scope than before, still the most consequential open item.
-2. **Sanity Studio deployment topology**: embedded `/studio` route vs. separate deployment (Section 6) — low-stakes, my lean is toward separate deployment using Sanity's free Studio hosting, but not decided here.
-3. **Transactional email provider** for contact-form forwarding (Section 11) — low-stakes given volume.
-4. **Analytics tool** selection (Section 13) — unchanged open decision, carried forward from the original architecture.
-5. **Whether legal pages should be Sanity-managed or static in the codebase** — raised in `docs/product.md`, not resolved here; a genuine, low-stakes-but-real product/content decision.
-6. **Sanity plan/tier confirmation** — free tier appears sufficient based on current published pricing, but should be verified directly against Sanity's actual pricing page before final commitment (Section 18).
+**Resolved in this revision, no longer open:**
+1. ~~Production hosting provider~~ — **CONFIRMED: Cloudflare** (Section 17).
+2. ~~Transactional email provider~~ — **CONFIRMED: Resend**, forwarding to a **Google Workspace** mailbox (Section 11).
+3. ~~Analytics tool selection~~ — **CONFIRMED: none in v1** (Section 13).
+4. ~~Map/location integration approach~~ — **CONFIRMED: Google Maps, click-to-load embed, no API key** (Section 9.1).
+5. ~~Whether legal pages should be Sanity-managed or static~~ — **CONFIRMED: static** Next.js pages, per `docs/content-model.md` Section 0 decision 3.
+
+**Still open:**
+1. **Sanity Studio deployment topology**: embedded `/studio` route vs. separate deployment (Section 6) — low-stakes, my lean is toward separate deployment using Sanity's free Studio hosting, but not decided here.
+2. **Sanity plan/tier confirmation** — free tier appears sufficient based on current published pricing, but should be verified directly against Sanity's actual pricing page before final commitment (Section 18).

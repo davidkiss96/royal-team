@@ -10,7 +10,7 @@ Scope: Conceptual Sanity content model — document types, fields, relationships
 
 1. **`Author`** — approved, kept independent of authentication. Fields: `name`, `slug`, `photo`, `bio`, `role`/title. Detailed in Section 6.
 2. **`Homepage`** — approved as a separate singleton, holding marketing/presentation content only. `BusinessSettings` holds operational/business facts only. Detailed in Sections 7–8.
-3. **Legal pages** (Privacy Policy, Impresszum, Cookie Policy) — **not** Sanity content types. They remain developer-controlled static pages in the Next.js codebase, optionally referencing business facts (name, registration number, address) from `BusinessSettings` at render time so those facts aren't duplicated by hand in two places. No `LegalPage` content type exists in this model.
+3. **Legal pages** (Privacy Policy at `/adatvedelem`, Impresszum at `/impresszum`) — **not** Sanity content types. They remain developer-controlled static pages in the Next.js codebase, optionally referencing business facts (name, registration number, address) from `BusinessSettings` at render time so those facts aren't duplicated by hand in two places. No `LegalPage` content type exists in this model. **Confirmed: there is no separate Cookie Policy page/type** — v1 sets no analytics, marketing, or visitor-tracking cookies at all (`docs/product.md` Section 15), so a dedicated Cookie Policy would have nothing real to describe; a short cookie section is folded into the Privacy Policy instead.
 4. **Media** — confirmed: no `Media` document type. The `imageWithAlt` reusable object type (Section 1) remains the sole mechanism, using Sanity's native asset system directly.
 5. **Content type list** — confirmed final for v1, challenged and found sound (Section 1 explains the one place I'd have added something and why I'm not): `Homepage`, `BusinessSettings`, `Service`, `BlogPost`, `Project`, `Review`, `Author`.
 6. **Following the Figma design revision review (booking removed, pricing and case studies added), the following corrections and confirmations are now final:**
@@ -496,7 +496,7 @@ Detailed in Sections 2–10 above, with per-field justification. Two corrections
 - Scheduled publishing (Section 13) — tied to a paid Sanity tier not currently justified by this project's scale.
 - A dedicated public `Author` archive/landing page — the `slug` field is reserved for this, but no such page exists in v1.
 - Appointment booking and everything under it — unchanged, remains under `docs/database.md`/`docs/schema-design.md`'s deferred-scope banners.
-- **A real Google Maps (or equivalent) embed on the Contact page** — the design prototype keeps its current static placeholder-plus-external-link treatment deliberately; a real embed is confirmed as Next.js implementation-phase work, not a content-model or design concern to resolve now.
+- ~~A real Google Maps (or equivalent) embed on the Contact page~~ — **implemented.** A click-to-load Google Maps embed (`docs/architecture.md` Section 9.1) — no content-model impact, since the map's address comes from `BusinessSettings.address`/the mock standing in for it, not a new content field.
 - **Real `/projektek/[slug]` per-project routing** — the design prototype's current single-instance project-detail page is confirmed acceptable as a prototype; real slug-based routing driven by actual `Project` documents is confirmed as Next.js implementation-phase work.
 
 ### 7. Remaining decisions genuinely requiring your review

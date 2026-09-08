@@ -1,3 +1,5 @@
+import { BUSINESS_SETTINGS } from "@/lib/mock/business-settings";
+
 export interface NavLink {
   label: string;
   href: string;
@@ -23,12 +25,5 @@ export const FOOTER_LEGAL_LINKS: NavLink[] = [
   { label: "Adatvédelem", href: "/adatvedelem" },
 ];
 
-/**
- * Placeholder only — the real phone number belongs to the future
- * BusinessSettings singleton (docs/architecture.md Section 6,
- * docs/content-model.md Section 7) and hasn't been confirmed anywhere in
- * the approved docs. Kept in this one place so wiring in the real value
- * later is a one-line change, not a find-and-replace.
- */
-export const PHONE_DISPLAY = "+36 1 234 5678";
-export const PHONE_HREF = "tel:+3612345678";
+export const PHONE_DISPLAY = BUSINESS_SETTINGS.phone;
+export const PHONE_HREF = BUSINESS_SETTINGS.phoneHref;

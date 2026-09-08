@@ -275,24 +275,19 @@ For any non-trivial change:
 A complete set of engineering conventions across 25 areas, grounded specifically in this project's already-approved documents rather than generic best practice — every section ties back to a specific decision already made in `product.md`, `architecture.md`, `content-model.md`, or `design-system.md`, and several sections directly generalize a lesson already demonstrated earlier in this project's own history (the `isFeatured` reversal, the booking-CTA scope conflict).
 
 ### Contradictions found
-None outright, between this scope restatement and the four current approved documents. Two **gaps** worth distinguishing from contradictions — new information not previously captured, not a conflict with what was previously decided:
+None outright, between this scope restatement and the four current approved documents. Two **gaps** were originally flagged here — both are now resolved:
 
-1. **Price list** — mentioned as in-scope in this message, but not yet reflected in `content-model.md` (no pricing field on `Service`, no separate price-list content type). Needs a small content-modeling decision (a field on `Service`, or a standalone simple price-list page/type) before implementation touches this area.
-2. **Precise business location/map** — this message asks for a real map, but the reference design's contact page only had a static placeholder image (`design-system.md` Section 8), and `architecture.md`'s external-services list (Section 16) doesn't currently include a maps provider. This needs a small architecture decision (e.g., a lightweight embed approach that doesn't require an API key, versus a fuller Google Maps integration) before implementation.
-
-Per your instruction, I have not modified any of the four existing documents for these — they're gaps to resolve deliberately, not contradictions requiring a document correction.
+1. ~~**Price list**~~ — **RESOLVED.** `PriceCategory` (`docs/content-model.md` Section 10), a document type fully independent of `Service`.
+2. ~~**Precise business location/map**~~ — **RESOLVED.** A real, interactive Google Maps embed is implemented on the Contact page (`/kapcsolat`), using a **click-to-load** pattern: a styled placeholder renders by default (no iframe, no request to Google) until the visitor clicks "Térkép betöltése," at which point the map mounts. This needs no Google Maps API key (`docs/architecture.md` Section 9.1) and is now listed in `docs/architecture.md` Section 16's external-services table.
 
 ### Engineering decisions that remain open
-- Hosting provider (`architecture.md` Section 17) — unchanged, still the most consequential open item.
+As of the legal-pages/Contact-page implementation step, hosting, transactional email, receiving mailbox, analytics, and map/location are all **confirmed** (`docs/architecture.md` Sections 9.1, 11, 13, 16, 17) — no longer open. What's still genuinely open:
 - Sanity Studio deployment topology (`architecture.md` Section 6).
-- Transactional email provider and analytics tool (`architecture.md` Sections 11, 13).
-- Price-list content shape (new gap, above).
-- Map/location integration approach (new gap, above).
 - Testing framework selection (Section 22) — deliberately deferred until real logic exists to justify it.
-- ISR revalidation windows per content type (Section 3) — a real decision, but one better made against the finished design and real content-update cadence, not speculatively now.
+- ISR revalidation windows per content type (Section 3) — a real decision, but one better made against real content-update cadence once Sanity is wired in, not speculatively now.
+- The Contact form's real Server Action + Resend integration itself (the form's client-side UI/validation is implemented; the actual send is intentionally not yet wired up, per this step's explicit scope limits).
 
-### Recommended next steps before initializing the application
-1. Resolve the price-list and map/location gaps — small decisions, but both affect the content model and architecture documents respectively, and both are cheap to settle now versus mid-implementation.
-2. Finalize the pending Figma design revision and update `docs/design-system.md` accordingly, since several implementation details (exact component set, exact page inventory) are explicitly provisional until that happens.
-3. Resolve the hosting provider decision — or at minimum narrow it enough that environment/deployment assumptions in this document and `architecture.md` don't need to stay abstract once real project setup begins.
-4. Only then: initialize the Next.js project and Sanity schema, informed by a finished design and a settled set of small open gaps, rather than starting implementation with known provisional pieces still in motion.
+### Recommended next steps
+1. Wire up the Contact form's Server Action (validate server-side, send via Resend to the Google Workspace mailbox) — the one piece of this step intentionally left as a UI-only boundary.
+2. Resolve the Sanity Studio deployment topology (embedded vs. separate) once Sanity itself is introduced.
+3. Initialize the Sanity project/schema and replace the hand-written mock data (`src/lib/mock/`) with real Sanity-sourced content and generated types.
