@@ -1,0 +1,26 @@
+{
+  "name": "royal-team-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sanity Studio for Royal-Team Autószerviz — a standalone app, separate from the Next.js frontend (docs/architecture.md Section 6).",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.12.0",
+    "react": "^19.2.2",
+    "react-dom": "^19.2.2",
+    "sanity": "^6.12.0",
+    "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "typescript": "^5.7.2"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
