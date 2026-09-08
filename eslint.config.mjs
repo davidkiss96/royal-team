@@ -11,7 +11,10 @@ const eslintConfig = [
   {
     // Read-only Figma reference app (README.md) — not our code, not built
     // with this project's own conventions or dependencies.
-    ignores: ["design-reference/**"],
+    // studio/ is a separate, standalone Sanity Studio app with its own
+    // package.json/tsconfig (docs/architecture.md Section 6) — not part of
+    // the Next.js app this config is written for.
+    ignores: ["design-reference/**", "studio/**"],
   },
 ];
 

@@ -39,6 +39,7 @@
   ],
   "exclude": [
     "node_modules",
-    "design-reference"
+    "design-reference",
+    "studio"
   ]
 }

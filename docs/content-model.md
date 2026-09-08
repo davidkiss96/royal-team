@@ -81,7 +81,7 @@ Restated from the prior version because it remains the single most important pla
 | `title` | string | Yes | |
 | `slug` | slug | Yes | Generated from `title` once, at creation. See "Slug stability" below for the safety behavior around editing it afterward. |
 | `tagline` | string | No, **approved addition** | Short subtitle shown under the title in the homepage service-card grid and the services index page (e.g., "Részecskeszűrő regenerálás") — a brief, more specific descriptor than `title`, distinct from `summary`'s longer descriptive sentence. Added once implementation surfaced it as a real, repeated design element (Section 0, item 7). |
-| `summary` | text | No | Listing-card text and meta-description fallback. |
+| `summary` | text | **Yes, finalized** | Listing-card text and meta-description fallback. Required because every service listing card and the SEO meta-description fallback depend on it — an empty `summary` would leave both silently blank. |
 | `body` | Portable Text | Warning-level validation | Warning, not hard error, because content is built incrementally — an editor should be able to save an in-progress draft without a scolding error blocking them. |
 | `highlights` | array of strings | No, **approved addition** | The "Főbb előnyök" bulleted benefits list on the services index page (e.g., "Üzemanyag-takarékosság," "Csökkentett emisszió," "Motortartósság növelése"). Plain strings, not label/value pairs like `Project.specs` (Section 4) — each item is a short, self-contained phrase with nothing to pair it with. A field description should nudge editors toward 3–4 items, the same soft-guidance approach used on `Homepage.secondaryCtas` (Section 8) — editorial guidance, not a hard validation limit. |
 | `process` | array of `{ title (string), description (string) }` | No, **approved addition** | The numbered "how we work" steps shown on the `Service` detail page (e.g., "01 Diagnosztika — OBD olvasás, szűrő nyomásmérés..."). Step number is derived from array position, not stored. Same rationale as `Project.specs` (Section 4): a small, fixed, repeating shape, simple enough not to need named per-step fields. Genuinely optional — a service with a simple, one-visit process may reasonably have none. |
@@ -185,9 +185,10 @@ Restated from the prior version because it remains the single most important pla
 **Group: Details**
 | Field | Type | Required | Why |
 |---|---|---|---|
-| `author` | reference → `Author` | Recommended | Same rationale as `BlogPost` — the AMG build's credibility benefits from named technical attribution. |
 | `relatedServices` | array of references → `Service` | No, **changed from a single reference in this revision** | A project can plausibly relate to more than one service (e.g., the AMG build involved DPF cleaning, diagnostics, and suspension work together) — the earlier singular design underestimated this. Changed from `relatedService` (single) to `relatedServices` (array) specifically because the approved Figma design's project detail page shows multiple related services per project; the content model is being corrected to match a real, confirmed requirement, not speculatively widened. |
 | `displayOrder` | number | No | Controls ordering on the projects index page — e.g., ensuring the AMG build appears first regardless of when it was published. |
+
+**No `author` field (finalized, reversing the earlier draft):** `Project` does not reference `Author`. Only `BlogPost.author` exists — the approved content model does not use Project authorship. This was corrected during the Sanity schema-implementation step to match the actual finalized model; the earlier "Same rationale as `BlogPost`" reasoning for a `Project.author` field is superseded.
 
 **Group: SEO**
 | Field | Type | Required | Why |
@@ -203,7 +204,7 @@ Restated from the prior version because it remains the single most important pla
 - **Featured:** removed as a field on `Project` itself — see above; curation lives on `Homepage`.
 - **Ordering:** `displayOrder`, for the Projects index page.
 - **Gallery:** present, supplementary to inline body images.
-- **Author:** reference to `Author`, publicly displayed.
+- **Author:** no field — `Project` does not reference `Author` (see above); only `BlogPost` does.
 - **Specs:** structured `label`/`value` array for vehicle/technical facts, approved addition (above).
 - **Related services:** array of references, plural — corrected from the original singular design (above).
 - **SEO:** standard `seo` object.
@@ -225,21 +226,24 @@ Restated from the prior version because it remains the single most important pla
 | `reviewDate` | date | No | The date the review reflects, independent of when it was entered into Sanity. |
 | `source` | string, fixed list | Yes | Values: `google`, `in_person`, `phone`, `email`, `other` — approved enum, implemented as a Studio dropdown (`options.list`). |
 | `sourceDetail` | string | No | Free-text supplement, independent of which `source` is chosen. |
+| `isActive` | boolean, default `true` | No | **Finalized addition.** The business owner must be able to temporarily hide a review without deleting it — the same hide-without-delete need already established for `Service`/`PriceCategory` (Sections 2, 10), and for the same reason: Sanity's native unpublish isn't an obviously-safe "hide" action for a non-technical editor. This does **not** replace `Homepage.featuredReviews` curation (Section 8), which remains the only mechanism for choosing what appears on the homepage — `isActive` instead governs a full, standalone reviews listing (Section 8 sitemap: "Reviews can be a dedicated page and/or a surfaced section"). |
+| `displayOrder` | number | No | **Finalized addition.** Controls manual ordering within a full reviews listing — a separate concern from homepage curation, exactly parallel to `Service.displayOrder`/`Project.displayOrder`. |
 
-**Why `isFeatured` is dropped from this revision (reversing the prior draft, same reasoning as `Project`):** homepage curation now lives on `Homepage.featuredReviews` (Section 8) as a reference array. A separate `isFeatured` boolean here would be a second, competing way to answer the same question, with no clear rule for which one wins if they ever disagreed — removing it resolves that ambiguity at the model level rather than leaving it as a future support question.
+**Why `isFeatured` is dropped from this revision (reversing the prior draft, same reasoning as `Project`):** homepage curation now lives on `Homepage.featuredReviews` (Section 8) as a reference array. A separate `isFeatured` boolean here would be a second, competing way to answer the same question, with no clear rule for which one wins if they ever disagreed — removing it resolves that ambiguity at the model level rather than leaving it as a future support question. `isActive`/`displayOrder` (above) are not a reintroduction of this — they answer "is this review usable at all, and in what order" for a standalone listing, not "should this be on the homepage."
 
-**Preview configuration:** `authorName` as primary line; subtitle showing rating as stars (e.g., "★★★★★") and `source`; no thumbnail (reviews have no image field).
+**Preview configuration:** `authorName` as primary line; subtitle showing rating as stars (e.g., "★★★★★"), `source`, and a visual "Hidden" indicator when `isActive` is `false`; no thumbnail (reviews have no image field).
 
 **Answering the specific review points requested:**
-- **Visible/hidden:** no separate field — native draft/publish is sufficient; a review is either ready to show or still being entered/reviewed internally, which maps cleanly onto draft/publish with no additional state needed.
-- **Featured:** removed as a field here — see above.
+- **Visible/hidden:** `isActive` — finalized addition, justified above.
+- **Featured:** removed as a field here — see above; curation lives on `Homepage`.
+- **Ordering:** `displayOrder` — finalized addition, justified above.
 - **Source attribution:** `source` (constrained list) + `sourceDetail` (free text), unchanged from the prior approved design.
 
 ---
 
 ## 6. `Author`
 
-**Purpose:** unchanged — public editorial attribution for `BlogPost`/`Project`, entirely decoupled from Sanity project membership or any authentication concept.
+**Purpose:** public editorial attribution for `BlogPost` (Section 3) — `Project` does not reference `Author` (Section 4) — entirely decoupled from Sanity project membership or any authentication concept.
 
 **Fields (flat, deliberately minimal, per your explicit "keep this lightweight" instruction):**
 
@@ -251,7 +255,7 @@ Restated from the prior version because it remains the single most important pla
 | `bio` | text | No | Short editorial bio, optionally shown alongside authored content. |
 | `role` | string | No | **Added per your suggested field list** (e.g., "Owner & Master Technician," "Founder"). Gives the public byline more credibility context than a bare name alone — directly supports the trust-building business goal, at the cost of one simple field. |
 
-**Explicitly not included, to keep this lightweight as instructed:** no email field, no social links, no multiple-photo gallery, no "areas of expertise" tagging, no relationship back to which posts/projects reference this author (that relationship already exists in the other direction, via `BlogPost.author`/`Project.author` — duplicating it here would be redundant data with no query benefit for how Sanity references work). `Author` is a name, an optional face, an optional short bio, and an optional title — nothing more.
+**Explicitly not included, to keep this lightweight as instructed:** no email field, no social links, no multiple-photo gallery, no "areas of expertise" tagging, no relationship back to which posts reference this author (that relationship already exists in the other direction, via `BlogPost.author` — duplicating it here would be redundant data with no query benefit for how Sanity references work). `Project` does not reference `Author` at all (Section 4). `Author` is a name, an optional face, an optional short bio, and an optional title — nothing more.
 
 **Public presentation:** rendered inline as a small byline wherever referenced (e.g., "Written by [name], [role]" with `photo` if present) — not as a standalone profile page in v1, consistent with keeping this type genuinely lightweight rather than building out unneeded profile-management surface area.
 
@@ -461,11 +465,11 @@ Raised explicitly because you asked for it to be considered: Sanity offers **sch
 `Homepage` (singleton), `BusinessSettings` (singleton), `Service`, `BlogPost`, `Project`, `Review`, `Author`, `AboutPage` (singleton), `PriceCategory` — **nine types**, confirmed final. `Project` includes two fields added during the Figma design review (`specs`, `relatedServices` — see item 2); `AboutPage` (Section 9) closes the previously-open About-page content-model gap; `PriceCategory` (Section 10) closes the previously-open pricing gap.
 
 ### 2. Fields for each type
-Detailed in Sections 2–10 above, with per-field justification. Two corrections from the Figma design review are final: `Project.relatedService` (single reference) is **`Project.relatedServices`** (array of references), and `Project` gained a `specs` field (array of label/value pairs) — both in Section 4. `Service` gained `tagline` (string), `highlights` (array of strings), and `process` (array of title/description pairs) once Next.js implementation of the Services pages surfaced them as real, repeated design elements with no existing field to source (Section 0 items 7–8, Section 2). `Project` gained `results` (array of value/label/description triples) once implementation of the Projects pages surfaced the same kind of gap (Section 0 item 9, Section 4). **`AboutPage`** (Section 9) mirrors `Homepage`'s singleton pattern: hero, `ownerStory` (Portable Text), `philosophyValues`, `stats` (reusing `Project.specs`'s label/value shape), `photoGallery`, a single `cta`, and `seo`. **`PriceCategory`** (Section 10) is the approved type: `title`, `displayOrder`, `isActive`, and a required, minimum-one-item `items` array of embedded price-item objects (`name`, `note`, `priceType`, `amount`, `isActive`) — fully independent of `Service`, per your explicit instruction. `priceType` gained a third value, `quote`, once Next.js implementation of the Price List page surfaced "Ingyenes" (quote-only) line items with no real numeric amount (Section 0 item 10).
+Detailed in Sections 2–10 above, with per-field justification. Two corrections from the Figma design review are final: `Project.relatedService` (single reference) is **`Project.relatedServices`** (array of references), and `Project` gained a `specs` field (array of label/value pairs) — both in Section 4. `Service` gained `tagline` (string), `highlights` (array of strings), and `process` (array of title/description pairs) once Next.js implementation of the Services pages surfaced them as real, repeated design elements with no existing field to source (Section 0 items 7–8, Section 2). `Project` gained `results` (array of value/label/description triples) once implementation of the Projects pages surfaced the same kind of gap (Section 0 item 9, Section 4). **`AboutPage`** (Section 9) mirrors `Homepage`'s singleton pattern: hero, `ownerStory` (Portable Text), `philosophyValues`, `stats` (reusing `Project.specs`'s label/value shape), `photoGallery`, a single `cta`, and `seo`. **`PriceCategory`** (Section 10) is the approved type: `title`, `displayOrder`, `isActive`, and a required, minimum-one-item `items` array of embedded price-item objects (`name`, `note`, `priceType`, `amount`, `isActive`) — fully independent of `Service`, per your explicit instruction. `priceType` gained a third value, `quote`, once Next.js implementation of the Price List page surfaced "Ingyenes" (quote-only) line items with no real numeric amount (Section 0 item 10). **Finalized during the Sanity schema-implementation step:** `Review` gained `isActive` and `displayOrder` (Section 5) — a hide-without-delete toggle and manual ordering for a full reviews listing, independent of `Homepage.featuredReviews` curation; `Service.summary` became required, not optional, since every listing card and the SEO meta-description fallback depend on it (Section 2); and the earlier draft's `Project.author` field is confirmed removed — `Project` does not reference `Author` (Section 4).
 
 ### 3. Editor UX decisions
 - Field grouping (tabs/sections) for `Service`, `BlogPost`, `Project`, `BusinessSettings`, `Homepage` — flat/ungrouped for the smaller `Review` and `Author` types, deliberately, since grouping adds friction below a certain field count rather than reducing it.
-- List/reference preview configuration specified per type (Section 12), including a visible "Hidden" indicator on `Service`.
+- List/reference preview configuration specified per type (Section 12), including a visible "Hidden" indicator on `Service`, `PriceCategory`, and `Review`.
 - Field descriptions specified for every non-obvious field, especially slug fields, `isActive`, and `noIndex`.
 - Homepage curation via reference arrays (drag-to-reorder), replacing scattered `isFeatured` flags across three other content types.
 - **`Service.isActive` is confirmed to be the production data source for the "ELÉRHETŐ" badge** seen in the approved design (Section 2) — not a cosmetic, always-on label.
@@ -486,7 +490,7 @@ Detailed in Sections 2–10 above, with per-field justification. Two corrections
 - No `ctaLabel` field on `Service` (Section 2) — a single site-wide contact CTA is simpler and sufficient.
 - No generic page-builder/block system anywhere, including on `Homepage`.
 - No profile-management complexity on `Author` beyond five fields (Section 6).
-- No visible/hidden field on `BlogPost`, `Project`, or `Review` — native draft/publish is sufficient for all three; only `Service` has a demonstrated recurring need distinct from draft/publish.
+- No visible/hidden field on `BlogPost` or `Project` — native draft/publish is sufficient for both. `Service`, `PriceCategory`, and `Review` each have a demonstrated recurring hide-without-delete need distinct from draft/publish, and have an `isActive` field for it (Sections 2, 5, 10).
 - **No `country` field on `BusinessSettings.address`** (Section 7) — Hungary is fixed, implicit single-market context for v1, not stored data.
 - **No `currency` field, no formatted price-string field, no `Service` reference, no separate `PriceListItem` document, and no `PriceList` wrapper document on `PriceCategory`** (Section 10) — all deliberately excluded for reasons detailed there; the pricing content-model gap is now closed, not left open.
 - **No `AboutPage` field beyond a single `cta`** — unlike `Homepage.secondaryCtas` (a small array), the About page's design shows exactly one closing call-to-action, so the field matches that shape rather than defaulting to an array (Section 9).

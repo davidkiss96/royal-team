@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "studio": "npm --prefix studio run dev"
   },
   "dependencies": {
     "lucide-react": "^1.41.0",
