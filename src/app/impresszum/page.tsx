@@ -2,59 +2,60 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
-import { BUSINESS_SETTINGS, formatAddress } from "@/lib/mock/business-settings";
+import { formatAddress } from "@/lib/format-address";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 
 export const metadata: Metadata = {
   title: "Impresszum — Royal-Team Autószerviz",
   description: "A Royal-Team Autószerviz Kft. törvény által előírt impresszuma.",
 };
 
-const FACT_SECTIONS: { title: string; items: [string, string][] }[] = [
-  {
-    title: "Szolgáltató adatai",
-    items: [
-      ["Cégnév", BUSINESS_SETTINGS.legalCompanyName],
-      ["Székhely", `${formatAddress(BUSINESS_SETTINGS.registeredOffice)}, Magyarország`],
-      ["Cégjegyzékszám", BUSINESS_SETTINGS.legalRegistrationNumber],
-      ["Adószám", BUSINESS_SETTINGS.legalTaxNumber],
-      ["Ügyvezető", BUSINESS_SETTINGS.managingDirector],
-    ],
-  },
-  {
-    title: "Telephely / szolgáltatás helye",
-    items: [
-      ["Műhely címe", `${formatAddress(BUSINESS_SETTINGS.address)}, Magyarország`],
-    ],
-  },
-  {
-    title: "Elérhetőség",
-    items: [
-      ["Telefon", BUSINESS_SETTINGS.phone],
-      ["E-mail", BUSINESS_SETTINGS.email],
-      ["Weboldal", BUSINESS_SETTINGS.website],
-    ],
-  },
-  {
-    title: "Tárhely- és infrastruktúra-szolgáltató",
-    items: [
-      ["Szolgáltató neve", "Cloudflare, Inc."],
-      ["Cím", "101 Townsend St, San Francisco, CA 94107, Egyesült Államok"],
-      ["Weboldal", "www.cloudflare.com"],
-    ],
-  },
-  {
-    title: "Szerzői jogok",
-    items: [
-      ["Copyright", `© ${new Date().getFullYear()} ${BUSINESS_SETTINGS.legalCompanyName}`],
-      [
-        "Tartalom",
-        "Minden jog fenntartva. A weboldalon szereplő tartalmak, képek és grafikák szerzői jogi védelem alatt állnak, azok a Royal-Team Autószerviz Kft. előzetes írásbeli engedélye nélkül nem használhatók fel.",
-      ],
-    ],
-  },
-];
+export default async function ImpresszumPage() {
+  const settings = await getBusinessSettings();
 
-export default function ImpresszumPage() {
+  const factSections: { title: string; items: [string, string][] }[] = [
+    {
+      title: "Szolgáltató adatai",
+      items: [
+        ["Cégnév", settings.legalCompanyName],
+        ["Székhely", `${formatAddress(settings.registeredOffice)}, Magyarország`],
+        ["Cégjegyzékszám", settings.legalRegistrationNumber],
+        ["Adószám", settings.legalTaxNumber],
+        ["Ügyvezető", settings.managingDirector],
+      ],
+    },
+    {
+      title: "Telephely / szolgáltatás helye",
+      items: [["Műhely címe", `${formatAddress(settings.address)}, Magyarország`]],
+    },
+    {
+      title: "Elérhetőség",
+      items: [
+        ["Telefon", settings.phone],
+        ["E-mail", settings.email],
+        ["Weboldal", settings.website],
+      ],
+    },
+    {
+      title: "Tárhely- és infrastruktúra-szolgáltató",
+      items: [
+        ["Szolgáltató neve", "Cloudflare, Inc."],
+        ["Cím", "101 Townsend St, San Francisco, CA 94107, Egyesült Államok"],
+        ["Weboldal", "www.cloudflare.com"],
+      ],
+    },
+    {
+      title: "Szerzői jogok",
+      items: [
+        ["Copyright", `© ${new Date().getFullYear()} ${settings.legalCompanyName}`],
+        [
+          "Tartalom",
+          "Minden jog fenntartva. A weboldalon szereplő tartalmak, képek és grafikák szerzői jogi védelem alatt állnak, azok a Royal-Team Autószerviz Kft. előzetes írásbeli engedélye nélkül nem használhatók fel.",
+        ],
+      ],
+    },
+  ];
+
   return (
     <>
       <section className="bg-background pt-40 pb-16">
@@ -69,7 +70,7 @@ export default function ImpresszumPage() {
 
       <section className="bg-background pb-24">
         <Container className="max-w-3xl space-y-10">
-          {FACT_SECTIONS.map((section) => (
+          {factSections.map((section) => (
             <div key={section.title} className="border border-gold/10 p-6 lg:p-8">
               <h2 className="mb-5 border-b border-gold/10 pb-4 font-heading text-lg font-black text-gold">
                 {section.title}

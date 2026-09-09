@@ -1,47 +1,50 @@
 import { Clock, MapPin, Phone, type LucideIcon } from "lucide-react";
 import { Container } from "@/components/container";
-import { BUSINESS_SETTINGS } from "@/lib/mock/business-settings";
-import { PHONE_DISPLAY } from "@/lib/site-config";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 
 /**
- * Static site copy standing in for `BusinessSettings` (docs/content-model.md
- * Section 7) — sourced from the shared `BUSINESS_SETTINGS` mock so the
- * address shown here can't drift from the Contact page/legal pages. Hours
- * aren't part of the confirmed business data yet, so that copy stays as
- * placeholder text pending a real value.
+ * Sourced from the real `BusinessSettings` Sanity singleton
+ * (docs/content-model.md Section 7) — phone and address can't drift from
+ * the Contact page/legal pages, since all read from the same document.
+ * Opening hours aren't part of the seeded business data yet
+ * (`BusinessSettings.openingHours` has no source content — see
+ * `src/scripts/seed-sanity.ts`), so that copy stays as placeholder text
+ * pending a real value, unchanged from before this migration.
  */
-const CONTACT_STRIP_ITEMS: {
-  icon: LucideIcon;
-  label: string;
-  value: string;
-  detail: string;
-}[] = [
-  {
-    icon: Phone,
-    label: "Telefon",
-    value: PHONE_DISPLAY,
-    detail: "H-P: 8:00 – 18:00",
-  },
-  {
-    icon: MapPin,
-    label: "Cím",
-    value: `${BUSINESS_SETTINGS.address.city}, ${BUSINESS_SETTINGS.address.addressLine1}`,
-    detail: `${BUSINESS_SETTINGS.address.postalCode} ${BUSINESS_SETTINGS.address.city}`,
-  },
-  {
-    icon: Clock,
-    label: "Nyitvatartás",
-    value: "H–P: 8:00–18:00",
-    detail: "Szo: 8:00–13:00",
-  },
-];
+export async function ContactStrip() {
+  const settings = await getBusinessSettings();
 
-export function ContactStrip() {
+  const items: {
+    icon: LucideIcon;
+    label: string;
+    value: string;
+    detail: string;
+  }[] = [
+    {
+      icon: Phone,
+      label: "Telefon",
+      value: settings.phone,
+      detail: "H-P: 8:00 – 18:00",
+    },
+    {
+      icon: MapPin,
+      label: "Cím",
+      value: `${settings.address.city}, ${settings.address.addressLine1}`,
+      detail: `${settings.address.postalCode} ${settings.address.city}`,
+    },
+    {
+      icon: Clock,
+      label: "Nyitvatartás",
+      value: "H–P: 8:00–18:00",
+      detail: "Szo: 8:00–13:00",
+    },
+  ];
+
   return (
     <section className="bg-background py-14">
       <Container>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {CONTACT_STRIP_ITEMS.map(({ icon: Icon, label, value, detail }) => (
+          {items.map(({ icon: Icon, label, value, detail }) => (
             <div
               key={label}
               className="flex items-start gap-4 border border-gold/8 p-6 transition-all hover:border-gold/30"

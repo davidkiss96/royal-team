@@ -1,33 +1,35 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import { GoogleMapEmbed } from "@/components/google-map-embed";
-import { BUSINESS_SETTINGS, formatAddress } from "@/lib/mock/business-settings";
+import { formatAddress } from "@/lib/format-address";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 
-const workshopAddress = formatAddress(BUSINESS_SETTINGS.address);
+export async function ContactInfo() {
+  const settings = await getBusinessSettings();
+  const workshopAddress = formatAddress(settings.address);
 
-const INFO_ITEMS = [
-  {
-    icon: Phone,
-    title: "Telefon",
-    lines: [BUSINESS_SETTINGS.phone, "H–P: 8:00–18:00"],
-    href: BUSINESS_SETTINGS.phoneHref,
-  },
-  {
-    icon: MapPin,
-    title: "Cím (műhely)",
-    lines: [BUSINESS_SETTINGS.address.addressLine1, workshopAddress],
-  },
-  {
-    icon: Mail,
-    title: "E-mail",
-    lines: [BUSINESS_SETTINGS.email],
-    href: `mailto:${BUSINESS_SETTINGS.email}`,
-  },
-];
+  const infoItems = [
+    {
+      icon: Phone,
+      title: "Telefon",
+      lines: [settings.phone, "H–P: 8:00–18:00"],
+      href: `tel:${settings.phone.replace(/\s+/g, "")}`,
+    },
+    {
+      icon: MapPin,
+      title: "Cím (műhely)",
+      lines: [settings.address.addressLine1, workshopAddress],
+    },
+    {
+      icon: Mail,
+      title: "E-mail",
+      lines: [settings.email],
+      href: `mailto:${settings.email}`,
+    },
+  ];
 
-export function ContactInfo() {
   return (
     <div className="space-y-7 lg:col-span-2">
-      {INFO_ITEMS.map(({ icon: Icon, title, lines, href }) => (
+      {infoItems.map(({ icon: Icon, title, lines, href }) => (
         <div key={title} className="flex gap-5">
           <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center border border-gold/25">
             <Icon size={16} className="text-gold" />

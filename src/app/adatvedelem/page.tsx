@@ -3,7 +3,11 @@ import type { ReactNode } from "react";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
-import { BUSINESS_SETTINGS, formatAddress } from "@/lib/mock/business-settings";
+import { formatAddress } from "@/lib/format-address";
+import {
+  getBusinessSettings,
+  type BusinessSettings,
+} from "@/lib/sanity/queries/business-settings";
 
 export const metadata: Metadata = {
   title: "Adatvédelmi tájékoztató — Royal-Team Autószerviz",
@@ -19,14 +23,15 @@ interface PolicySection {
   body: ReactNode;
 }
 
-const SECTIONS: PolicySection[] = [
+function buildSections(settings: BusinessSettings): PolicySection[] {
+  return [
   {
     id: "adatkezelo",
     title: "1. Adatkezelő",
     body: (
       <p>
         A jelen tájékoztatóban leírt adatkezelést a{" "}
-        <strong className="text-foreground/80">{BUSINESS_SETTINGS.legalCompanyName}</strong>{" "}
+        <strong className="text-foreground/80">{settings.legalCompanyName}</strong>{" "}
         (a továbbiakban: „Adatkezelő&rdquo; vagy „Royal-Team&rdquo;) végzi, mint a
         royalteamszerviz.hu weboldal (a továbbiakban: „Weboldal&rdquo;) üzemeltetője.
       </p>
@@ -37,15 +42,15 @@ const SECTIONS: PolicySection[] = [
     title: "2. Az adatkezelő hivatalos adatai",
     body: (
       <ul className="space-y-1.5">
-        <li>Cégnév: {BUSINESS_SETTINGS.legalCompanyName}</li>
-        <li>Székhely: {formatAddress(BUSINESS_SETTINGS.registeredOffice)}, Magyarország</li>
-        <li>Telephely / szolgáltatás helye: {formatAddress(BUSINESS_SETTINGS.address)}, Magyarország</li>
-        <li>Cégjegyzékszám: {BUSINESS_SETTINGS.legalRegistrationNumber}</li>
-        <li>Adószám: {BUSINESS_SETTINGS.legalTaxNumber}</li>
-        <li>Ügyvezető: {BUSINESS_SETTINGS.managingDirector}</li>
-        <li>E-mail: {BUSINESS_SETTINGS.email}</li>
-        <li>Telefon: {BUSINESS_SETTINGS.phone}</li>
-        <li>Weboldal: {BUSINESS_SETTINGS.website}</li>
+        <li>Cégnév: {settings.legalCompanyName}</li>
+        <li>Székhely: {formatAddress(settings.registeredOffice)}, Magyarország</li>
+        <li>Telephely / szolgáltatás helye: {formatAddress(settings.address)}, Magyarország</li>
+        <li>Cégjegyzékszám: {settings.legalRegistrationNumber}</li>
+        <li>Adószám: {settings.legalTaxNumber}</li>
+        <li>Ügyvezető: {settings.managingDirector}</li>
+        <li>E-mail: {settings.email}</li>
+        <li>Telefon: {settings.phone}</li>
+        <li>Weboldal: {settings.website}</li>
       </ul>
     ),
   },
@@ -192,7 +197,7 @@ const SECTIONS: PolicySection[] = [
       <p>
         A kapcsolatfelvételi űrlapról érkező e-maileket az Adatkezelő a
         Google Workspace szolgáltatás keretében üzemeltetett üzleti
-        postafiókjában ({BUSINESS_SETTINGS.email}) fogadja és tárolja. Az
+        postafiókjában ({settings.email}) fogadja és tárolja. Az
         e-mail — mint az adatkezelés tárgyát képező üzenet — ebben a
         postafiókban marad meg mindaddig, amíg a 13. pontban leírt
         megőrzési idő szerint indokolt.
@@ -269,7 +274,7 @@ const SECTIONS: PolicySection[] = [
           <li>tiltakozás az adatkezelés ellen.</li>
         </ul>
         <p className="mt-3">
-          Kérelmét a {BUSINESS_SETTINGS.email} e-mail címre küldheti. Az
+          Kérelmét a {settings.email} e-mail címre küldheti. Az
           Adatkezelő az érintetti kérelmeket indokolatlan késedelem nélkül,
           de főszabály szerint a kérelem beérkezésétől számított egy hónapon
           belül kezeli és tájékoztatja az érintettet a megtett
@@ -321,9 +326,13 @@ const SECTIONS: PolicySection[] = [
       </>
     ),
   },
-];
+  ];
+}
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const settings = await getBusinessSettings();
+  const sections = buildSections(settings);
+
   return (
     <>
       <section className="bg-background pt-40 pb-16">
@@ -339,7 +348,7 @@ export default function PrivacyPolicyPage() {
 
       <section className="bg-background pb-24">
         <Container className="max-w-3xl space-y-6">
-          {SECTIONS.map((section) => (
+          {sections.map((section) => (
             <div key={section.id} className="border-l-2 border-gold/20 py-2 pl-6">
               <h2 className="mb-3 font-heading text-base font-black text-foreground">
                 {section.title}
