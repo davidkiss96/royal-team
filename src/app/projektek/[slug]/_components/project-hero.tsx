@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/container";
-import type { Project } from "@/lib/mock/projects";
 import { getIsoYear } from "@/lib/format-date";
-import { getServicesBySlugs } from "@/lib/mock/services";
+import type { ProjectDetail } from "@/lib/sanity/queries/projects";
 
 /** Same generic "last word gold" heading convention as the Service detail
  * page's hero — no field exists (or should exist) for per-title curated
@@ -14,9 +13,9 @@ function splitTitleForAccent(title: string): { lead: string; accent: string } {
   return { lead: words.join(" "), accent };
 }
 
-export function ProjectHero({ project, index }: { project: Project; index: number }) {
+export function ProjectHero({ project, index }: { project: ProjectDetail; index: number }) {
   const { lead, accent } = splitTitleForAccent(project.title);
-  const relatedServices = getServicesBySlugs(project.relatedServices);
+  const { relatedServices } = project;
 
   return (
     <section className="relative flex min-h-[72vh] items-end overflow-hidden">
@@ -51,7 +50,8 @@ export function ProjectHero({ project, index }: { project: Project; index: numbe
         )}
 
         <span className="font-mono-label text-xs tracking-[0.3em] text-gold">
-          PROJEKT #{String(index + 1).padStart(3, "0")} · {getIsoYear(project.projectDate)}
+          PROJEKT #{String(index + 1).padStart(3, "0")}
+          {project.projectDate && ` · ${getIsoYear(project.projectDate)}`}
         </span>
         <h1 className="mt-2 mb-4 font-heading text-5xl font-black text-white md:text-7xl">
           {lead}

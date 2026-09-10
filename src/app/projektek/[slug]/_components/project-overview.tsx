@@ -1,15 +1,14 @@
-import { BodyBlocks } from "@/components/body-blocks";
 import { Container } from "@/components/container";
+import { PortableTextContent } from "@/components/portable-text";
 import { SectionLabel } from "@/components/section-label";
-import type { Project } from "@/lib/mock/projects";
+import type { ProjectDetail } from "@/lib/sanity/queries/projects";
 
-/** Only paragraph/list blocks render here — `numberedSteps`/`quote` blocks
- * get their own dedicated sections elsewhere on the page. */
-export function ProjectOverview({ project }: { project: Project }) {
-  const overviewBlocks = project.body.filter(
-    (block) => block.type === "paragraph" || block.type === "list",
-  );
-
+/** Only the flowing-narrative part of `body` renders here — the numbered
+ * "work performed" steps and the customer quote get their own dedicated
+ * sections elsewhere on the page (`ProjectDetail.workPerformedSteps`/
+ * `resultsQuote`, already split out of `body` by
+ * `src/lib/sanity/queries/projects.ts`). */
+export function ProjectOverview({ project }: { project: ProjectDetail }) {
   return (
     <section className="bg-background py-20">
       <Container>
@@ -19,7 +18,9 @@ export function ProjectOverview({ project }: { project: Project }) {
             <h2 className="mb-6 font-heading text-3xl font-black text-foreground">
               A <span className="text-gold">feladat</span>
             </h2>
-            <BodyBlocks blocks={overviewBlocks} />
+            <div className="space-y-4 text-sm leading-relaxed text-foreground/55">
+              <PortableTextContent value={project.overviewBody} />
+            </div>
           </div>
 
           <div className="lg:col-span-2">

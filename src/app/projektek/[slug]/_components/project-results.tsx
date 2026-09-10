@@ -1,12 +1,11 @@
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import type { Project } from "@/lib/mock/projects";
+import type { ProjectDetail } from "@/lib/sanity/queries/projects";
 
-export function ProjectResults({ project }: { project: Project }) {
-  const quoteBlock = project.body.find((block) => block.type === "quote");
-  const hasQuote = quoteBlock?.type === "quote";
+export function ProjectResults({ project }: { project: ProjectDetail }) {
+  const quote = project.resultsQuote;
 
-  if (!project.results?.length && !hasQuote) return null;
+  if (!project.results?.length && !quote) return null;
 
   return (
     <section className="bg-secondary py-20">
@@ -32,13 +31,13 @@ export function ProjectResults({ project }: { project: Project }) {
           </div>
         )}
 
-        {hasQuote && (
+        {quote && (
           <div className="mx-auto max-w-2xl border border-gold/15 bg-background/50 p-8 text-center">
             <p className="text-sm leading-relaxed text-foreground/60 italic">
-              &ldquo;{quoteBlock.text}&rdquo;
+              &ldquo;{quote.text}&rdquo;
             </p>
-            {quoteBlock.attribution && (
-              <p className="mt-4 font-mono-label text-[10px] text-gold">{quoteBlock.attribution}</p>
+            {quote.attribution && (
+              <p className="mt-4 font-mono-label text-[10px] text-gold">{quote.attribution}</p>
             )}
           </div>
         )}

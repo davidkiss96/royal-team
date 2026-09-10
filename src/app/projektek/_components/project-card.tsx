@@ -3,23 +3,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { getIsoYear } from "@/lib/format-date";
-import type { Project } from "@/lib/mock/projects";
-import { getServicesBySlugs } from "@/lib/mock/services";
+import type { ProjectListItem } from "@/lib/sanity/queries/projects";
 
 interface ProjectCardProps {
-  project: Project;
+  project: ProjectListItem;
   index: number;
   featured: boolean;
 }
 
 /**
- * Project card for the `/projektek` grid. Tag pills are the resolved
- * `relatedServices`' real titles, not a separate `tags` field — this task's
- * explicit instruction to use the real Project data structure rather than
- * a second UI-specific model.
+ * Project card for the `/projektek` grid. Tag pills are `relatedServices`'
+ * real titles, already resolved from Sanity references by
+ * `getProjects()` (`src/lib/sanity/queries/projects.ts`), not a separate
+ * `tags` field or a second UI-specific model.
  */
 export function ProjectCard({ project, index, featured }: ProjectCardProps) {
-  const relatedServices = getServicesBySlugs(project.relatedServices);
+  const { relatedServices } = project;
 
   return (
     <RevealOnScroll delayMs={Math.min(index, 6) * 60} className={featured ? "md:col-span-2" : ""}>
@@ -55,7 +54,8 @@ export function ProjectCard({ project, index, featured }: ProjectCardProps) {
 
         <div className="absolute right-0 bottom-0 left-0 p-7">
           <span className="font-mono-label text-[10px] tracking-[0.3em] text-gold">
-            PROJEKT #{String(index + 1).padStart(3, "0")} · {getIsoYear(project.projectDate)}
+            PROJEKT #{String(index + 1).padStart(3, "0")}
+            {project.projectDate && ` · ${getIsoYear(project.projectDate)}`}
           </span>
           <h3 className={`mt-1 mb-1 font-heading font-black text-white ${featured ? "text-3xl" : "text-xl"}`}>
             {project.title}

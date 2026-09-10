@@ -4,7 +4,7 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
-import { ALL_PROJECTS } from "@/lib/mock/projects";
+import { getProjects } from "@/lib/sanity/queries/projects";
 import { ProjectCard } from "./_components/project-card";
 
 export const metadata: Metadata = {
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     "Válogatott szervizprojektek — részletes dokumentációval, technikai leírással és valódi eredményekkel.",
 };
 
-export default function ProjectsPage() {
-  const projects = [...ALL_PROJECTS].sort((a, b) => a.displayOrder - b.displayOrder);
+export default async function ProjectsPage() {
+  const projects = await getProjects();
 
   return (
     <>

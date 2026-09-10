@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ALL_PROJECTS } from "@/lib/mock/projects";
+import { getProjectBySlug, getProjectSlugs } from "@/lib/sanity/queries/projects";
 import { ProjectGallery } from "./_components/project-gallery";
 import { ProjectHero } from "./_components/project-hero";
 import { ProjectOverview } from "./_components/project-overview";
@@ -13,38 +13,39 @@ interface ProjectDetailPageProps {
 }
 
 /**
- * `Project` has no `isActive` field (docs/content-model.md Section 4 —
- * native draft/publish is the documented visibility mechanism, unlike
- * `Service`). For this mock catalog, presence in `ALL_PROJECTS` **is** the
- * published state, so an invalid slug is simply one not found in the list.
+ * All projects are pre-rendered at build time — `Project` has no
+ * `isActive`-style filter to exclude any of them (docs/content-model.md
+ * Section 4), unlike `Service`'s `getActiveServiceSlugs`. A project added
+ * after the last build still resolves correctly on first request via
+ * `dynamicParams`'s default `true` (docs/development-guidelines.md Section
+ * 3), the same behavior already established for `Service`.
  */
-function getProject(slug: string) {
-  return ALL_PROJECTS.find((project) => project.slug === slug);
-}
-
-export function generateStaticParams() {
-  return ALL_PROJECTS.map((project) => ({ slug: project.slug }));
+export async function generateStaticParams() {
+  const slugs = await getProjectSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: ProjectDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) return {};
 
   return {
-    title: `${project.title} — Royal-Team Autószerviz`,
-    description: project.summary,
+    title: project.seo?.metaTitle || `${project.title} — Royal-Team Autószerviz`,
+    description: project.seo?.metaDescription || project.summary,
+    ...(project.seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
   };
 }
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) notFound();
 
-  const index = ALL_PROJECTS.findIndex((p) => p.slug === slug);
+  const slugs = await getProjectSlugs();
+  const index = slugs.indexOf(slug);
 
   return (
     <>

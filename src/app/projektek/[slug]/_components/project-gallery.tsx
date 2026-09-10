@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import type { Project } from "@/lib/mock/projects";
+import type { ProjectDetail } from "@/lib/sanity/queries/projects";
 
-export function ProjectGallery({ project }: { project: Project }) {
+export function ProjectGallery({ project }: { project: ProjectDetail }) {
   if (!project.gallery || project.gallery.length === 0) return null;
 
   return (

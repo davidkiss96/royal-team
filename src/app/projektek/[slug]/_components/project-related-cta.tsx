@@ -3,12 +3,11 @@ import Link from "next/link";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import type { Project } from "@/lib/mock/projects";
-import { getServicesBySlugs } from "@/lib/mock/services";
+import type { ProjectDetail } from "@/lib/sanity/queries/projects";
 import { SERVICE_ICONS } from "@/lib/service-icons";
 
-export function ProjectRelatedCta({ project }: { project: Project }) {
-  const relatedServices = getServicesBySlugs(project.relatedServices);
+export function ProjectRelatedCta({ project }: { project: ProjectDetail }) {
+  const { relatedServices } = project;
 
   return (
     <section className="bg-background py-20">
