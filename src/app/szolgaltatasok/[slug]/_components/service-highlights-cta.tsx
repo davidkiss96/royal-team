@@ -2,7 +2,7 @@ import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import type { Service } from "@/lib/mock/services";
+import type { ServiceDetail } from "@/lib/sanity/queries/services";
 import { PHONE_DISPLAY, PHONE_HREF } from "@/lib/site-config";
 import { SERVICE_ICONS } from "@/lib/service-icons";
 
@@ -12,7 +12,7 @@ import { SERVICE_ICONS } from "@/lib/service-icons";
  * reproduced as a second, competing shape (docs/content-model.md Section 0
  * item 8).
  */
-export function ServiceHighlightsCta({ service }: { service: Service }) {
+export function ServiceHighlightsCta({ service }: { service: ServiceDetail }) {
   const Icon = SERVICE_ICONS[service.slug];
 
   return (

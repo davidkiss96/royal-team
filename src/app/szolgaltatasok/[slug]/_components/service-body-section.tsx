@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { Container } from "@/components/container";
+import { PortableTextContent } from "@/components/portable-text";
 import { SectionLabel } from "@/components/section-label";
-import type { Service } from "@/lib/mock/services";
+import type { ServiceDetail } from "@/lib/sanity/queries/services";
 
 /**
  * Generalized version of the reference DPF page's "Problem" section — no
@@ -11,7 +12,7 @@ import type { Service } from "@/lib/mock/services";
  * 8. The secondary image uses `gallery`'s first entry, falling back to
  * `heroImage` for services without a gallery.
  */
-export function ServiceBodySection({ service }: { service: Service }) {
+export function ServiceBodySection({ service }: { service: ServiceDetail }) {
   const image = service.gallery?.[0] ?? service.heroImage;
 
   return (
@@ -24,20 +25,7 @@ export function ServiceBodySection({ service }: { service: Service }) {
               A szolgáltatásról
             </h2>
             <div className="space-y-4 text-sm leading-relaxed text-foreground/55">
-              {service.body.map((block, index) =>
-                block.type === "paragraph" ? (
-                  <p key={index}>{block.text}</p>
-                ) : (
-                  <div key={index} className="space-y-2.5 pt-2">
-                    {block.items.map((item) => (
-                      <div key={item} className="flex items-center gap-2 text-sm text-foreground/55">
-                        <div className="h-1.5 w-1.5 flex-shrink-0 bg-gold" />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                ),
-              )}
+              <PortableTextContent value={service.body} />
             </div>
           </div>
 

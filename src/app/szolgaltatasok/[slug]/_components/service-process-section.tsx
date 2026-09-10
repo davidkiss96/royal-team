@@ -1,12 +1,12 @@
 import { Container } from "@/components/container";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { SectionLabel } from "@/components/section-label";
-import type { Service } from "@/lib/mock/services";
+import type { ServiceDetail } from "@/lib/sanity/queries/services";
 
 /** The only section of the reference DPF page that used scroll-triggered
  * entrance animation (a left-slide fade-in, staggered per step) — the only
  * place RevealOnScroll is used on this page, matching that. */
-export function ServiceProcessSection({ service }: { service: Service }) {
+export function ServiceProcessSection({ service }: { service: ServiceDetail }) {
   if (!service.process || service.process.length === 0) return null;
 
   return (

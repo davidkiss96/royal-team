@@ -123,6 +123,17 @@ The Next.js side of the integration (as opposed to Studio itself, Section 6 abov
 - **Caching/revalidation strategy:** time-based ISR only, via Next.js's fetch-cache integration — `sanityClient.fetch(query, params, { next: { revalidate: N } })`, with `N` chosen per content type once real queries exist (a homepage hero and a legal-adjacent page don't need the same staleness tolerance). Combined with `useCdn: true`, this satisfies "content changes should eventually be reflected without a full deploy" (Section 4) without webhook-triggered on-demand revalidation, which stays explicitly out of scope for now (Section 5).
 - **Verified:** a temporary, since-removed Route Handler confirmed Next.js's server runtime can reach the real Sanity `production` dataset end-to-end (connect → query → typed response) before this foundation was considered done.
 
+### 6.2 Established Query-Module Conventions (from the `BusinessSettings` and `Service` migrations)
+
+Now that two content types are actually wired up, the following patterns are real, observed conventions worth naming for the next migration (`Project`/`BlogPost`) rather than re-deriving from scratch:
+
+- **Revalidation windows chosen so far:** `BusinessSettings` (a singleton of operational facts an owner may need reflected almost immediately) uses **60s**; `Service` (editorially-curated, lower-volatility content) uses **300s** (`src/lib/sanity/queries/services.ts`). The general rule going forward: operational/contact-critical singletons stay near 60s; ordinary editorial content types (`Project`, `BlogPost`) should default to something in the 300s range unless a specific reason calls for shorter.
+- **One query module per content type**, bundling its raw/public TypeScript types, GROQ query strings, and `get*()` fetch functions together in one file (`src/lib/sanity/queries/<type>.ts`) — not split across separate query/type files.
+- **Shared GROQ fragments** for the `imageWithAlt` and `seo` object types now live in `src/lib/sanity/queries/fragments.ts` (`IMAGE_WITH_ALT_PROJECTION`, `SEO_PROJECTION`), per `development-guidelines.md` Section 8 — reuse these rather than re-fragmenting per content type.
+- **Image resolution:** `src/lib/sanity/image.ts`'s `resolveImage()` turns a (possibly absent) `imageWithAlt` field into the display-ready `{ url, alt, caption }` shape components already expect, falling back to the local placeholder graphic when no asset exists yet — the correct pattern for any content type migrated before its real photography is uploaded.
+- **Portable Text:** `src/components/portable-text.tsx`'s `PortableTextContent` (`@portabletext/react`) is the shared renderer for any `body`-type Portable Text field. It currently only implements the block kinds `Service.body` uses (paragraphs, bullet lists) — extend its `components` map on proven need (e.g. blockquotes/numbered lists for `Project.body`) rather than building out unused variants now.
+- **Filtering/ordering/active-state enforcement belongs in GROQ**, never fetched broad and filtered in JavaScript (`development-guidelines.md` Section 8) — e.g. `Service`'s `isActive`/`displayOrder` are both applied in the query itself, for both the listing and the by-slug lookup (so an inactive document can never resolve publicly by direct URL either).
+
 ---
 
 ## 7. Authentication and Authorization Approach

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
 import { FaqAccordion } from "@/components/faq-accordion";
-import { ALL_SERVICES } from "@/lib/mock/services";
+import { getActiveServiceSlugs, getServiceBySlug } from "@/lib/sanity/queries/services";
 import { ServiceBodySection } from "./_components/service-body-section";
 import { ServiceHero } from "./_components/service-hero";
 import { ServiceHighlightsCta } from "./_components/service-highlights-cta";
@@ -12,32 +12,39 @@ interface ServiceDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
-function getService(slug: string) {
-  return ALL_SERVICES.find((service) => service.slug === slug && service.isActive);
-}
-
-export function generateStaticParams() {
-  return ALL_SERVICES.filter((service) => service.isActive).map((service) => ({
-    slug: service.slug,
-  }));
+/**
+ * Only active-service slugs are pre-rendered at build time. A service
+ * created or reactivated afterward isn't statically generated until the
+ * next build, but still resolves correctly: `dynamicParams` defaults to
+ * `true`, so Next.js renders it on demand on first request (using
+ * `getServiceBySlug` below, same as any pre-rendered path) and caches that
+ * result per the route's ISR window — no on-demand revalidation/webhook
+ * needed for this to work (docs/architecture.md Section 6.1/13, task Section
+ * 8/9). `dynamicParams` is intentionally left at its default rather than
+ * set explicitly, since the default is exactly the desired behavior here.
+ */
+export async function generateStaticParams() {
+  const slugs = await getActiveServiceSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: ServiceDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const service = getService(slug);
+  const service = await getServiceBySlug(slug);
   if (!service) return {};
 
   return {
-    title: `${service.title} — Royal-Team Autószerviz`,
-    description: service.summary,
+    title: service.seo?.metaTitle || `${service.title} — Royal-Team Autószerviz`,
+    description: service.seo?.metaDescription || service.summary,
+    ...(service.seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
   };
 }
 
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
   const { slug } = await params;
-  const service = getService(slug);
+  const service = await getServiceBySlug(slug);
   if (!service) notFound();
 
   return (

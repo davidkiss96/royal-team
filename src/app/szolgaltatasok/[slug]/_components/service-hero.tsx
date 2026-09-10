@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import type { Service } from "@/lib/mock/services";
+import type { ServiceDetail } from "@/lib/sanity/queries/services";
 
 /** Puts the title's last word on its own line, in gold — matches the
  * reference's "DPF Szűrő / Tisztítás" treatment, generalized to any title
@@ -14,7 +14,7 @@ function splitTitleForAccent(title: string): { lead: string; accent: string } {
   return { lead: words.join(" "), accent };
 }
 
-export function ServiceHero({ service }: { service: Service }) {
+export function ServiceHero({ service }: { service: ServiceDetail }) {
   const { lead, accent } = splitTitleForAccent(service.title);
 
   return (

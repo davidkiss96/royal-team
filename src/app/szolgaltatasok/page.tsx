@@ -4,7 +4,7 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
-import { ALL_SERVICES } from "@/lib/mock/services";
+import { getServices } from "@/lib/sanity/queries/services";
 import { ServiceRow } from "./_components/service-row";
 
 export const metadata: Metadata = {
@@ -13,10 +13,8 @@ export const metadata: Metadata = {
     "DPF tisztítás, elektronikai diagnosztika, futómű- és fékrendszer-szerviz, karbantartás — prémium autószerviz Ercsiben, OEM technológiával.",
 };
 
-export default function ServicesPage() {
-  const activeServices = ALL_SERVICES.filter((service) => service.isActive).sort(
-    (a, b) => a.displayOrder - b.displayOrder,
-  );
+export default async function ServicesPage() {
+  const activeServices = await getServices();
 
   return (
     <>
