@@ -27,11 +27,14 @@ const HERO_HEADLINE_LINES = [
 const GOLD_LINE_INDEXES = new Set([1, 4]);
 
 /** Same rationale as `HERO_HEADLINE_LINES` above — no content-model field
- * covers these trust stats (not on `Homepage`, not on `BusinessSettings`). */
+ * covers these trust stats (not on `Homepage`, not on `BusinessSettings`).
+ * A "4.9★ Google értékelés" stat previously appeared here too — removed
+ * alongside the matching fake aggregate rating in `reviews-section.tsx`
+ * (same issue: an unverified rating attributed to a named third-party
+ * platform, not the kind of generic stat this list is otherwise used for). */
 const HERO_STATS = [
   { value: "15+", label: "Év tapasztalat" },
   { value: "3000+", label: "Elégedett ügyfél" },
-  { value: "4.9★", label: "Google értékelés" },
   { value: "100%", label: "Garancia" },
 ];
 
