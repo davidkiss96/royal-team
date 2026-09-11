@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CloseIcon, MenuIcon, PhoneIcon } from "./icons";
 import { Logo } from "./logo";
-import { NAV_LINKS, PHONE_DISPLAY, PHONE_HREF } from "@/lib/site-config";
+import { NAV_LINKS } from "@/lib/site-config";
 
 // Scroll-linked nav background threshold, and the nav-link breakpoint below,
 // both preserved exactly from the approved Figma reference (docs/design-system.md
@@ -20,7 +20,17 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Header() {
+interface HeaderProps {
+  /**
+   * Sourced from Sanity `BusinessSettings` by the (server) root layout and
+   * passed down as props — `Header` is a Client Component (scroll/menu
+   * state), so it can't call the server-only `getBusinessSettings()` itself.
+   */
+  phone: string;
+  phoneHref: string;
+}
+
+export function Header({ phone, phoneHref }: HeaderProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -88,11 +98,11 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <a
-            href={PHONE_HREF}
+            href={phoneHref}
             className={`hidden items-center gap-2 font-mono-label text-xs font-medium text-gold transition-colors hover:text-gold-bright md:flex ${focusRing}`}
           >
             <PhoneIcon className="h-[14px] w-[14px]" />
-            {PHONE_DISPLAY}
+            {phone}
           </a>
 
           <button
@@ -127,11 +137,11 @@ export function Header() {
               );
             })}
             <a
-              href={PHONE_HREF}
+              href={phoneHref}
               className={`flex items-center gap-2 pt-4 font-mono-label text-xs font-medium text-gold ${focusRing}`}
             >
               <PhoneIcon className="h-[14px] w-[14px]" />
-              {PHONE_DISPLAY}
+              {phone}
             </a>
           </nav>
         </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
 import { FaqAccordion } from "@/components/faq-accordion";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import { getActiveServiceSlugs, getServiceBySlug } from "@/lib/sanity/queries/services";
 import { ServiceBodySection } from "./_components/service-body-section";
 import { ServiceHero } from "./_components/service-hero";
@@ -47,12 +48,15 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
   const service = await getServiceBySlug(slug);
   if (!service) notFound();
 
+  const { phone } = await getBusinessSettings();
+  const phoneHref = `tel:${phone.replace(/\s+/g, "")}`;
+
   return (
     <>
       <ServiceHero service={service} />
       <ServiceBodySection service={service} />
       <ServiceProcessSection service={service} />
-      <ServiceHighlightsCta service={service} />
+      <ServiceHighlightsCta service={service} phone={phone} phoneHref={phoneHref} />
 
       {service.faq && service.faq.length > 0 && (
         <section className="bg-card/30 py-16">

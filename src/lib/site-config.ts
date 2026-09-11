@@ -1,5 +1,3 @@
-import { BUSINESS_SETTINGS } from "@/lib/mock/business-settings";
-
 export interface NavLink {
   label: string;
   href: string;
@@ -24,6 +22,3 @@ export const FOOTER_LEGAL_LINKS: NavLink[] = [
   { label: "Impresszum", href: "/impresszum" },
   { label: "Adatvédelem", href: "/adatvedelem" },
 ];
-
-export const PHONE_DISPLAY = BUSINESS_SETTINGS.phone;
-export const PHONE_HREF = BUSINESS_SETTINGS.phoneHref;

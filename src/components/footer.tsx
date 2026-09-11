@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { PhoneIcon } from "./icons";
 import { Logo } from "./logo";
-import { FOOTER_LEGAL_LINKS, NAV_LINKS, PHONE_DISPLAY, PHONE_HREF } from "@/lib/site-config";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
+import { FOOTER_LEGAL_LINKS, NAV_LINKS } from "@/lib/site-config";
 
 interface FooterServiceLink {
   title: string;
@@ -22,8 +23,13 @@ interface FooterProps {
 const focusRing =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
 
-export function Footer({ services = [] }: FooterProps) {
+export async function Footer({ services = [] }: FooterProps) {
   const hasServices = services.length > 0;
+  // Sourced from the real BusinessSettings Sanity singleton, same pattern as
+  // ContactStrip — phone/company/address can't drift from the Contact and
+  // legal pages, since all read from the same document.
+  const settings = await getBusinessSettings();
+  const phoneHref = `tel:${settings.phone.replace(/\s+/g, "")}`;
 
   return (
     <footer className="border-t border-gold/8 bg-background pt-16 pb-8">
@@ -46,11 +52,11 @@ export function Footer({ services = [] }: FooterProps) {
               nélkül.
             </p>
             <a
-              href={PHONE_HREF}
+              href={phoneHref}
               className={`flex items-center gap-2 font-mono-label text-xs text-gold transition-colors hover:text-gold-bright ${focusRing}`}
             >
               <PhoneIcon className="h-[13px] w-[13px]" />
-              {PHONE_DISPLAY}
+              {settings.phone}
             </a>
           </div>
 
@@ -94,7 +100,7 @@ export function Footer({ services = [] }: FooterProps) {
         <div className="mb-8 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent" />
 
         <div className="flex flex-col items-center justify-between gap-4 text-[10px] text-foreground/20 sm:flex-row">
-          <p>© {new Date().getFullYear()} Royal-Team Autószerviz Kft. · Minden jog fenntartva.</p>
+          <p>© {new Date().getFullYear()} {settings.legalCompanyName} · Minden jog fenntartva.</p>
           <div className="flex items-center gap-5">
             {FOOTER_LEGAL_LINKS.map(({ label, href }) => (
               <Link
@@ -105,7 +111,7 @@ export function Footer({ services = [] }: FooterProps) {
                 {label}
               </Link>
             ))}
-            <span className="font-mono-label">Ercsi, Magyarország</span>
+            <span className="font-mono-label">{settings.address.city}, Magyarország</span>
           </div>
         </div>
       </div>

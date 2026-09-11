@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Rajdhani, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import "./globals.css";
 
 /**
@@ -45,18 +46,23 @@ export const metadata: Metadata = {
   description: "Prémium autószerviz — Ercsi",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetched here (rather than inside Header) because Header is a Client
+  // Component (scroll/menu state) and getBusinessSettings() is server-only.
+  const { phone } = await getBusinessSettings();
+  const phoneHref = `tel:${phone.replace(/\s+/g, "")}`;
+
   return (
     <html
       lang="hu"
       className={`${rajdhani.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
       <body className="flex min-h-screen flex-col font-body antialiased">
-        <Header />
+        <Header phone={phone} phoneHref={phoneHref} />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

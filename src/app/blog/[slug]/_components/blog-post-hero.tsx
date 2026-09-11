@@ -19,7 +19,7 @@ import type { BlogPostDetail } from "@/lib/sanity/queries/blog-posts";
  */
 export function BlogPostHero({ post }: { post: BlogPostDetail }) {
   return (
-    <section className="relative flex min-h-[400px] items-end overflow-hidden lg:h-[55vh]">
+    <section className="relative flex min-h-[400px] items-end overflow-hidden lg:min-h-[55vh]">
       <Image
         src={post.heroImage.url}
         alt={post.heroImage.alt}
