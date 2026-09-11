@@ -44,18 +44,12 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "border-b border-border bg-background/95 backdrop-blur-xl"
-          : "bg-transparent"
+        scrolled ? "border-b border-border bg-background/95 backdrop-blur-xl" : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-        <Link
-          href="/"
-          aria-label="Royal-Team Autószerviz – Főoldal"
-          className={`flex items-center gap-3 ${focusRing}`}
-        >
-          <Logo size={44} priority />
+        <Link href="/" aria-label="Royal-Team Autószerviz – Főoldal" className={`flex items-center gap-3 ${focusRing}`}>
+          <Logo size={50} priority />
           <span className="hidden leading-none sm:block">
             <span className="block font-heading text-sm font-bold uppercase tracking-[0.18em] text-gold">
               Royal-Team
@@ -109,20 +103,13 @@ export function Header() {
             aria-label={menuOpen ? "Menü bezárása" : "Menü megnyitása"}
             className={`p-2 text-foreground/60 xl:hidden ${focusRing}`}
           >
-            {menuOpen ? (
-              <CloseIcon className="h-[22px] w-[22px]" />
-            ) : (
-              <MenuIcon className="h-[22px] w-[22px]" />
-            )}
+            {menuOpen ? <CloseIcon className="h-[22px] w-[22px]" /> : <MenuIcon className="h-[22px] w-[22px]" />}
           </button>
         </div>
       </div>
 
       {menuOpen && (
-        <div
-          id="mobile-nav"
-          className="border-b border-border bg-background/98 backdrop-blur-xl xl:hidden"
-        >
+        <div id="mobile-nav" className="border-b border-border bg-background/98 backdrop-blur-xl xl:hidden">
           <nav aria-label="Fő navigáció" className="space-y-1 px-6 py-6">
             {NAV_LINKS.map(({ label, href }) => {
               const active = isActive(pathname, href);
