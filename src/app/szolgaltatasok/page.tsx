@@ -4,14 +4,16 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
+import { buildPageMetadata } from "@/lib/seo";
 import { getServices } from "@/lib/sanity/queries/services";
 import { ServiceRow } from "./_components/service-row";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Szolgáltatásaink — Royal-Team Autószerviz",
   description:
     "DPF tisztítás, elektronikai diagnosztika, futómű- és fékrendszer-szerviz, karbantartás — prémium autószerviz Ercsiben, OEM technológiával.",
-};
+  path: "/szolgaltatasok",
+});
 
 export default async function ServicesPage() {
   const activeServices = await getServices();

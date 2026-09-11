@@ -3,6 +3,8 @@ import { Rajdhani, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
+import { SITE_URL } from "@/lib/site-config";
+import { buildLocalBusinessJsonLd } from "@/lib/seo";
 import "./globals.css";
 
 /**
@@ -38,10 +40,14 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-// Placeholder metadata — real per-page metadata is generated from Sanity
-// content per page (docs/development-guidelines.md Section 10), once content
-// fetching exists. This is only the site-wide fallback.
+// Site-wide fallback — every real page overrides title/description via its
+// own `metadata`/`generateMetadata` (docs/development-guidelines.md Section
+// 10). `metadataBase` is the one place this resolves: every page's relative
+// `alternates.canonical`/OG image URL is resolved against it, from the same
+// `SITE_URL` `sitemap.ts`/`robots.ts` already use — never a second domain
+// source, never localhost.
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Royal-Team Autószerviz",
   description: "Prémium autószerviz — Ercsi",
 };
@@ -53,8 +59,13 @@ export default async function RootLayout({
 }>) {
   // Fetched here (rather than inside Header) because Header is a Client
   // Component (scroll/menu state) and getBusinessSettings() is server-only.
-  const { phone } = await getBusinessSettings();
-  const phoneHref = `tel:${phone.replace(/\s+/g, "")}`;
+  const settings = await getBusinessSettings();
+  const phoneHref = `tel:${settings.phone.replace(/\s+/g, "")}`;
+  const localBusinessJsonLd = buildLocalBusinessJsonLd(
+    settings,
+    SITE_URL,
+    `${SITE_URL}/logos/icon-gradient-light.svg`,
+  );
 
   return (
     <html
@@ -62,7 +73,16 @@ export default async function RootLayout({
       className={`${rajdhani.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
       <body className="flex min-h-screen flex-col font-body antialiased">
-        <Header phone={phone} phoneHref={phoneHref} />
+        <script
+          type="application/ld+json"
+          // Server-generated from Sanity BusinessSettings only, no user
+          // input — `<` is still escaped so no field value can prematurely
+          // close this script tag.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
+        <Header phone={settings.phone} phoneHref={phoneHref} />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

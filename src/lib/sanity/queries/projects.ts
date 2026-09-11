@@ -169,7 +169,10 @@ const PROJECT_BY_SLUG_QUERY = `*[_type == "project" && slug.current == $slug][0]
  * index, which must match the number a project shows on the `/projektek`
  * grid (`ProjectCard`'s `index` prop).
  */
-const PROJECT_SLUGS_QUERY = `*[_type == "project"] | order(displayOrder asc).slug.current`;
+const PROJECT_SLUGS_QUERY = `*[_type == "project"] | order(displayOrder asc){
+  "slug": slug.current,
+  "noIndex": seo.noIndex
+}`;
 
 function toRelatedServices(raw: RawRelatedService[] | null): ProjectRelatedService[] {
   return (raw ?? []).map((service) => ({
@@ -303,15 +306,23 @@ export async function getProjectBySlug(slug: string): Promise<ProjectDetail | nu
   return project ? toProjectDetail(project) : null;
 }
 
+export interface ProjectSlugEntry {
+  slug: string;
+  noIndex: boolean;
+}
+
 /**
- * Fetches all project slugs, ordered by `displayOrder`, for
- * `generateStaticParams` and for computing the detail page's "PROJEKT #NNN"
- * index consistently with `/projektek`'s card grid.
+ * Fetches all project slugs (plus each one's `seo.noIndex`), ordered by
+ * `displayOrder`, for `generateStaticParams`, for computing the detail
+ * page's "PROJEKT #NNN" index consistently with `/projektek`'s card grid,
+ * and for `sitemap.ts`.
  */
-export async function getProjectSlugs(): Promise<string[]> {
-  return sanityClient.fetch<string[]>(
+export async function getProjectSlugs(): Promise<ProjectSlugEntry[]> {
+  const raw = await sanityClient.fetch<{ slug: string; noIndex: boolean | null }[]>(
     PROJECT_SLUGS_QUERY,
     {},
     { next: { revalidate: REVALIDATE_SECONDS } },
   );
+
+  return raw.map(({ slug, noIndex }) => ({ slug, noIndex: noIndex ?? false }));
 }

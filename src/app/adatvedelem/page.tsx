@@ -4,16 +4,18 @@ import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
 import { formatAddress } from "@/lib/format-address";
+import { buildPageMetadata } from "@/lib/seo";
 import {
   getBusinessSettings,
   type BusinessSettings,
 } from "@/lib/sanity/queries/business-settings";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Adatvédelmi tájékoztató — Royal-Team Autószerviz",
   description:
     "A Royal-Team Autószerviz Kft. adatvédelmi tájékoztatója a weboldal és a kapcsolatfelvételi űrlap adatkezeléséről.",
-};
+  path: "/adatvedelem",
+});
 
 const EFFECTIVE_DATE = "2026. szeptember 8.";
 

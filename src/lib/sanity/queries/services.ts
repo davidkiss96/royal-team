@@ -113,7 +113,10 @@ const SERVICE_BY_SLUG_QUERY = `*[_type == "service" && isActive == true && slug.
   seo${SEO_PROJECTION}
 }`;
 
-const ACTIVE_SERVICE_SLUGS_QUERY = `*[_type == "service" && isActive == true].slug.current`;
+const ACTIVE_SERVICE_SLUGS_QUERY = `*[_type == "service" && isActive == true]{
+  "slug": slug.current,
+  "noIndex": seo.noIndex
+}`;
 
 function toServiceListItem(raw: RawServiceListItem): ServiceListItem {
   return {
@@ -175,16 +178,26 @@ export async function getServiceBySlug(slug: string): Promise<ServiceDetail | nu
   return service ? toServiceDetail(service) : null;
 }
 
+export interface ServiceSlugEntry {
+  slug: string;
+  noIndex: boolean;
+}
+
 /**
- * Fetches only active-service slugs, for `generateStaticParams`
- * (docs/development-guidelines.md Section 3) — a service that's currently
- * `isActive: false` is deliberately not pre-rendered, consistent with it
- * never resolving publicly (see `getServiceBySlug` above).
+ * Fetches active-service slugs (plus each one's `seo.noIndex`), for
+ * `generateStaticParams` (docs/development-guidelines.md Section 3) and for
+ * `sitemap.ts`. A service that's currently `isActive: false` is deliberately
+ * excluded entirely, consistent with it never resolving publicly (see
+ * `getServiceBySlug` above) — `noIndex` is a separate, narrower concern
+ * (still a real, reachable page, just excluded from the sitemap/search
+ * indexing), so it's returned alongside the slug rather than filtered here.
  */
-export async function getActiveServiceSlugs(): Promise<string[]> {
-  return sanityClient.fetch<string[]>(
+export async function getActiveServiceSlugs(): Promise<ServiceSlugEntry[]> {
+  const raw = await sanityClient.fetch<{ slug: string; noIndex: boolean | null }[]>(
     ACTIVE_SERVICE_SLUGS_QUERY,
     {},
     { next: { revalidate: REVALIDATE_SECONDS } },
   );
+
+  return raw.map(({ slug, noIndex }) => ({ slug, noIndex: noIndex ?? false }));
 }

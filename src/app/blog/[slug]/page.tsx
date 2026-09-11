@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
 import { PortableTextContent } from "@/components/portable-text";
+import { buildPageMetadata, isRealImage } from "@/lib/seo";
 import { getBlogPostBySlug, getBlogPostSlugs } from "@/lib/sanity/queries/blog-posts";
 import { BlogPostAuthorBar } from "./_components/blog-post-author-bar";
 import { BlogPostHero } from "./_components/blog-post-hero";
@@ -13,8 +14,8 @@ interface BlogPostDetailPageProps {
 }
 
 export async function generateStaticParams() {
-  const slugs = await getBlogPostSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const entries = await getBlogPostSlugs();
+  return entries.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -24,11 +25,15 @@ export async function generateMetadata({
   const post = await getBlogPostBySlug(slug);
   if (!post) return {};
 
-  return {
+  return buildPageMetadata({
     title: post.seo?.metaTitle || `${post.title} — Royal-Team Autószerviz`,
     description: post.seo?.metaDescription || post.excerpt,
-    ...(post.seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
-  };
+    path: `/blog/${slug}`,
+    noIndex: post.seo?.noIndex,
+    image: isRealImage(post.heroImage) ? post.heroImage : undefined,
+    ogType: "article",
+    publishedTime: post.publishedAt ?? undefined,
+  });
 }
 
 /**

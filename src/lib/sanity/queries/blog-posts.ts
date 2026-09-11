@@ -178,7 +178,10 @@ const BLOG_POST_BY_SLUG_QUERY = `*[_type == "blogPost" && slug.current == $slug]
   seo${SEO_PROJECTION}
 }`;
 
-const BLOG_POST_SLUGS_QUERY = `*[_type == "blogPost"].slug.current`;
+const BLOG_POST_SLUGS_QUERY = `*[_type == "blogPost"]{
+  "slug": slug.current,
+  "noIndex": seo.noIndex
+}`;
 
 function toAuthor(raw: RawAuthor | null): BlogPostAuthor | undefined {
   if (!raw) return undefined;
@@ -258,11 +261,22 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPostDetail | 
   return post ? toBlogPostDetail(post) : null;
 }
 
-/** Fetches all blog post slugs, for `generateStaticParams`. */
-export async function getBlogPostSlugs(): Promise<string[]> {
-  return sanityClient.fetch<string[]>(
+export interface BlogPostSlugEntry {
+  slug: string;
+  noIndex: boolean;
+}
+
+/**
+ * Fetches all blog post slugs (plus each one's `seo.noIndex`), for
+ * `generateStaticParams` and for `sitemap.ts` (which excludes any post
+ * explicitly marked `noIndex`).
+ */
+export async function getBlogPostSlugs(): Promise<BlogPostSlugEntry[]> {
+  const raw = await sanityClient.fetch<{ slug: string; noIndex: boolean | null }[]>(
     BLOG_POST_SLUGS_QUERY,
     {},
     { next: { revalidate: REVALIDATE_SECONDS } },
   );
+
+  return raw.map(({ slug, noIndex }) => ({ slug, noIndex: noIndex ?? false }));
 }

@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
+import { buildPageMetadata } from "@/lib/seo";
 import { getBlogPosts } from "@/lib/sanity/queries/blog-posts";
 import { BlogPostCard } from "./_components/blog-post-card";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Blog — Royal-Team Autószerviz",
   description:
     "Szakmai tartalmak, tippek és útmutatók autótulajdonosoknak — a Royal-Team szakembereinek tollából.",
-};
+  path: "/blog",
+});
 
 /**
  * Structure/copy match `design-reference/figma-app/src/app/App.tsx`'s

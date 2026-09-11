@@ -17,6 +17,7 @@ import { sanityClient } from "../client";
 const BUSINESS_SETTINGS_ID = "businessSettings";
 
 const BUSINESS_SETTINGS_QUERY = `*[_id == "${BUSINESS_SETTINGS_ID}"][0]{
+  businessName,
   phone,
   email,
   website,
@@ -33,7 +34,13 @@ const BUSINESS_SETTINGS_QUERY = `*[_id == "${BUSINESS_SETTINGS_ID}"][0]{
   legalCompanyName,
   legalRegistrationNumber,
   legalTaxNumber,
-  managingDirector
+  managingDirector,
+  openingHours[]{
+    day,
+    closed,
+    opens,
+    closes
+  }
 }`;
 
 /**
@@ -60,7 +67,15 @@ export interface BusinessSettingsAddress {
  * meaningful fallback if they're absent — a missing value is a content gap
  * to fix in Studio, not a case for the frontend to design around.
  */
+export interface BusinessSettingsOpeningHoursRow {
+  day: string;
+  closed: boolean | null;
+  opens: string | null;
+  closes: string | null;
+}
+
 export interface BusinessSettings {
+  businessName: string;
   phone: string;
   email: string;
   website: string;
@@ -70,6 +85,7 @@ export interface BusinessSettings {
   legalRegistrationNumber: string;
   legalTaxNumber: string;
   managingDirector: string;
+  openingHours: BusinessSettingsOpeningHoursRow[] | null;
 }
 
 /**

@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
+import { buildPageMetadata } from "@/lib/seo";
 import { ContactForm } from "./_components/contact-form";
 import { ContactHero } from "./_components/contact-hero";
 import { ContactInfo } from "./_components/contact-info";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Kapcsolat — Royal-Team Autószerviz",
   description:
     "Lépjen kapcsolatba a Royal-Team Autószerviz csapatával — telefon, e-mail, cím és kapcsolatfelvételi űrlap.",
-};
+  path: "/kapcsolat",
+});
 
 export default function ContactPage() {
   return (

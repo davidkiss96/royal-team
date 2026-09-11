@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { buildPageMetadata, isRealImage } from "@/lib/seo";
 import { getProjectBySlug, getProjectSlugs } from "@/lib/sanity/queries/projects";
 import { ProjectGallery } from "./_components/project-gallery";
 import { ProjectHero } from "./_components/project-hero";
@@ -21,8 +22,8 @@ interface ProjectDetailPageProps {
  * 3), the same behavior already established for `Service`.
  */
 export async function generateStaticParams() {
-  const slugs = await getProjectSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const entries = await getProjectSlugs();
+  return entries.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -32,11 +33,13 @@ export async function generateMetadata({
   const project = await getProjectBySlug(slug);
   if (!project) return {};
 
-  return {
+  return buildPageMetadata({
     title: project.seo?.metaTitle || `${project.title} — Royal-Team Autószerviz`,
     description: project.seo?.metaDescription || project.summary,
-    ...(project.seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
-  };
+    path: `/projektek/${slug}`,
+    noIndex: project.seo?.noIndex,
+    image: isRealImage(project.heroImage) ? project.heroImage : undefined,
+  });
 }
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
@@ -44,8 +47,8 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   const project = await getProjectBySlug(slug);
   if (!project) notFound();
 
-  const slugs = await getProjectSlugs();
-  const index = slugs.indexOf(slug);
+  const entries = await getProjectSlugs();
+  const index = entries.findIndex((entry) => entry.slug === slug);
 
   return (
     <>

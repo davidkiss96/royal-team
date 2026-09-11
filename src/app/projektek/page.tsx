@@ -4,14 +4,16 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
+import { buildPageMetadata } from "@/lib/seo";
 import { getProjects } from "@/lib/sanity/queries/projects";
 import { ProjectCard } from "./_components/project-card";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Projektek — Royal-Team Autószerviz",
   description:
     "Válogatott szervizprojektek — részletes dokumentációval, technikai leírással és valódi eredményekkel.",
-};
+  path: "/projektek",
+});
 
 export default async function ProjectsPage() {
   const projects = await getProjects();

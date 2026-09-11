@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildPageMetadata, isRealImage } from "@/lib/seo";
 import { getAboutPage } from "@/lib/sanity/queries/about-page";
 import { AboutCta } from "./_components/about-cta";
 import { AboutHero } from "./_components/about-hero";
@@ -12,13 +13,15 @@ const FALLBACK_META_DESCRIPTION =
   "Ismerje meg a Royal-Team Autószervizt — 15 év tapasztalat, teljesítmény-orientált szemlélet és igényesség minden munkában.";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { seo } = await getAboutPage();
+  const { seo, heroImage } = await getAboutPage();
 
-  return {
+  return buildPageMetadata({
     title: seo?.metaTitle || FALLBACK_META_TITLE,
     description: seo?.metaDescription || FALLBACK_META_DESCRIPTION,
-    ...(seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
-  };
+    path: "/rolunk",
+    noIndex: seo?.noIndex,
+    image: isRealImage(heroImage) ? heroImage : undefined,
+  });
 }
 
 export default function AboutPage() {

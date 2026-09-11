@@ -8,6 +8,7 @@ import { ReviewsSection } from "./_components/reviews-section";
 import { ServicesOverview } from "./_components/services-overview";
 import { WhyUsSection } from "./_components/why-us-section";
 import { WorkshopTechSection } from "./_components/workshop-tech-section";
+import { buildPageMetadata, isRealImage } from "@/lib/seo";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 
 const FALLBACK_META_TITLE = "Royal-Team Autószerviz — Prémium autószerviz Ercsiben";
@@ -15,13 +16,15 @@ const FALLBACK_META_DESCRIPTION =
   "Prémium, teljesítmény-orientált autószerviz Ercsiben. DPF tisztítás, diagnosztika, futómű- és fékszerviz, karbantartás — OEM technológiával.";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { seo } = await getHomepageContent();
+  const { seo, heroImage } = await getHomepageContent();
 
-  return {
+  return buildPageMetadata({
     title: seo?.metaTitle || FALLBACK_META_TITLE,
     description: seo?.metaDescription || FALLBACK_META_DESCRIPTION,
-    ...(seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
-  };
+    path: "/",
+    noIndex: seo?.noIndex,
+    image: isRealImage(heroImage) ? heroImage : undefined,
+  });
 }
 
 /**

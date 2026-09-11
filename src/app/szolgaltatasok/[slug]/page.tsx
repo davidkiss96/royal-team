@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
 import { FaqAccordion } from "@/components/faq-accordion";
+import { buildPageMetadata, isRealImage } from "@/lib/seo";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import { getActiveServiceSlugs, getServiceBySlug } from "@/lib/sanity/queries/services";
 import { ServiceBodySection } from "./_components/service-body-section";
@@ -25,8 +26,8 @@ interface ServiceDetailPageProps {
  * set explicitly, since the default is exactly the desired behavior here.
  */
 export async function generateStaticParams() {
-  const slugs = await getActiveServiceSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const entries = await getActiveServiceSlugs();
+  return entries.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -36,11 +37,13 @@ export async function generateMetadata({
   const service = await getServiceBySlug(slug);
   if (!service) return {};
 
-  return {
+  return buildPageMetadata({
     title: service.seo?.metaTitle || `${service.title} — Royal-Team Autószerviz`,
     description: service.seo?.metaDescription || service.summary,
-    ...(service.seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
-  };
+    path: `/szolgaltatasok/${slug}`,
+    noIndex: service.seo?.noIndex,
+    image: isRealImage(service.heroImage) ? service.heroImage : undefined,
+  });
 }
 
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {

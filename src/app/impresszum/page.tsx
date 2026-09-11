@@ -3,12 +3,14 @@ import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
 import { formatAddress } from "@/lib/format-address";
+import { buildPageMetadata } from "@/lib/seo";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Impresszum — Royal-Team Autószerviz",
   description: "A Royal-Team Autószerviz Kft. törvény által előírt impresszuma.",
-};
+  path: "/impresszum",
+});
 
 export default async function ImpresszumPage() {
   const settings = await getBusinessSettings();
