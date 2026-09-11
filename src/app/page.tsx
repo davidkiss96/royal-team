@@ -8,12 +8,21 @@ import { ReviewsSection } from "./_components/reviews-section";
 import { ServicesOverview } from "./_components/services-overview";
 import { WhyUsSection } from "./_components/why-us-section";
 import { WorkshopTechSection } from "./_components/workshop-tech-section";
-import { HOMEPAGE_CONTENT } from "@/lib/mock/homepage";
+import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 
-export const metadata: Metadata = {
-  title: HOMEPAGE_CONTENT.seo.metaTitle,
-  description: HOMEPAGE_CONTENT.seo.metaDescription,
-};
+const FALLBACK_META_TITLE = "Royal-Team Autószerviz — Prémium autószerviz Ercsiben";
+const FALLBACK_META_DESCRIPTION =
+  "Prémium, teljesítmény-orientált autószerviz Ercsiben. DPF tisztítás, diagnosztika, futómű- és fékszerviz, karbantartás — OEM technológiával.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { seo } = await getHomepageContent();
+
+  return {
+    title: seo?.metaTitle || FALLBACK_META_TITLE,
+    description: seo?.metaDescription || FALLBACK_META_DESCRIPTION,
+    ...(seo?.noIndex ? { robots: { index: false, follow: false } } : {}),
+  };
+}
 
 /**
  * No FAQ section here — the reference design's homepage FAQ set is a

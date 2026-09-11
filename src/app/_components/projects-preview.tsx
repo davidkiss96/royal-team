@@ -5,11 +5,11 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
 import { getIsoYear } from "@/lib/format-date";
-import { ALL_PROJECTS } from "@/lib/mock/projects";
-import { getServicesBySlugs } from "@/lib/mock/services";
+import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 
-export function ProjectsPreview() {
-  const [featured, ...rest] = ALL_PROJECTS;
+export async function ProjectsPreview() {
+  const { featuredProjects } = await getHomepageContent();
+  const [featured, ...rest] = featuredProjects;
   if (!featured) return null;
 
   return (
@@ -45,15 +45,14 @@ export function ProjectsPreview() {
             <div className="absolute top-0 right-0 h-10 w-10 border-t-2 border-r-2 border-gold/60" />
             <div className="absolute right-0 bottom-0 left-0 p-7">
               <span className="font-mono-label text-[10px] tracking-[0.3em] text-gold">
-                PROJEKT #001 · {getIsoYear(featured.projectDate)}
+                PROJEKT #001
+                {featured.projectDate && ` · ${getIsoYear(featured.projectDate)}`}
               </span>
               <h3 className="mt-1 mb-1 font-heading text-2xl font-black text-white">
                 {featured.title}
               </h3>
               <p className="mb-4 text-xs text-white/45">
-                {getServicesBySlugs(featured.relatedServices)
-                  .map((service) => service.title)
-                  .join(" · ")}
+                {featured.relatedServiceTitles.join(" · ")}
               </p>
               <div className="flex items-center gap-1.5 text-[10px] text-gold transition-all group-hover:gap-3">
                 <span className="font-heading font-bold tracking-wider uppercase">

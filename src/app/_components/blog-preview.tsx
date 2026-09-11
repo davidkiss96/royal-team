@@ -4,10 +4,13 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
 import { formatHungarianDate } from "@/lib/format-date";
-import { LATEST_POSTS } from "@/lib/mock/blog-posts";
 import { estimateReadingMinutes } from "@/lib/reading-time";
+import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 
-export function BlogPreview() {
+export async function BlogPreview() {
+  const { latestBlogPosts } = await getHomepageContent();
+  if (latestBlogPosts.length === 0) return null;
+
   return (
     <section className="bg-background py-20">
       <Container>
@@ -24,7 +27,7 @@ export function BlogPreview() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {LATEST_POSTS.map((post) => (
+          {latestBlogPosts.map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
@@ -44,7 +47,7 @@ export function BlogPreview() {
                   {post.title}
                 </h3>
                 <div className="flex items-center justify-between font-mono-label text-[10px] text-foreground/30">
-                  <span>{formatHungarianDate(post.publishedAt)}</span>
+                  <span>{post.publishedAt && formatHungarianDate(post.publishedAt)}</span>
                   <span>{estimateReadingMinutes(post.excerpt)} perc olvasás</span>
                 </div>
               </div>

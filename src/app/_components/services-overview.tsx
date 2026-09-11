@@ -5,11 +5,12 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
-import { ALL_SERVICES } from "@/lib/mock/services";
+import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 import { SERVICE_ICONS } from "@/lib/service-icons";
 
-export function ServicesOverview() {
-  const activeServices = ALL_SERVICES.filter((service) => service.isActive);
+export async function ServicesOverview() {
+  const { featuredServices } = await getHomepageContent();
+  if (featuredServices.length === 0) return null;
 
   return (
     <section className="bg-background py-24">
@@ -25,7 +26,7 @@ export function ServicesOverview() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {activeServices.map((service) => {
+          {featuredServices.map((service) => {
             const Icon = SERVICE_ICONS[service.slug];
             return (
               <Link

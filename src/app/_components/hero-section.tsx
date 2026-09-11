@@ -3,17 +3,40 @@ import Image from "next/image";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import { HERO_STATS, HOMEPAGE_CONTENT } from "@/lib/mock/homepage";
+import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 
-// Which headline lines get the gold accent — a fixed presentational rule
-// tied to this specific curated copy (see docs/content-model.md Section 8:
-// `heroHeadline` is a plain string, with no inline-highlight support),
-// matching the approved design's "Autószerviz." / "Teljesítmény." emphasis.
+/**
+ * The approved hero headline's per-line breaks and gold-accent words
+ * ("Autószerviz." / "Teljesítmény.") are a fixed presentational rule tied
+ * to this specific curated copy — `Homepage.heroHeadline` is a plain
+ * string field with no per-line/inline-highlight structure
+ * (docs/content-model.md Section 8), so this multi-line treatment can't be
+ * data-driven any more than it could from the pre-Sanity mock. Kept as a
+ * local constant, same treatment as `WHY_US_FEATURES`/`WORKSHOP_EQUIPMENT`
+ * (`why-us-section.tsx`/`workshop-tech-section.tsx`) for design elements
+ * with no matching content-model shape — see the migration report's
+ * content-model gap note.
+ */
+const HERO_HEADLINE_LINES = [
+  "Prémium",
+  "Autószerviz.",
+  "Precíz Munka.",
+  "Maximális",
+  "Teljesítmény.",
+];
 const GOLD_LINE_INDEXES = new Set([1, 4]);
 
-export function HeroSection() {
-  const { heroHeadlineLines, heroSubheadline, heroImage, secondaryCtas } =
-    HOMEPAGE_CONTENT;
+/** Same rationale as `HERO_HEADLINE_LINES` above — no content-model field
+ * covers these trust stats (not on `Homepage`, not on `BusinessSettings`). */
+const HERO_STATS = [
+  { value: "15+", label: "Év tapasztalat" },
+  { value: "3000+", label: "Elégedett ügyfél" },
+  { value: "4.9★", label: "Google értékelés" },
+  { value: "100%", label: "Garancia" },
+];
+
+export async function HeroSection() {
+  const { heroSubheadline, heroImage, secondaryCtas } = await getHomepageContent();
 
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden">
@@ -33,14 +56,14 @@ export function HeroSection() {
         <div className="max-w-xl">
           <SectionLabel>Prémium Autószerviz · Ercsi</SectionLabel>
           <h1 className="mb-6 font-heading text-5xl leading-[1.0] font-black text-foreground sm:text-6xl lg:text-[5.5rem]">
-            {heroHeadlineLines.map((line, index) => (
+            {HERO_HEADLINE_LINES.map((line, index) => (
               <span key={line}>
                 {GOLD_LINE_INDEXES.has(index) ? (
                   <span className="text-gold">{line}</span>
                 ) : (
                   line
                 )}
-                {index < heroHeadlineLines.length - 1 && <br />}
+                {index < HERO_HEADLINE_LINES.length - 1 && <br />}
               </span>
             ))}
           </h1>
@@ -48,12 +71,17 @@ export function HeroSection() {
             {heroSubheadline}
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button href={secondaryCtas[0]!.url}>
-              {secondaryCtas[0]!.label} →
-            </Button>
-            <Button href={secondaryCtas[1]!.url} variant="outline">
-              {secondaryCtas[1]!.label}
-            </Button>
+            {secondaryCtas.map((cta, index) =>
+              index === 0 ? (
+                <Button key={cta.url} href={cta.url}>
+                  {cta.label} →
+                </Button>
+              ) : (
+                <Button key={cta.url} href={cta.url} variant="outline">
+                  {cta.label}
+                </Button>
+              ),
+            )}
           </div>
 
           <div className="mt-12 flex flex-wrap gap-8 border-t border-gold/20 pt-10">

@@ -1,8 +1,25 @@
 import { Star } from "lucide-react";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import { AGGREGATE_RATING_PLACEHOLDER, FEATURED_REVIEWS } from "@/lib/mock/reviews";
 import { formatHungarianMonthYear } from "@/lib/format-date";
+import { getHomepageContent } from "@/lib/sanity/queries/homepage";
+
+/**
+ * The reference design's "4.9 · Google (128 értékelés)" aggregate figure has
+ * no corresponding field anywhere in the content model (not on
+ * `BusinessSettings`, not on `Homepage`) and isn't derivable from the
+ * featured reviews alone (a real aggregate would cover every review, not
+ * just the curated homepage selection). Kept as a clearly-marked
+ * placeholder, matching the approved design's numbers, pending a real data
+ * source — not computed, not verified. Same treatment as `HERO_STATS`
+ * (`hero-section.tsx`) for design elements with no matching content-model
+ * field.
+ */
+const AGGREGATE_RATING_PLACEHOLDER = {
+  value: 4.9,
+  count: 128,
+  source: "Google",
+};
 
 function StarRow({ size }: { size: number }) {
   return (
@@ -14,7 +31,10 @@ function StarRow({ size }: { size: number }) {
   );
 }
 
-export function ReviewsSection() {
+export async function ReviewsSection() {
+  const { featuredReviews } = await getHomepageContent();
+  if (featuredReviews.length === 0) return null;
+
   return (
     <section className="bg-card/40 py-24">
       <Container>
@@ -36,7 +56,7 @@ export function ReviewsSection() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {FEATURED_REVIEWS.map((review) => (
+          {featuredReviews.map((review) => (
             <div
               key={review.authorName}
               className="border border-gold/8 bg-card p-7 transition-all duration-300 hover:border-gold/30"
@@ -56,9 +76,11 @@ export function ReviewsSection() {
                     {review.sourceDetail}
                   </div>
                 )}
-                <div className="mt-1 text-[10px] text-foreground/25">
-                  {formatHungarianMonthYear(review.reviewDate)}
-                </div>
+                {review.reviewDate && (
+                  <div className="mt-1 text-[10px] text-foreground/25">
+                    {formatHungarianMonthYear(review.reviewDate)}
+                  </div>
+                )}
               </div>
             </div>
           ))}
