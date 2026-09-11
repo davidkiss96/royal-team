@@ -1,15 +1,19 @@
 import Image from "next/image";
-import { BodyBlocks } from "@/components/body-blocks";
 import { Container } from "@/components/container";
+import { PortableTextContent } from "@/components/portable-text";
 import { SectionLabel } from "@/components/section-label";
-import type { AboutPageContent } from "@/lib/mock/about-page";
+import { getAboutPage } from "@/lib/sanity/queries/about-page";
 
-/** `photoGallery[0]` is this section's companion image — see the mock
- * data's module comment for why (no dedicated "story image" field exists,
- * and this mirrors the Service/Project detail pages' `gallery[0]`
- * fallback pattern). */
-export function OwnerStorySection({ content }: { content: AboutPageContent }) {
-  const image = content.photoGallery[0] ?? content.heroImage;
+/** `photoGallery[0]` is this section's companion image — no dedicated
+ * "story image" field exists on `AboutPage` (docs/content-model.md Section
+ * 9), mirroring the Service/Project detail pages' `gallery[0]` fallback
+ * pattern. Falls back to `heroImage` when the gallery is empty, same as
+ * before the migration. */
+export async function OwnerStorySection() {
+  const { ownerStory, photoGallery, heroImage } = await getAboutPage();
+  if (ownerStory.length === 0) return null;
+
+  const image = photoGallery[0] ?? heroImage;
 
   return (
     <section className="bg-background py-20">
@@ -22,7 +26,9 @@ export function OwnerStorySection({ content }: { content: AboutPageContent }) {
               <br />
               <span className="text-gold">motorok iránt.</span>
             </h2>
-            <BodyBlocks blocks={content.ownerStory} />
+            <div className="space-y-4 text-sm leading-relaxed text-foreground/55">
+              <PortableTextContent value={ownerStory} />
+            </div>
           </div>
 
           <div className="relative">

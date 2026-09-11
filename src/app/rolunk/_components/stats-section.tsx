@@ -1,14 +1,15 @@
 import { Container } from "@/components/container";
-import type { AboutPageContent } from "@/lib/mock/about-page";
+import { getAboutPage } from "@/lib/sanity/queries/about-page";
 
-export function StatsSection({ content }: { content: AboutPageContent }) {
-  if (content.stats.length === 0) return null;
+export async function StatsSection() {
+  const { stats } = await getAboutPage();
+  if (stats.length === 0) return null;
 
   return (
     <section className="bg-background py-20">
       <Container>
         <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
-          {content.stats.map(({ label, value }) => (
+          {stats.map(({ label, value }) => (
             <div
               key={label}
               className="border border-gold/10 p-8 text-center transition-all hover:border-gold/30"

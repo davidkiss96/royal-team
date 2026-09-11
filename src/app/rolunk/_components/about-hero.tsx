@@ -2,14 +2,27 @@ import Image from "next/image";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
-import type { AboutPageContent } from "@/lib/mock/about-page";
+import { getAboutPage } from "@/lib/sanity/queries/about-page";
 
-export function AboutHero({ content }: { content: AboutPageContent }) {
+/**
+ * The approved hero headline's per-line break and gold-accent second line
+ * ("Prémium szerviz." / "Szenvedéllyel.") are a fixed presentational rule
+ * tied to this specific curated copy — `AboutPage.heroHeadline` is a plain
+ * string field with no per-line/inline-highlight structure
+ * (docs/content-model.md Section 9), so this can't be data-driven any more
+ * than `Homepage.heroHeadline` could (`src/app/_components/hero-section.tsx`).
+ * Kept as a local constant for the same reason.
+ */
+const HERO_HEADLINE_LINES = ["Prémium szerviz.", "Szenvedéllyel."];
+
+export async function AboutHero() {
+  const { heroSubheadline, heroImage } = await getAboutPage();
+
   return (
     <section className="relative overflow-hidden pt-40 pb-32">
       <Image
-        src={content.heroImage.url}
-        alt={content.heroImage.alt}
+        src={heroImage.url}
+        alt={heroImage.alt}
         fill
         priority
         sizes="100vw"
@@ -19,21 +32,21 @@ export function AboutHero({ content }: { content: AboutPageContent }) {
       <Container className="relative">
         <SectionLabel>Rólunk</SectionLabel>
         <h1 className="mb-6 font-heading text-5xl font-black text-foreground md:text-7xl">
-          {content.heroHeadlineLines.map((line, index) => (
+          {HERO_HEADLINE_LINES.map((line, index) => (
             <span key={line}>
-              {index === content.heroHeadlineLines.length - 1 ? (
+              {index === HERO_HEADLINE_LINES.length - 1 ? (
                 <span className="text-gold">{line}</span>
               ) : (
                 line
               )}
-              {index < content.heroHeadlineLines.length - 1 && <br />}
+              {index < HERO_HEADLINE_LINES.length - 1 && <br />}
             </span>
           ))}
         </h1>
         <GoldDivider />
-        {content.heroSubheadline && (
+        {heroSubheadline && (
           <p className="mt-6 max-w-xl text-sm leading-relaxed text-foreground/45">
-            {content.heroSubheadline}
+            {heroSubheadline}
           </p>
         )}
       </Container>

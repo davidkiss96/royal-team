@@ -1,7 +1,7 @@
 import { Shield, Target, TrendingUp, type LucideIcon } from "lucide-react";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
-import type { AboutPageContent, PhilosophyIconKey } from "@/lib/mock/about-page";
+import { getAboutPage, type PhilosophyIconKey } from "@/lib/sanity/queries/about-page";
 
 /** `philosophyValues[].icon` is a fixed string key (docs/content-model.md
  * Section 9) resolved to a component here — the same presentation-layer
@@ -13,8 +13,9 @@ const PHILOSOPHY_ICONS: Record<PhilosophyIconKey, LucideIcon> = {
   growth: TrendingUp,
 };
 
-export function PhilosophySection({ content }: { content: AboutPageContent }) {
-  if (content.philosophyValues.length === 0) return null;
+export async function PhilosophySection() {
+  const { philosophyValues } = await getAboutPage();
+  if (philosophyValues.length === 0) return null;
 
   return (
     <section className="bg-secondary py-20">
@@ -24,7 +25,7 @@ export function PhilosophySection({ content }: { content: AboutPageContent }) {
           <h2 className="font-heading text-4xl font-black text-foreground">Értékeink</h2>
         </div>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {content.philosophyValues.map(({ icon, title, description }) => {
+          {philosophyValues.map(({ icon, title, description }) => {
             const Icon = PHILOSOPHY_ICONS[icon];
             return (
               <div

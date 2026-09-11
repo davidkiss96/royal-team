@@ -1,11 +1,12 @@
 import Image from "next/image";
 import { Container } from "@/components/container";
-import type { AboutPageContent } from "@/lib/mock/about-page";
+import { getAboutPage } from "@/lib/sanity/queries/about-page";
 
 /** Renders `photoGallery` minus its first entry, which the owner-story
  * section already uses — see that section's comment. */
-export function PhotoGallerySection({ content }: { content: AboutPageContent }) {
-  const images = content.photoGallery.slice(1);
+export async function PhotoGallerySection() {
+  const { photoGallery } = await getAboutPage();
+  const images = photoGallery.slice(1);
   if (images.length === 0) return null;
 
   return (
