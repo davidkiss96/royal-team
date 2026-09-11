@@ -13,8 +13,8 @@ import { SectionLabel } from "@/components/section-label";
  */
 export default function NotFound() {
   return (
-    <section className="flex min-h-screen items-center">
-      <Container className="w-full py-32 text-center">
+    <section className="flex min-h-screen items-center pt-40 pb-24">
+      <Container className="w-full text-center">
         <div className="mx-auto max-w-xl">
           <SectionLabel>Hiba</SectionLabel>
           <p className="mt-4 font-heading text-8xl leading-none font-black text-gold sm:text-9xl">404</p>

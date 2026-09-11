@@ -6,8 +6,9 @@ import {
   submitContactForm,
   type ContactFormValues,
 } from "./submit-contact-form";
+import { validateContactFields, type ContactFormFieldErrors } from "./validate-contact-form";
 
-type FieldErrors = Partial<Record<keyof ContactFormValues, string>>;
+type FieldErrors = ContactFormFieldErrors;
 
 const EMPTY_VALUES: ContactFormValues = {
   name: "",
@@ -16,32 +17,6 @@ const EMPTY_VALUES: ContactFormValues = {
   message: "",
   privacyAccepted: false,
 };
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function validate(values: ContactFormValues): FieldErrors {
-  const errors: FieldErrors = {};
-
-  if (!values.name.trim()) {
-    errors.name = "Adja meg a nevét.";
-  }
-
-  if (!values.email.trim()) {
-    errors.email = "Adja meg az e-mail címét.";
-  } else if (!EMAIL_PATTERN.test(values.email.trim())) {
-    errors.email = "Adjon meg egy érvényes e-mail címet.";
-  }
-
-  if (!values.message.trim()) {
-    errors.message = "Írja le, miben segíthetünk.";
-  }
-
-  if (!values.privacyAccepted) {
-    errors.privacyAccepted = "Az üzenet elküldéséhez ezt el kell fogadnia.";
-  }
-
-  return errors;
-}
 
 const inputClasses =
   "w-full border border-gold/12 bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-foreground/18 focus:border-gold";
@@ -54,9 +29,10 @@ const errorClasses = "mt-1.5 text-xs text-destructive";
  * marketing-consent checkbox, per the GDPR Art. 6(1)(b) legal basis this
  * form relies on).
  *
- * Submission goes through `submitContactForm` — a clearly isolated,
- * temporary boundary (see that file) — so swapping in the real Server
- * Action later doesn't touch this component's validation/state logic.
+ * Submission goes through `submitContactForm`, the Server Action that
+ * re-validates and sends via Resend (see that file) — this component only
+ * ever trusts its own validation for immediate UX feedback, never for
+ * deciding whether a message actually goes out.
  */
 export function ContactForm() {
   const [values, setValues] = useState<ContactFormValues>(EMPTY_VALUES);
@@ -71,7 +47,7 @@ export function ContactForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const fieldErrors = validate(values);
+    const fieldErrors = validateContactFields(values);
     setErrors(fieldErrors);
 
     if (Object.keys(fieldErrors).length > 0) {
