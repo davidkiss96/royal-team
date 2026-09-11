@@ -38,6 +38,11 @@ Scope: Conceptual Sanity content model — document types, fields, relationships
     - `priceType` gains a third value: `quote` (alongside `fixed` and `from`). *Why:* the approved Figma reference has line items priced "Ingyenes" (e.g., "Egyedi árajánlatkérés") that aren't really free services at 0 Ft — they're "the quote itself is free" items, a genuinely different pricing mode from a flat or "starting from" number, not a numeric edge case of either.
     - `amount` becomes **required only when `priceType` is `fixed` or `from`** — a `quote` item has no number to validate. This is a conditional-required rule (Studio validation, `Rule.custom` keyed off the sibling `priceType` field), not a general loosening of the "positive integer" rule for `fixed`/`from` items, which stays exactly as strict as originally approved.
 
+11. **Following Next.js implementation of the Blog pages (`/blog`, `/blog/[slug]`) against the previously-overlooked approved Figma reference's `blog`/`blog-article` design, two approved additions to `BlogPost` (Section 3):**
+    - `tags` (array of strings, optional) — the end-of-article tag list shown on the reference's `blog-article` page (e.g., "DPF", "Szerviz", "Diagnosztika", "Tippek"), already named as a real design element in `docs/design-system.md`'s route-mapping table ("blog-article... body, tags, sidebar") but never carried into this document's `BlogPost` field list until implementation surfaced the concrete gap — the same "extract on proven need" process already used for `Service.tagline`/`highlights`/`process` and `Project.specs`/`results` (items 7–9 above). Kept as a flat array of short strings, the same shape already established for `Service.highlights` — no separate tag-taxonomy/document type, consistent with this project's standing "no generic framework" discipline. The first tag doubles as the short badge shown in the listing card and article hero (the reference's separate, single `category` field was not reproduced as a second field — one small array covers both presentation needs without inventing a second content-model concept the design review never separately asked for).
+    - `relatedServices` (array of references → `Service`, optional) — the related-service sidebar CTA on the `blog-article` reference page. Mirrors `Project.relatedServices` exactly (same field name, same shape) for cross-content-type consistency, rather than inventing a differently-shaped relation. The reference's sidebar CTA copy is otherwise fully hardcoded to one specific service (DPF); the real implementation instead reads the referenced `Service`'s own `title`/`summary` fields, so the CTA stays correct for whichever service an editor actually attaches to a given post, rather than hardcoding one business's worth of copy into the template.
+    - **No `relatedPosts`/`category` field was added.** "Related articles" (the reference's other sidebar section) is derived at query time as "other recent posts" — a generic, no-schema-change strategy — rather than an explicit editor-curated relationship, since no such curation requirement was ever raised for this feature; adding one would be inventing an editorial relationship nobody asked for. A single `category` field was likewise not added — see the `tags` rationale above.
+
 **On challenging the list per your instruction:** I don't have a concrete reason to add or remove a type beyond what's already been decided. The one place I reconsidered was whether `Review` needs any structural change given the Homepage-curation rework below — it doesn't; it stays as previously designed, just no longer self-managing its own "featured" state (Section 5 explains why that responsibility moved to `Homepage`).
 
 ---
@@ -131,6 +136,8 @@ Restated from the prior version because it remains the single most important pla
 | `slug` | slug | Yes | Same stability treatment as `Service.slug`. |
 | `excerpt` | text | No | Listing summary, meta-description fallback. |
 | `body` | Portable Text (inline images supported) | Warning-level | Inline images (not a separate gallery) because blog narrative is linear — a photo illustrates a specific point in the text as it's written, unlike `Project`'s more documentation-style structure (Section 4). |
+| `tags` | array of strings | No, **approved addition** | End-of-article tag list plus the listing/hero badge (first tag) — Section 0, item 11. |
+| `relatedServices` | array of references → `Service` | No, **approved addition** | Drives the article sidebar's related-service CTA — Section 0, item 11. Same shape as `Project.relatedServices` (Section 4). |
 
 **Group: Media**
 | Field | Type | Required | Why |
@@ -156,6 +163,8 @@ Restated from the prior version because it remains the single most important pla
 - **Author:** reference to `Author`, publicly displayed.
 - **`publishedAt`:** present and justified above.
 - **Cover image:** `heroImage`.
+- **Tags:** `tags`, approved addition — Section 0, item 11.
+- **Related services:** `relatedServices`, approved addition — Section 0, item 11.
 - **SEO:** standard `seo` object.
 - **Slug stability:** same treatment as all slugged types — see the dedicated section below.
 

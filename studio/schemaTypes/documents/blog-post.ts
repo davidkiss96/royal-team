@@ -1,7 +1,16 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {uniqueSlugValidator} from '../lib/unique-slug-validator'
 
-/** docs/content-model.md Section 3. No category/tag field — not part of the approved content model. Draft/published state is native Sanity, no custom field. */
+/**
+ * docs/content-model.md Section 3. Draft/published state is native Sanity,
+ * no custom field. `tags` and `relatedServices` are approved additions
+ * (Section 0, item 11) — added once the approved Figma reference's
+ * `blog-article` design surfaced them as real, repeated design elements
+ * (an end-of-article tag list and a related-service sidebar CTA) with no
+ * existing field to source them from, the same "extract on proven need"
+ * process already used for `Service.tagline`/`highlights`/`process` and
+ * `Project.specs`/`results`.
+ */
 export const blogPost = defineType({
   name: 'blogPost',
   title: 'Blogbejegyzés',
@@ -46,6 +55,23 @@ export const blogPost = defineType({
       group: 'content',
       of: [defineArrayMember({type: 'block'}), defineArrayMember({type: 'imageWithAlt'})],
       validation: (Rule) => Rule.warning('Érdemes kitölteni a nyilvános oldalhoz.'),
+    }),
+    defineField({
+      name: 'tags',
+      title: 'Címkék',
+      description:
+        'Rövid kulcsszavak a cikkhez (pl. "DPF", "Diagnosztika"). Az első címke jelenik meg kiemelt kategóriaként a lista nézetben és a cikk fejlécében; az összes címke megjelenik a cikk végén.',
+      type: 'array',
+      group: 'content',
+      of: [defineArrayMember({type: 'string'})],
+    }),
+    defineField({
+      name: 'relatedServices',
+      title: 'Kapcsolódó szolgáltatások',
+      description: 'A cikk oldalsávjában megjelenő szolgáltatás-ajánlás.',
+      type: 'array',
+      group: 'content',
+      of: [defineArrayMember({type: 'reference', to: [{type: 'service'}]})],
     }),
     defineField({
       name: 'heroImage',

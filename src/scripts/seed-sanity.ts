@@ -34,7 +34,7 @@
  * - Does not upload any images — every mock image points at the same
  *   generic placeholder SVG (public/placeholders/photo-placeholder.svg),
  *   not real photography, so no imageWithAlt field is populated anywhere.
- * - Does not populate BlogPost.body/author/seo, Homepage.introText, or
+ * - Does not populate BlogPost.body/author/seo/tags/relatedServices, Homepage.introText, or
  *   BusinessSettings.logo/brandColorPrimary/brandColorSecondary/openingHours/
  *   socialLinks — none of these have corresponding mock data to migrate from.
  */
