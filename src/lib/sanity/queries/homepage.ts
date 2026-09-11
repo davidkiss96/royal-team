@@ -52,6 +52,7 @@ const FEATURED_PROJECT_PROJECTION = `{
 
 const FEATURED_REVIEW_PROJECTION = `{
   authorName,
+  rating,
   text,
   reviewDate,
   sourceDetail,
@@ -97,6 +98,10 @@ export interface HomepageFeaturedProject {
 
 export interface HomepageFeaturedReview {
   authorName: string;
+  /** 1–5, integer — `Review.rating` is Studio-required and range-validated
+   * (`studio/schemaTypes/documents/review.ts`); still clamped when mapped
+   * below as a minimal defensive guard, not a validation framework. */
+  rating: number;
   text: string;
   reviewDate: string | null;
   sourceDetail?: string;
@@ -147,7 +152,13 @@ interface RawHomepage {
       }[]
     | null;
   featuredReviews:
-    | { authorName: string; text: string; reviewDate: string | null; sourceDetail: string | null }[]
+    | {
+        authorName: string;
+        rating: number;
+        text: string;
+        reviewDate: string | null;
+        sourceDetail: string | null;
+      }[]
     | null;
   seo: SeoFields | null;
 }
@@ -190,6 +201,7 @@ function toHomepageData(raw: RawHomepageQueryResult): HomepageData {
     })),
     featuredReviews: (h?.featuredReviews ?? []).map((r) => ({
       authorName: r.authorName,
+      rating: Math.min(5, Math.max(1, Math.round(r.rating))),
       text: r.text,
       reviewDate: r.reviewDate,
       sourceDetail: r.sourceDetail ?? undefined,

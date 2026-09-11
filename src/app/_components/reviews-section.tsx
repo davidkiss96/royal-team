@@ -4,11 +4,17 @@ import { SectionLabel } from "@/components/section-label";
 import { formatHungarianMonthYear } from "@/lib/format-date";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 
-function StarRow({ size }: { size: number }) {
+/** Renders the real stored `rating` (1–5) as filled stars, with the
+ * remainder up to 5 shown unfilled — never a fixed 5-star row. */
+function StarRow({ rating, size }: { rating: number; size: number }) {
   return (
     <div className="flex">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <Star key={star} size={size} className="fill-gold text-gold" />
+      {[1, 2, 3, 4, 5].map((position) => (
+        <Star
+          key={position}
+          size={size}
+          className={position <= rating ? "fill-gold text-gold" : "text-gold/25"}
+        />
       ))}
     </div>
   );
@@ -35,7 +41,7 @@ export async function ReviewsSection() {
               className="border border-gold/8 bg-card p-7 transition-all duration-300 hover:border-gold/30"
             >
               <div className="mb-4">
-                <StarRow size={13} />
+                <StarRow rating={review.rating} size={13} />
               </div>
               <p className="mb-6 text-sm leading-relaxed text-foreground/60 italic">
                 &ldquo;{review.text}&rdquo;
