@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
-import { ALL_PRICE_CATEGORIES } from "@/lib/mock/price-categories";
+import { getPriceCategories } from "@/lib/sanity/queries/price-categories";
 import { PriceCategorySection } from "./_components/price-category-section";
 
 export const metadata: Metadata = {
@@ -13,10 +13,8 @@ export const metadata: Metadata = {
     "Áttekinthető, tájékoztató jellegű árlista — DPF tisztítás, diagnosztika, futómű- és fékszerviz, karbantartás.",
 };
 
-export default function PriceListPage() {
-  const categories = ALL_PRICE_CATEGORIES.filter((category) => category.isActive).sort(
-    (a, b) => a.displayOrder - b.displayOrder,
-  );
+export default async function PriceListPage() {
+  const categories = await getPriceCategories();
 
   return (
     <>

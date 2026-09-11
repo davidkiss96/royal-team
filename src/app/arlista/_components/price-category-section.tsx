@@ -1,6 +1,6 @@
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { formatPriceDisplay } from "@/lib/format-price";
-import type { PriceCategory } from "@/lib/mock/price-categories";
+import type { PriceCategory } from "@/lib/sanity/queries/price-categories";
 
 interface PriceCategorySectionProps {
   category: PriceCategory;
@@ -8,7 +8,7 @@ interface PriceCategorySectionProps {
 }
 
 export function PriceCategorySection({ category, delayMs }: PriceCategorySectionProps) {
-  const activeItems = category.items.filter((item) => item.isActive);
+  const activeItems = category.items;
   if (activeItems.length === 0) return null;
 
   return (

@@ -1,5 +1,3 @@
-import type { PriceItem } from "@/lib/mock/price-categories";
-
 // Non-breaking spaces (both between digit groups and before "Ft") prevent
 // an amount from wrapping awkwardly across a line break — visually
 // identical to a plain space otherwise.
@@ -12,7 +10,10 @@ function groupThousands(amount: number): string {
 /** Composes the displayed price string from `priceType` + `amount`, per the
  * approved decision that editors never hand-type formatted price text
  * (docs/content-model.md Section 10). */
-export function formatPriceDisplay(item: PriceItem): string {
+export function formatPriceDisplay(item: {
+  priceType: "fixed" | "from" | "quote";
+  amount?: number;
+}): string {
   if (item.priceType === "quote" || item.amount === undefined) {
     return "Ingyenes";
   }
