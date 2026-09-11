@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CloseIcon, MenuIcon, PhoneIcon } from "./icons";
 import { Logo } from "./logo";
 import { NAV_LINKS } from "@/lib/site-config";
@@ -34,6 +34,8 @@ export function Header({ phone, phoneHref }: HeaderProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const firstMenuLinkRef = useRef<HTMLAnchorElement>(null);
 
   // Reset the mobile menu on navigation. Adjusting state during render
   // (rather than in an effect) per React's own guidance for "reset state
@@ -50,6 +52,26 @@ export function Header({ phone, phoneHref }: HeaderProps) {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Moves focus into the open panel (first link) and lets Escape close it
+  // and hand focus back to the trigger button — not a full modal focus
+  // trap (this is a disclosure panel, not a dialog), just correct
+  // open/close focus handling per the WAI-ARIA disclosure pattern.
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    firstMenuLinkRef.current?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuToggleRef.current?.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
 
   return (
     <header
@@ -106,6 +128,7 @@ export function Header({ phone, phoneHref }: HeaderProps) {
           </a>
 
           <button
+            ref={menuToggleRef}
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
@@ -121,11 +144,12 @@ export function Header({ phone, phoneHref }: HeaderProps) {
       {menuOpen && (
         <div id="mobile-nav" className="border-b border-border bg-background/98 backdrop-blur-xl xl:hidden">
           <nav aria-label="Fő navigáció" className="space-y-1 px-6 py-6">
-            {NAV_LINKS.map(({ label, href }) => {
+            {NAV_LINKS.map(({ label, href }, index) => {
               const active = isActive(pathname, href);
               return (
                 <Link
                   key={href}
+                  ref={index === 0 ? firstMenuLinkRef : undefined}
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={`block border-b border-border/20 py-3 font-heading text-xs font-semibold uppercase tracking-[0.2em] transition-colors ${focusRing} ${

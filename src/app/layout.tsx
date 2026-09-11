@@ -82,8 +82,16 @@ export default async function RootLayout({
             __html: JSON.stringify(localBusinessJsonLd).replace(/</g, "\\u003c"),
           }}
         />
+        <a
+          href="#main-content"
+          className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-60 focus-visible:bg-gold focus-visible:px-4 focus-visible:py-2 focus-visible:font-heading focus-visible:text-xs focus-visible:font-bold focus-visible:tracking-widest focus-visible:text-black focus-visible:uppercase focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+        >
+          Ugrás a tartalomhoz
+        </a>
         <Header phone={settings.phone} phoneHref={phoneHref} />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

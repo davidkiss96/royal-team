@@ -35,6 +35,7 @@ export function ServiceBodySection({ service }: { service: ServiceDetail }) {
               alt={image.alt}
               width={700}
               height={520}
+              sizes="(min-width: 1024px) 50vw, 100vw"
               className="h-[460px] w-full object-cover brightness-75"
             />
             <div className="absolute top-0 right-0 h-12 w-12 border-t-2 border-r-2 border-gold" />

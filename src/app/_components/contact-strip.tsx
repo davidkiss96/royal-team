@@ -51,13 +51,13 @@ export async function ContactStrip() {
             >
               <Icon size={18} className="mt-0.5 flex-shrink-0 text-gold" />
               <div>
-                <p className="mb-1 text-[10px] tracking-wider text-foreground/35 uppercase">
+                <p className="mb-1 text-[10px] tracking-wider text-foreground/50 uppercase">
                   {label}
                 </p>
                 <p className="font-heading text-sm font-semibold text-foreground">
                   {value}
                 </p>
-                <p className="mt-0.5 text-xs text-foreground/35">{detail}</p>
+                <p className="mt-0.5 text-xs text-foreground/50">{detail}</p>
               </div>
             </div>
           ))}

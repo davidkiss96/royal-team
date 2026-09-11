@@ -20,6 +20,7 @@ export async function PhotoGallerySection() {
                 alt={image.alt}
                 width={600}
                 height={450}
+                sizes="(min-width: 768px) 33vw, 50vw"
                 className="h-full w-full object-cover brightness-75 transition-all duration-700 group-hover:scale-105 group-hover:brightness-90"
               />
             </div>

@@ -72,7 +72,7 @@ export default async function BlogPostDetailPage({ params }: BlogPostDetailPageP
                   {post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="border border-gold/15 px-3 py-1.5 font-mono-label text-[10px] text-foreground/35"
+                      className="border border-gold/15 px-3 py-1.5 font-mono-label text-[10px] text-foreground/50"
                     >
                       {tag}
                     </span>

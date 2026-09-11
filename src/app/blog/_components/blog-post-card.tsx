@@ -42,7 +42,7 @@ export function BlogPostCard({ post, index }: BlogPostCardProps) {
                 {post.tags[0]}
               </span>
             )}
-            <span className="font-mono-label text-[10px] text-foreground/25">
+            <span className="font-mono-label text-[10px] text-foreground/50">
               {estimateReadingMinutes(post.excerpt)} perc olvasás
             </span>
           </div>
@@ -52,7 +52,7 @@ export function BlogPostCard({ post, index }: BlogPostCardProps) {
           <p className="mb-6 text-sm leading-relaxed text-foreground/45">{post.excerpt}</p>
           <div className="flex items-center justify-between">
             {post.publishedAt && (
-              <span className="font-mono-label text-[10px] text-foreground/25">
+              <span className="font-mono-label text-[10px] text-foreground/50">
                 {formatHungarianDate(post.publishedAt)}
               </span>
             )}

@@ -26,6 +26,7 @@ export default async function ServicesPage() {
           alt=""
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-background/92" />
@@ -44,14 +45,20 @@ export default async function ServicesPage() {
 
       <section className="bg-background py-20">
         <Container className="space-y-6">
-          {activeServices.map((service, index) => (
-            <ServiceRow
-              key={service.slug}
-              service={service}
-              reverse={index % 2 === 1}
-              delayMs={Math.min(index, 4) * 50}
-            />
-          ))}
+          {activeServices.length > 0 ? (
+            activeServices.map((service, index) => (
+              <ServiceRow
+                key={service.slug}
+                service={service}
+                reverse={index % 2 === 1}
+                delayMs={Math.min(index, 4) * 50}
+              />
+            ))
+          ) : (
+            <p className="text-center text-sm text-foreground/40">
+              Jelenleg nincs elérhető szolgáltatás — nézzen vissza hamarosan.
+            </p>
+          )}
         </Container>
       </section>
 

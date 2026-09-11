@@ -30,6 +30,7 @@ export function ServiceRow({ service, reverse, delayMs }: ServiceRowProps) {
             alt={service.heroImage.alt}
             width={800}
             height={550}
+            sizes="(min-width: 1024px) 50vw, 100vw"
             className="h-full w-full object-cover brightness-[0.65] transition-all duration-700 group-hover:scale-[1.03] group-hover:brightness-75"
           />
         </div>
@@ -52,7 +53,7 @@ export function ServiceRow({ service, reverse, delayMs }: ServiceRowProps) {
 
           {service.highlights.length > 0 && (
             <div className="mb-8">
-              <p className="mb-3 text-[10px] tracking-widest text-foreground/35 uppercase">
+              <p className="mb-3 text-[10px] tracking-widest text-foreground/50 uppercase">
                 Főbb előnyök
               </p>
               <div className="space-y-2">

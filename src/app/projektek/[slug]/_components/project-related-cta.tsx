@@ -35,7 +35,7 @@ export function ProjectRelatedCta({ project }: { project: ProjectDetail }) {
                         <p className="font-heading text-sm font-semibold text-foreground">
                           {service.title}
                         </p>
-                        <p className="text-xs text-foreground/35">{service.tagline}</p>
+                        <p className="text-xs text-foreground/50">{service.tagline}</p>
                       </div>
                       <ArrowRight
                         size={14}

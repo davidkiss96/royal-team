@@ -37,6 +37,7 @@ export async function OwnerStorySection() {
               alt={image.alt}
               width={700}
               height={600}
+              sizes="(min-width: 1024px) 50vw, 100vw"
               className="h-[500px] w-full object-cover brightness-75"
             />
             <div className="absolute top-0 left-0 h-12 w-12 border-t-2 border-l-2 border-gold" />

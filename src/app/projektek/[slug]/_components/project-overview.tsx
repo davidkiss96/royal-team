@@ -34,7 +34,7 @@ export function ProjectOverview({ project }: { project: ProjectDetail }) {
                     key={label}
                     className="flex justify-between gap-4 border-b border-gold/8 py-2.5 last:border-0"
                   >
-                    <span className="font-mono-label text-xs text-foreground/35">{label}</span>
+                    <span className="font-mono-label text-xs text-foreground/50">{label}</span>
                     <span className="text-right font-heading text-sm font-semibold text-foreground">
                       {value}
                     </span>

@@ -26,6 +26,7 @@ export default async function PriceListPage() {
           alt=""
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-background/92" />

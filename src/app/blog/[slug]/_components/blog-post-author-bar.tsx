@@ -30,7 +30,7 @@ export function BlogPostAuthorBar({ author }: { author: BlogPostAuthor }) {
       )}
       <div>
         <p className="font-heading text-sm font-semibold text-foreground">{author.name}</p>
-        {author.role && <p className="font-mono-label text-[10px] text-foreground/30">{author.role}</p>}
+        {author.role && <p className="font-mono-label text-[10px] text-foreground/50">{author.role}</p>}
       </div>
     </div>
   );

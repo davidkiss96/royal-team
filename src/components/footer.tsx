@@ -44,10 +44,10 @@ export async function Footer({ services = [] }: FooterProps) {
               <Logo size={170} variant="full-gradient-light" />
               <div>
                 <div className="font-heading text-sm font-bold uppercase tracking-[0.15em] text-gold">Royal-Team</div>
-                <div className="mt-0.5 text-[10px] uppercase tracking-wider text-foreground/25">Autószerviz Kft.</div>
+                <div className="mt-0.5 text-[10px] uppercase tracking-wider text-foreground/40">Autószerviz Kft.</div>
               </div>
             </div>
-            <p className="mb-6 max-w-xs text-sm leading-relaxed text-foreground/35">
+            <p className="mb-6 max-w-xs text-sm leading-relaxed text-foreground/50">
               Prémium autószerviz Ercsi szívében. Diagnosztika, teljesítményfejlesztés, karbantartás — kompromisszumok
               nélkül.
             </p>
@@ -67,7 +67,7 @@ export async function Footer({ services = [] }: FooterProps) {
                 <li key={href}>
                   <Link
                     href={href}
-                    className={`text-xs text-foreground/30 transition-colors hover:text-gold ${focusRing}`}
+                    className={`text-xs text-foreground/50 transition-colors hover:text-gold ${focusRing}`}
                   >
                     {label}
                   </Link>
@@ -86,7 +86,7 @@ export async function Footer({ services = [] }: FooterProps) {
                   <li key={href}>
                     <Link
                       href={href}
-                      className={`text-xs text-foreground/30 transition-colors hover:text-gold ${focusRing}`}
+                      className={`text-xs text-foreground/50 transition-colors hover:text-gold ${focusRing}`}
                     >
                       {title}
                     </Link>
@@ -99,14 +99,14 @@ export async function Footer({ services = [] }: FooterProps) {
 
         <div className="mb-8 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent" />
 
-        <div className="flex flex-col items-center justify-between gap-4 text-[10px] text-foreground/20 sm:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 text-[10px] text-foreground/50 sm:flex-row">
           <p>© {new Date().getFullYear()} {settings.legalCompanyName} · Minden jog fenntartva.</p>
           <div className="flex items-center gap-5">
             {FOOTER_LEGAL_LINKS.map(({ label, href }) => (
               <Link
                 key={href}
                 href={href}
-                className={`text-foreground/25 transition-colors hover:text-gold ${focusRing}`}
+                className={`text-foreground/50 transition-colors hover:text-gold ${focusRing}`}
               >
                 {label}
               </Link>

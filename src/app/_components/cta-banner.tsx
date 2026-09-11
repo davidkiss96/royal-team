@@ -10,7 +10,13 @@ export async function CtaBanner() {
 
   return (
     <section className="relative overflow-hidden bg-gold py-20">
-      <Image src="/placeholders/photo-placeholder.svg" alt="" fill className="object-cover opacity-[0.07]" />
+      <Image
+        src="/placeholders/photo-placeholder.svg"
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover opacity-[0.07]"
+      />
       <Container className="relative text-center">
         <h2 className="mb-4 font-heading text-4xl font-black text-black md:text-5xl">
           Kérdése van? Lépjen kapcsolatba.

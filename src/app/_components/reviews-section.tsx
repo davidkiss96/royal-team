@@ -48,7 +48,7 @@ export async function ReviewsSection() {
             <span className="font-heading text-xl font-black text-foreground">
               {AGGREGATE_RATING_PLACEHOLDER.value}
             </span>
-            <span className="text-xs text-foreground/35">
+            <span className="text-xs text-foreground/50">
               / 5.0 · {AGGREGATE_RATING_PLACEHOLDER.source} (
               {AGGREGATE_RATING_PLACEHOLDER.count} értékelés)
             </span>
@@ -77,7 +77,7 @@ export async function ReviewsSection() {
                   </div>
                 )}
                 {review.reviewDate && (
-                  <div className="mt-1 text-[10px] text-foreground/25">
+                  <div className="mt-1 text-[10px] text-foreground/50">
                     {formatHungarianMonthYear(review.reviewDate)}
                   </div>
                 )}

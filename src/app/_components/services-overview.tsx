@@ -40,6 +40,7 @@ export async function ServicesOverview() {
                     alt={service.heroImage.alt}
                     width={600}
                     height={380}
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     className="h-full w-full object-cover brightness-[0.65] transition-all duration-700 group-hover:scale-105 group-hover:brightness-75"
                   />
                 </div>

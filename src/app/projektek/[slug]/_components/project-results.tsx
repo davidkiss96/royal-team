@@ -25,7 +25,7 @@ export function ProjectResults({ project }: { project: ProjectDetail }) {
                 <div className="mb-0.5 font-heading text-sm font-semibold text-foreground">
                   {label}
                 </div>
-                <div className="text-xs text-foreground/35">{description}</div>
+                <div className="text-xs text-foreground/50">{description}</div>
               </div>
             ))}
           </div>

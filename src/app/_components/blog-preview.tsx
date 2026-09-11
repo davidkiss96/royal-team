@@ -39,6 +39,7 @@ export async function BlogPreview() {
                   alt={post.heroImage.alt}
                   width={500}
                   height={300}
+                  sizes="(min-width: 768px) 33vw, 100vw"
                   className="h-full w-full object-cover brightness-65 transition-all duration-700 group-hover:scale-105 group-hover:brightness-80"
                 />
               </div>
@@ -46,7 +47,7 @@ export async function BlogPreview() {
                 <h3 className="mt-2 mb-3 font-heading text-base leading-snug font-black text-foreground">
                   {post.title}
                 </h3>
-                <div className="flex items-center justify-between font-mono-label text-[10px] text-foreground/30">
+                <div className="flex items-center justify-between font-mono-label text-[10px] text-foreground/50">
                   <span>{post.publishedAt && formatHungarianDate(post.publishedAt)}</span>
                   <span>{estimateReadingMinutes(post.excerpt)} perc olvasás</span>
                 </div>

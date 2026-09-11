@@ -32,6 +32,7 @@ export function ProjectCard({ project, index, featured }: ProjectCardProps) {
             alt={project.heroImage.alt}
             width={900}
             height={600}
+            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             className="h-full w-full object-cover brightness-50 transition-all duration-700 group-hover:scale-105 group-hover:brightness-65"
           />
         </div>

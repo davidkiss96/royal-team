@@ -27,6 +27,7 @@ export function WorkshopTechSection() {
               alt="Royal-Team műhely diagnosztikai és szervizberendezései"
               width={800}
               height={620}
+              sizes="(min-width: 1024px) 50vw, 100vw"
               className="h-[480px] w-full object-cover brightness-80"
             />
             <div className="absolute top-0 right-0 h-16 w-16 border-t-2 border-r-2 border-gold" />

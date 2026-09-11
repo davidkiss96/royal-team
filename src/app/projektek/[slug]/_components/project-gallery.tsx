@@ -24,6 +24,7 @@ export function ProjectGallery({ project }: { project: ProjectDetail }) {
                 alt={image.alt}
                 width={600}
                 height={400}
+                sizes="(min-width: 768px) 25vw, 50vw"
                 className="h-52 w-full object-cover brightness-75 transition-all duration-700 group-hover:scale-105 group-hover:brightness-90"
               />
             </div>

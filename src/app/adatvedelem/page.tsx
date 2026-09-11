@@ -344,7 +344,7 @@ export default async function PrivacyPolicyPage() {
             Adatvédelmi <span className="text-gold">tájékoztató</span>
           </h1>
           <GoldDivider className="mt-4" />
-          <p className="mt-5 text-sm text-foreground/35">Hatályos: {EFFECTIVE_DATE}-től</p>
+          <p className="mt-5 text-sm text-foreground/50">Hatályos: {EFFECTIVE_DATE}-től</p>
         </Container>
       </section>
 
@@ -368,7 +368,7 @@ export default async function PrivacyPolicyPage() {
             </a>
             <a
               href="/impresszum"
-              className="text-xs text-foreground/30 transition-colors hover:text-foreground/60"
+              className="text-xs text-foreground/50 transition-colors hover:text-foreground/70"
             >
               Impresszum megtekintése
             </a>

@@ -1,17 +1,19 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import { GoogleMapEmbed } from "@/components/google-map-embed";
 import { formatAddress } from "@/lib/format-address";
+import { formatOpeningHours } from "@/lib/format-opening-hours";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 
 export async function ContactInfo() {
   const settings = await getBusinessSettings();
   const workshopAddress = formatAddress(settings.address);
+  const openingHours = formatOpeningHours(settings.openingHours);
 
   const infoItems = [
     {
       icon: Phone,
       title: "Telefon",
-      lines: [settings.phone, "H–P: 8:00–18:00"],
+      lines: openingHours ? [settings.phone, openingHours] : [settings.phone],
       href: `tel:${settings.phone.replace(/\s+/g, "")}`,
     },
     {
@@ -35,7 +37,7 @@ export async function ContactInfo() {
             <Icon size={16} className="text-gold" />
           </div>
           <div>
-            <p className="mb-1.5 text-[10px] tracking-widest text-foreground/30 uppercase">
+            <p className="mb-1.5 text-[10px] tracking-widest text-foreground/50 uppercase">
               {title}
             </p>
             {lines.map((line) =>

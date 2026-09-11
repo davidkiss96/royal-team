@@ -38,6 +38,7 @@ export async function ProjectsPreview() {
                 alt={featured.heroImage.alt}
                 width={900}
                 height={700}
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 className="h-full w-full object-cover brightness-55 transition-all duration-700 group-hover:scale-105 group-hover:brightness-70"
               />
             </div>
@@ -76,6 +77,7 @@ export async function ProjectsPreview() {
                     alt={project.heroImage.alt}
                     width={700}
                     height={380}
+                    sizes="(min-width: 1024px) 50vw, 100vw"
                     className="h-full w-full object-cover brightness-50 transition-all duration-700 group-hover:scale-105 group-hover:brightness-65"
                   />
                 </div>

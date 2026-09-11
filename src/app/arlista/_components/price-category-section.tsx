@@ -34,7 +34,7 @@ export function PriceCategorySection({ category, delayMs }: PriceCategorySection
                     {item.name}
                   </p>
                   {item.note && (
-                    <p className="mt-0.5 font-mono-label text-[11px] text-foreground/35">
+                    <p className="mt-0.5 font-mono-label text-[11px] text-foreground/50">
                       {item.note}
                     </p>
                   )}

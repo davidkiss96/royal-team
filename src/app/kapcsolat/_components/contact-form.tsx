@@ -18,9 +18,10 @@ const EMPTY_VALUES: ContactFormValues = {
   privacyAccepted: false,
 };
 
-const inputClasses =
-  "w-full border border-gold/12 bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-foreground/18 focus:border-gold";
-const labelClasses = "mb-2 block text-[10px] tracking-widest text-foreground/30 uppercase";
+const focusRing =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
+const inputClasses = `w-full border border-gold/12 bg-background px-4 py-3 text-sm text-foreground transition-colors placeholder:text-foreground/45 focus:border-gold ${focusRing}`;
+const labelClasses = "mb-2 block text-[10px] tracking-widest text-foreground/50 uppercase";
 const errorClasses = "mt-1.5 text-xs text-destructive";
 
 /**
@@ -165,16 +166,17 @@ export function ContactForm() {
         </div>
 
         <div className="pt-1">
-          <div className="flex items-start gap-3">
-            <button
-              type="button"
-              role="checkbox"
-              aria-checked={values.privacyAccepted}
-              aria-describedby={
-                errors.privacyAccepted ? "contact-privacy-error" : undefined
-              }
-              onClick={() => updateField("privacyAccepted", !values.privacyAccepted)}
-              className={`mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${
+          <label className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              checked={values.privacyAccepted}
+              onChange={(event) => updateField("privacyAccepted", event.target.checked)}
+              aria-describedby={errors.privacyAccepted ? "contact-privacy-error" : undefined}
+              className="peer sr-only"
+            />
+            <span
+              aria-hidden="true"
+              className={`mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold ${
                 values.privacyAccepted ? "border-gold bg-gold/15" : "border-gold/25 bg-transparent"
               }`}
             >
@@ -189,15 +191,15 @@ export function ContactForm() {
                   />
                 </svg>
               )}
-            </button>
-            <label className="text-xs leading-relaxed text-foreground/35">
+            </span>
+            <span className="text-xs leading-relaxed text-foreground/50">
               Elolvastam és tudomásul veszem az{" "}
               <a href="/adatvedelem" className="text-gold hover:underline">
                 Adatvédelmi tájékoztatót
               </a>
               . *
-            </label>
-          </div>
+            </span>
+          </label>
           {errors.privacyAccepted && (
             <p id="contact-privacy-error" className={`${errorClasses} pl-7`}>
               {errors.privacyAccepted}
@@ -220,7 +222,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="inline-flex w-full items-center justify-center gap-2 bg-gold px-8 py-3.5 font-heading text-xs font-bold tracking-[0.2em] text-black uppercase transition-all duration-300 hover:bg-gold-bright disabled:cursor-not-allowed disabled:opacity-60"
+          className={`inline-flex w-full items-center justify-center gap-2 bg-gold px-8 py-3.5 font-heading text-xs font-bold tracking-[0.2em] text-black uppercase transition-all duration-300 hover:bg-gold-bright disabled:cursor-not-allowed disabled:opacity-60 ${focusRing}`}
         >
           {status === "submitting" ? (
             <>

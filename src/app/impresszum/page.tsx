@@ -52,7 +52,7 @@ export default async function ImpresszumPage() {
         ["Copyright", `© ${new Date().getFullYear()} ${settings.legalCompanyName}`],
         [
           "Tartalom",
-          "Minden jog fenntartva. A weboldalon szereplő tartalmak, képek és grafikák szerzői jogi védelem alatt állnak, azok a Royal-Team Autószerviz Kft. előzetes írásbeli engedélye nélkül nem használhatók fel.",
+          `Minden jog fenntartva. A weboldalon szereplő tartalmak, képek és grafikák szerzői jogi védelem alatt állnak, azok a ${settings.legalCompanyName} előzetes írásbeli engedélye nélkül nem használhatók fel.`,
         ],
       ],
     },
@@ -80,7 +80,7 @@ export default async function ImpresszumPage() {
               <dl className="space-y-3">
                 {section.items.map(([key, value]) => (
                   <div key={key} className="grid grid-cols-3 gap-4">
-                    <dt className="col-span-1 text-xs text-foreground/30">{key}</dt>
+                    <dt className="col-span-1 text-xs text-foreground/50">{key}</dt>
                     <dd className="col-span-2 text-xs text-foreground/75">{value}</dd>
                   </div>
                 ))}

@@ -26,6 +26,7 @@ export default async function ProjectsPage() {
           alt=""
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/40" />
@@ -44,11 +45,17 @@ export default async function ProjectsPage() {
 
       <section className="bg-background py-20">
         <Container>
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, index) => (
-              <ProjectCard key={project.slug} project={project} index={index} featured={index === 0} />
-            ))}
-          </div>
+          {projects.length > 0 ? (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {projects.map((project, index) => (
+                <ProjectCard key={project.slug} project={project} index={index} featured={index === 0} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-sm text-foreground/40">
+              Jelenleg nincs elérhető projekt — nézzen vissza hamarosan.
+            </p>
+          )}
         </Container>
       </section>
 

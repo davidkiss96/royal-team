@@ -14,9 +14,9 @@ import type { BlogPostListItem } from "@/lib/sanity/queries/blog-posts";
 export function BlogPostRelatedArticles({ posts }: { posts: BlogPostListItem[] }) {
   return (
     <div className="border border-gold/10 bg-card p-6">
-      <h3 className="mb-5 font-heading text-xs font-bold tracking-widest text-foreground/30 uppercase">
+      <h2 className="mb-5 font-heading text-xs font-bold tracking-widest text-foreground/50 uppercase">
         Kapcsolódó cikkek
-      </h3>
+      </h2>
       <div className="space-y-4">
         {posts.map((post) => (
           <Link key={post.slug} href={`/blog/${post.slug}`} className="group flex gap-3">
@@ -33,7 +33,7 @@ export function BlogPostRelatedArticles({ posts }: { posts: BlogPostListItem[] }
               <p className="font-heading text-xs leading-snug font-semibold text-foreground/80 transition-colors group-hover:text-gold">
                 {post.title}
               </p>
-              <p className="mt-1 font-mono-label text-[10px] text-foreground/25">
+              <p className="mt-1 font-mono-label text-[10px] text-foreground/50">
                 {estimateReadingMinutes(post.excerpt)} perc olvasás
               </p>
             </div>
