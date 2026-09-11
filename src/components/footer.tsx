@@ -35,7 +35,7 @@ export function Footer({ services = [] }: FooterProps) {
         >
           <div className="lg:col-span-2">
             <div className="mb-5 flex items-center gap-3">
-              <Logo size={40} />
+              <Logo size={36} />
               <div>
                 <div className="font-heading text-sm font-bold uppercase tracking-[0.15em] text-gold">
                   Royal-Team

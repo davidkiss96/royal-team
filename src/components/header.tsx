@@ -55,7 +55,7 @@ export function Header() {
           aria-label="Royal-Team Autószerviz – Főoldal"
           className={`flex items-center gap-3 ${focusRing}`}
         >
-          <Logo size={46} priority />
+          <Logo size={44} priority />
           <span className="hidden leading-none sm:block">
             <span className="block font-heading text-sm font-bold uppercase tracking-[0.18em] text-gold">
               Royal-Team
