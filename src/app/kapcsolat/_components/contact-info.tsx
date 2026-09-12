@@ -17,29 +17,27 @@ export async function ContactInfo() {
       href: `tel:${settings.phone.replace(/\s+/g, "")}`,
     },
     {
-      icon: MapPin,
-      title: "Cím (műhely)",
-      lines: [settings.address.addressLine1, workshopAddress],
-    },
-    {
       icon: Mail,
       title: "E-mail",
       lines: [settings.email],
       href: `mailto:${settings.email}`,
     },
+    {
+      icon: MapPin,
+      title: "Cím (műhely)",
+      lines: [workshopAddress],
+    },
   ];
 
   return (
-    <div className="space-y-7 lg:col-span-2">
+    <div className="space-y-7">
       {infoItems.map(({ icon: Icon, title, lines, href }) => (
         <div key={title} className="flex gap-5">
           <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center border border-gold/25">
             <Icon size={16} className="text-gold" />
           </div>
           <div>
-            <p className="mb-1.5 text-[10px] tracking-widest text-foreground/50 uppercase">
-              {title}
-            </p>
+            <p className="mb-1.5 text-[10px] tracking-widest text-foreground/50 uppercase">{title}</p>
             {lines.map((line) =>
               href ? (
                 <a
