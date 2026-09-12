@@ -42,7 +42,7 @@ export async function HeroSection() {
   const { heroSubheadline, heroImage, secondaryCtas } = await getHomepageContent();
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden">
+    <section className="relative flex min-h-svh items-center overflow-hidden">
       <Image
         src={heroImage.url}
         alt={heroImage.alt}
@@ -58,7 +58,7 @@ export async function HeroSection() {
       <Container className="relative w-full pt-32 pb-24">
         <div className="max-w-xl">
           <SectionLabel>Prémium Autószerviz · Ercsi</SectionLabel>
-          <h1 className="mb-6 font-heading text-5xl leading-[1.0] font-black text-foreground sm:text-6xl lg:text-[5.5rem]">
+          <h1 className="mb-6 font-heading text-5xl leading-[1.0] font-black text-foreground sm:text-6xl lg:text-[clamp(4.5rem,0.5rem+8.9svh,5.5rem)] lg:[@media(max-height:850px)]:mb-4">
             {HERO_HEADLINE_LINES.map((line, index) => (
               <span key={line}>
                 {GOLD_LINE_INDEXES.has(index) ? (
@@ -70,7 +70,7 @@ export async function HeroSection() {
               </span>
             ))}
           </h1>
-          <p className="mb-10 max-w-md text-base leading-relaxed text-foreground/55">
+          <p className="mb-10 max-w-md text-base leading-relaxed text-foreground/55 lg:[@media(min-height:781px)_and_(max-height:850px)]:mb-7 lg:[@media(max-height:780px)]:mb-6">
             {heroSubheadline}
           </p>
           <div className="flex flex-wrap gap-4">
@@ -87,7 +87,7 @@ export async function HeroSection() {
             )}
           </div>
 
-          <div className="mt-12 flex flex-wrap gap-8 border-t border-gold/20 pt-10">
+          <div className="mt-12 flex flex-wrap gap-8 border-t border-gold/20 pt-10 lg:[@media(min-height:781px)_and_(max-height:850px)]:mt-7 lg:[@media(min-height:781px)_and_(max-height:850px)]:pt-6 lg:[@media(max-height:780px)]:mt-4 lg:[@media(max-height:780px)]:pt-4">
             {HERO_STATS.map(({ value, label }) => (
               <div key={label}>
                 <div className="font-heading text-2xl leading-none font-black text-gold">
@@ -102,9 +102,11 @@ export async function HeroSection() {
         </div>
       </Container>
 
-      <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 text-gold/50">
-        <div className="h-10 w-px bg-gradient-to-b from-transparent to-gold/50" />
-        <ChevronDown size={14} className="animate-bounce" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-svh">
+        <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 text-gold/50">
+          <div className="h-10 w-px bg-gradient-to-b from-transparent to-gold/50" />
+          <ChevronDown size={14} className="animate-bounce" />
+        </div>
       </div>
     </section>
   );
