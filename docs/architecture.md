@@ -192,6 +192,17 @@ source), so it adds no new billing/credential surface. `docs/development-guideli
 previously-flagged "map/location integration approach" gap is resolved by
 this decision.
 
+That click now goes through a small first-party consent layer
+(`src/lib/consent`): the button grants an `externalServices` consent
+category, the embed renders only when that category is granted, and the
+choice is persisted in `localStorage` (a single, versioned, non-tracking
+entry — the visitor's own yes/no about the map, nothing analytic) so it
+survives a reload; a "Hozzájárulás visszavonása" action next to the map
+revokes it, which unmounts the iframe rather than hiding it. The consent
+model is deliberately vendor-agnostic (categories, not "Google Maps"
+specifically), so a v2 analytics/marketing category can depend on it later
+without changing this mechanism — see `docs/product.md` Section 15.
+
 **Status: v1 requirement — implemented.**
 
 ---

@@ -240,7 +240,12 @@ function buildSections(settings: BusinessSettings): PolicySection[] {
         nyújt információt. A beágyazott térkép mellett egy „Megnyitás Google
         Térképen&rdquo; feliratú külső hivatkozás is elérhető, amellyel a
         címet a Weboldaltól függetlenül, közvetlenül a Google Maps oldalán
-        is megtekintheti.
+        is megtekintheti. Az Ön döntését (hogy engedélyezte-e a térkép
+        betöltését) a böngészője a saját eszközén, kizárólag erre a célra
+        megjegyzi, így nem kell minden látogatáskor újra rákattintania — ezt
+        a döntést a térkép mellett megjelenő „Hozzájárulás
+        visszavonása&rdquo; hivatkozással bármikor visszavonhatja, ekkor a
+        térkép eltávolításra kerül és a helyére az előnézet kerül vissza.
       </p>
     ),
   },
@@ -313,10 +318,9 @@ function buildSections(settings: BusinessSettings): PolicySection[] {
           látogatói cookie-kat, és nem alkalmaz analitikai vagy marketing
           célú nyomkövetést. Nem használunk Google Analytics-et, Google Tag
           Manager-t, Meta Pixelt, sem más statisztikai vagy hirdetési célú
-          eszközt, és a látogatók böngészőjében nem tárolunk adatot
-          (localStorage/sessionStorage) nyomkövetési célból.
+          eszközt.
         </p>
-        <p>
+        <p className="mb-3">
           Egyetlen kivétel a 12. pontban leírt, kattintásra betöltődő Google
           Maps beágyazás: ha Ön kifejezetten rákattint a térkép betöltésére,
           a Google — saját szolgáltatásának részeként — cookie-kat vagy
@@ -324,6 +328,13 @@ function buildSections(settings: BusinessSettings): PolicySection[] {
           Weboldal saját cookie-kezelése helyett a Google saját
           adatkezelési gyakorlatának a része, és csak az Ön kifejezett
           kattintása után történik meg.
+        </p>
+        <p>
+          Az Ön erre vonatkozó döntését a Weboldal a böngészőjének helyi
+          tárolójában (localStorage), kizárólag az Ön saját eszközén jegyzi
+          meg — ez nem nyomkövetési vagy statisztikai célú adattárolás,
+          hanem egyetlen igen/nem érték arról, hogy Ön engedélyezte-e a
+          térkép betöltését, és bármikor visszavonható (12. pont).
         </p>
       </>
     ),
