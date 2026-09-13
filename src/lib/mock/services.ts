@@ -746,76 +746,90 @@ export const ALL_SERVICES: Service[] = [
   {
     slug: "gepi-atmosasos-automata-valtoolajcsere",
     title: "Gépi, átmosásos automata váltóolajcsere",
-    tagline: "Kontrollált, gépi olajcsere-folyamat",
+    tagline: "Prémium márkájú automata sebességváltókhoz",
     summary:
-      "Az automata sebességváltó állapotának felmérése és gépi, átmosásos váltóolajcsere — az alkalmazhatóság a jármű és a váltó típusától függ.",
+      "Teljes, gépi és átmosásos automata váltóolajcsere elsősorban prémium márkájú (például Mercedes-Benz, BMW, Audi, Volkswagen, Porsche) gépjárművekhez — a fáradt olaj és a szennyeződések eltávolítása a teljes rendszerből, gyártói előírás szerinti hőmérsékleten, szükség esetén váltóadaptációval és záróellenőrzéssel.",
     body: [
       {
         type: "paragraph",
-        text: "Az automata sebességváltó megbízható működéséhez a váltóolaj állapota is hozzájárul. Az elhasználódott olaj a hagyományos leeresztéses cserénél részben a rendszerben maradhat, ezért bizonyos váltóknál a gépi, átmosásos csere hatékonyabb megoldást jelenthet.",
+        text: "Az automata sebességváltó a kapcsolásokat hidraulikus nyomáson és a váltóolaj kenőképességén keresztül vezérli. Az idővel elhasználódó, szennyeződésekkel terhelt olaj rontja a hidraulikus vezérlés pontosságát, ami a kapcsolási minőség romlásában és a váltó fokozott terhelésében mutatkozhat meg.",
       },
       {
         type: "paragraph",
-        text: "A gépi, átmosásos olajcsere során az egész rendszeren átáramoltatjuk az új olajat, kontrollált folyamat keretében, hogy minél nagyobb arányban lecseréljük a régi olajat. Az alkalmazhatóság mindig a jármű és a sebességváltó típusától függ, ezért ezt előzetesen ellenőrizzük.",
+        text: "A gépi, átmosásos váltóolajcsere lényege, hogy a hagyományos leeresztéses cserével szemben — ahol az olaj egy része szinte mindig a nyomatékváltóban és a csatornákban marad — egy erre alkalmas berendezés az egész rendszeren átáramoltatja az új olajat. Így a fáradt olaj és a benne lévő szennyeződések nagyobb arányban távoznak a rendszerből.",
+      },
+      {
+        type: "paragraph",
+        text: "A folyamatot a gyártó előírásának megfelelő üzemi hőmérsékleten végezzük, mivel a váltóolaj viselkedése — és ezáltal a csere pontossága — hőmérsékletfüggő. Az olajtípusra, mennyiségre és eljárásra vonatkozó gyártói előírások jármű- és váltótípusonként eltérnek, ezért ezeket minden esetben az adott típushoz igazítjuk. A csere után, ahol ez indokolt vagy elvégezhető, váltóadaptációt és hibakód-ellenőrzést is végzünk, hogy a rendszer a csere után is megfelelően működjön.",
+      },
+      {
+        type: "paragraph",
+        text: "A referenciaanyagunk szerint az automata váltóolaj cseréje jellemzően 60 000–80 000 km körül javasolt, fokozott igénybevétel — például sportos használat, vontatás vagy jelentős városi közlekedés — esetén pedig 40 000–60 000 km körülire csökkenhet ez az intervallum. Ezek általános tájékoztató értékek: a tényleges csereintervallumot mindig a jármű típusa, a sebességváltó fajtája, a gyártói előírás és a használati mód határozza meg.",
       },
       {
         type: "list",
         items: [
-          "Esedékes automata váltóolajcsere",
+          "Esedékes vagy közelgő váltóolajcsere a gyártói előírás szerint",
           "Rendszertelen vagy döccenős kapcsolás",
+          "Fokozott igénybevétel — sportos vezetés, vontatás, sok városi használat",
           "Bizonytalanság a váltó állapotával kapcsolatban",
-          "A gyártó gépi olajcserét ír elő az adott típushoz",
         ],
       },
     ],
     highlights: [
-      "Kontrollált, gépi olajcsere-folyamat",
-      "Állapotfelmérés a csere előtt",
-      "Alkalmazhatóság ellenőrzése jármű- és váltótípus szerint",
+      "Teljes rendszeren átáramoltatott, gépi olajcsere",
+      "A fáradt olaj és a szennyeződések nagyobb arányú eltávolítása",
+      "Gyártói előírás szerinti hőmérsékleten végzett csere",
+      "Szükség esetén váltóadaptáció és hibakód-ellenőrzés",
     ],
     process: [
       {
         title: "Állapotfelmérés",
-        description: "Az automata sebességváltó és a jelenlegi váltóolaj állapotának vizsgálata, valamint annak ellenőrzése, hogy az adott típusnál alkalmazható-e a gépi, átmosásos csere",
+        description: "A sebességváltó és a jelenlegi váltóolaj állapotának, valamint az adott jármű- és váltótípusnál alkalmazandó gyártói előírásnak a felmérése",
       },
       {
-        title: "Előkészítés",
-        description: "A jármű csatlakoztatása az olajcserélő berendezéshez",
+        title: "Csatlakoztatás és előmelegítés",
+        description: "A jármű csatlakoztatása az olajcserélő berendezéshez, majd a rendszer a gyártó által előírt üzemi hőmérsékletre hozása",
       },
       {
         title: "Gépi, átmosásos olajcsere",
-        description: "Az új olaj kontrollált átáramoltatása a rendszeren, a régi olaj minél nagyobb arányú lecserélése érdekében",
+        description: "A fáradt olaj és a benne lévő szennyeződések kontrollált lecserélése az új olajra a teljes rendszeren keresztül",
       },
       {
-        title: "Ellenőrzés",
-        description: "A csere utáni működés ellenőrzése",
+        title: "Ellenőrzés és adaptáció",
+        description: "A csere utáni működés és a hibakódok ellenőrzése, szükség esetén a váltóadaptáció elvégzése",
       },
     ],
     faq: [
       {
-        question: "Minden automata váltónál elvégezhető a gépi, átmosásos olajcsere?",
+        question: "Mikor érdemes automata váltóolajat cserélni?",
         answer:
-          "Nem minden esetben — az alkalmazhatóság a jármű és a sebességváltó típusától függ. Ezt előzetesen, az állapotfelmérés részeként ellenőrizzük.",
+          "Az általános tájékoztatás szerint ez jellemzően 60 000–80 000 km körül esedékes, fokozott igénybevétel — például sportos használat, vontatás vagy sok városi közlekedés — esetén pedig már 40 000–60 000 km körül indokolt lehet. A pontos intervallum mindig a jármű és a váltó típusától, valamint a gyártói előírástól függ.",
       },
       {
-        question: "Miben különbözik ez a hagyományos olajcserétől?",
+        question: "Mi a különbség a hagyományos és a gépi, átmosásos csere között?",
         answer:
-          "A gépi, átmosásos csere során az egész rendszeren átáramoltatjuk az új olajat, így a hagyományos leeresztéses cseréhez képest jellemzően nagyobb arányban távozik a régi olaj a rendszerből.",
+          "Hagyományos leeresztéses cserénél az olaj egy része a nyomatékváltóban és a csatornákban marad, míg a gépi, átmosásos eljárás az egész rendszeren átáramoltatja az új olajat, így a régi olajat és a szennyeződéseket nagyobb arányban távolítja el.",
       },
       {
-        question: "Honnan tudom, hogy váltóolajcserére van szükségem?",
+        question: "Minden automata váltónál ugyanaz az olajcsere-periódus?",
         answer:
-          "A gyártó által javasolt időszak mellett a rendszertelen vagy döccenős kapcsolás is jelezheti, hogy érdemes ellenőriztetni a váltóolaj állapotát.",
+          "Nem — a csereintervallum jármű- és váltótípusonként, valamint a használati módtól függően is eltérő lehet. A gyártói előírás mindig irányadó, ezért ezt minden esetben figyelembe vesszük.",
+      },
+      {
+        question: "Szükség van-e váltóadaptációra az olajcsere után?",
+        answer:
+          "Ez a jármű és a váltó típusától függ — ahol ez indokolt vagy elvégezhető, a csere részeként váltóadaptációt és a rendszer működésének ellenőrzését is elvégezzük.",
       },
     ],
     heroImage: {
       url: "/placeholders/photo-placeholder.svg",
-      alt: "Automata sebességváltó gépi, átmosásos olajcseréje",
+      alt: "Automata sebességváltó gépi, átmosásos olajcseréje prémium márkájú gépjárművön",
     },
     gallery: [
       {
         url: "/placeholders/photo-placeholder.svg",
-        alt: "Váltóolajcserélő berendezés csatlakoztatva a járműhöz",
+        alt: "Váltóolajcserélő berendezés csatlakoztatva egy automata sebességváltóhoz",
       },
     ],
     isActive: true,
