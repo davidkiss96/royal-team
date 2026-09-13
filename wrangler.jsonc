@@ -12,7 +12,56 @@
   // revalidation (a Worker calling itself over HTTP) — required for
   // `{ next: { revalidate } }` in src/lib/sanity/queries/* to actually
   // refresh stale pages rather than only ever serving the first-rendered copy.
-  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "royal-team" }]
+  // `environment: "production"` mirrors what Cloudflare's API already
+  // reports for this Worker's one (default) deployment target — every
+  // Worker has an implicit "production" environment even without Wrangler's
+  // separate named-environment feature (`env.*` blocks, deliberately not
+  // used here — see docs/architecture.md Section 17.1 for why a single
+  // Worker is this project's chosen architecture). Declaring it explicitly
+  // keeps this file byte-for-byte consistent with what `wrangler deploy`
+  // already reports remotely, so there's nothing left to flag as drift.
+  "services": [
+    { "binding": "WORKER_SELF_REFERENCE", "service": "royal-team", "environment": "production" }
+  ],
+
+  // Non-secret, git-tracked source of truth for this Worker's Dashboard
+  // "Variables" — declaring them here means `wrangler deploy` re-asserts
+  // these exact values every time instead of trying to delete whatever the
+  // Dashboard already has (the cause of the "local configuration differs
+  // from remote" warning on the first deploy, since nothing local declared
+  // them yet). Real values, safe to commit — not secret
+  // (docs/architecture.md Section 6 / .env.example).
+  //
+  // IMPORTANT — these do NOT control the deployed app's actual behavior:
+  // because both are NEXT_PUBLIC_-prefixed, Next.js inlines their real
+  // value into the compiled bundle at `next build` time, from whatever
+  // build-time environment ran it (`.env.local` for a local
+  // `npm run cf:deploy` — see that script in package.json). This `vars`
+  // block only keeps Cloudflare's own bookkeeping/Dashboard display
+  // accurate and stops the deploy-time drift warning; to actually change
+  // which Sanity project/dataset the deployed app talks to, change
+  // `.env.local` (or your CI's build-time env) and redeploy, not this file.
+  "vars": {
+    "NEXT_PUBLIC_SANITY_PROJECT_ID": "zgo9rr84",
+    "NEXT_PUBLIC_SANITY_DATASET": "production"
+  }
+
+  // NEXT_PUBLIC_SITE_ENV is deliberately NOT declared here — see
+  // package.json's `cf:deploy` script instead, which sets it explicitly
+  // (and only) for the one real production build. Putting a build-time-only
+  // var here would do nothing for the deployed app (same reasoning as
+  // above) while still being picked up by local `next dev` via
+  // `initOpenNextCloudflareForDev()` (next.config.ts) — risking `next dev`
+  // becoming indexable too, exactly what src/lib/site-config.ts's
+  // `IS_PRODUCTION` default was built to prevent.
+
+  // RESEND_API_KEY/RESEND_FROM_EMAIL are deliberately NOT here, and never
+  // should be: both are genuine runtime reads (no NEXT_PUBLIC_ prefix —
+  // read live inside submit-contact-form.ts's Server Action, not inlined at
+  // build time) and stay Cloudflare Secrets, set via the Dashboard or
+  // `wrangler secret put`. `wrangler deploy` never touches or deletes a
+  // Secret unless `wrangler secret delete` is run explicitly, so there is
+  // no drift risk and nothing to declare here.
 
   // No "images" binding: that requires Cloudflare Images (a separate paid
   // product) to re-optimize next/image output at the edge. This app's images
