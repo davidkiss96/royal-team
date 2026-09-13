@@ -62,11 +62,7 @@ export const ALL_SERVICES: Service[] = [
         ],
       },
     ],
-    highlights: [
-      "Több karbantartási munka egy alkalommal",
-      "Átfogó állapotfelmérés",
-      "Felkészítés a műszaki vizsgára",
-    ],
+    highlights: ["Több karbantartási munka egy alkalommal", "Átfogó állapotfelmérés", "Felkészítés a műszaki vizsgára"],
     process: [
       {
         title: "Bevétel és állapotfelmérés",
@@ -78,7 +74,8 @@ export const ALL_SERVICES: Service[] = [
       },
       {
         title: "Fékrendszer és vezérlés ellenőrzése",
-        description: "A fékalkatrészek állapotának vizsgálata, szükség esetén csere, valamint a vezérlés ellenőrzése vagy cseréje",
+        description:
+          "A fékalkatrészek állapotának vizsgálata, szükség esetén csere, valamint a vezérlés ellenőrzése vagy cseréje",
       },
       {
         title: "Záró ellenőrzés",
@@ -231,7 +228,8 @@ export const ALL_SERVICES: Service[] = [
       },
       {
         title: "Automatizált tisztítás",
-        description: "A szűrő tisztítása Bekis DPF 4100+ berendezéssel, vízbázisú eljárással, a korom, hamu és egyéb lerakódások eltávolítására",
+        description:
+          "A szűrő tisztítása Bekis DPF 4100+ berendezéssel, vízbázisú eljárással, a korom, hamu és egyéb lerakódások eltávolítására",
       },
       {
         title: "Szárítás",
@@ -239,7 +237,8 @@ export const ALL_SERVICES: Service[] = [
       },
       {
         title: "Utómérés és dokumentáció",
-        description: "A tisztítás eredményének ellenőrzése méréssel, visszaszerelés, majd a mérési eredmények dokumentálása",
+        description:
+          "A tisztítás eredményének ellenőrzése méréssel, visszaszerelés, majd a mérési eredmények dokumentálása",
       },
     ],
     faq: [
@@ -620,7 +619,8 @@ export const ALL_SERVICES: Service[] = [
     process: [
       {
         title: "Állapotfelmérés",
-        description: "A szívórendszer és a szívószelepek állapotának vizsgálata, annak eldöntése, hogy a dióhéjas tisztítás indokolt-e",
+        description:
+          "A szívórendszer és a szívószelepek állapotának vizsgálata, annak eldöntése, hogy a dióhéjas tisztítás indokolt-e",
       },
       {
         title: "Előkészítés",
@@ -785,15 +785,18 @@ export const ALL_SERVICES: Service[] = [
     process: [
       {
         title: "Állapotfelmérés",
-        description: "A sebességváltó és a jelenlegi váltóolaj állapotának, valamint az adott jármű- és váltótípusnál alkalmazandó gyártói előírásnak a felmérése",
+        description:
+          "A sebességváltó és a jelenlegi váltóolaj állapotának, valamint az adott jármű- és váltótípusnál alkalmazandó gyártói előírásnak a felmérése",
       },
       {
         title: "Csatlakoztatás és előmelegítés",
-        description: "A jármű csatlakoztatása az olajcserélő berendezéshez, majd a rendszer a gyártó által előírt üzemi hőmérsékletre hozása",
+        description:
+          "A jármű csatlakoztatása az olajcserélő berendezéshez, majd a rendszer a gyártó által előírt üzemi hőmérsékletre hozása",
       },
       {
         title: "Gépi, átmosásos olajcsere",
-        description: "A fáradt olaj és a benne lévő szennyeződések kontrollált lecserélése az új olajra a teljes rendszeren keresztül",
+        description:
+          "A fáradt olaj és a benne lévő szennyeződések kontrollált lecserélése az új olajra a teljes rendszeren keresztül",
       },
       {
         title: "Ellenőrzés és adaptáció",
