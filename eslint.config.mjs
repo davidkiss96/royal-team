@@ -14,7 +14,12 @@ const eslintConfig = [
     // studio/ is a separate, standalone Sanity Studio app with its own
     // package.json/tsconfig (docs/architecture.md Section 6) — not part of
     // the Next.js app this config is written for.
-    ignores: ["design-reference/**", "studio/**"],
+    // .open-next/ and .wrangler/ are `opennextjs-cloudflare build`'s
+    // generated Worker bundle/local state (gitignored, docs/architecture.md
+    // Section 17.1) — the same kind of build output `.next/` already is,
+    // just not covered by eslint-config-next's default ignores since it
+    // predates the Cloudflare adapter.
+    ignores: ["design-reference/**", "studio/**", ".open-next/**", ".wrangler/**"],
   },
 ];
 
