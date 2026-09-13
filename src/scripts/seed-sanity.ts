@@ -17,16 +17,50 @@
  * `createOrReplace`, so re-running this script (in --write mode) updates
  * the same documents in place instead of creating duplicates.
  *
+ * SCOPES (--only) AND CLEANUP (--cleanup)
+ * ----------------------------------------
+ * `SEED_SCOPES` (below the per-type document builders) is the single table
+ * pairing each content type with its mock collection, its builder, and its
+ * Sanity `_type` — a full run is just "every scope in that table," and
+ * `--only=<name>` is "the one scope whose name matches." There is no second,
+ * separately-maintained list of valid `--only` values to keep in sync: an
+ * unrecognized name fails with the list of names read straight off
+ * `SEED_SCOPES`, and adding a future scope (e.g. an `about-page` mock
+ * update) means adding one entry to that table, not touching any argument-
+ * parsing or validation code here.
+ *
+ * `--only=<scope>` restricts a run (dry or --write) to that one content
+ * type: only its documents are built and written, and no other scope's mock
+ * file is even read.
+ *
+ * Stale-document deletion is opt-in and separate from scope selection: pass
+ * `--cleanup` to also delete, for each scope in the current run (all of them
+ * by default, or just the one named by `--only`), any existing Sanity
+ * document of that scope's `_type` whose `_id` isn't produced by the current
+ * mock data. Without `--cleanup`, every run — scoped or full — only ever
+ * creates/replaces documents, exactly like `createOrReplace` on its own.
+ * `--only=services` alone therefore does NOT delete stale services;
+ * `--only=services --cleanup` does.
+ *
  * Run:
- *   node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts             (dry run)
- *   node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts --write     (real write)
- *   npm run seed:sanity            (dry run)
- *   npm run seed:sanity -- --write (real write)
+ *   node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts                                    (dry run, full)
+ *   node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts --write                            (real write, full, no cleanup)
+ *   node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts --write --cleanup                  (real write, full, with cleanup)
+ *   node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts --only=services                    (dry run, services only)
+ *   node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts --write --only=services             (real write, services only, no cleanup)
+ *   node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts --write --only=services --cleanup   (real write, services only, with cleanup)
+ *   npm run seed:sanity                                       (dry run, full)
+ *   npm run seed:sanity -- --write                            (real write, full, no cleanup)
+ *   npm run seed:sanity -- --write --cleanup                  (real write, full, with cleanup)
+ *   npm run seed:sanity -- --only=services                    (dry run, services only)
+ *   npm run seed:sanity -- --write --only=services            (real write, services only, no cleanup)
+ *   npm run seed:sanity -- --write --only=services --cleanup  (real write, services only, with cleanup)
  *
  * --write requires SANITY_API_WRITE_TOKEN to be set (in .env.local — never
  * .env.example, never NEXT_PUBLIC_*, never committed). Create one at
  * manage.sanity.io -> your project -> API -> Tokens (Editor permission is
- * enough; this script only creates/replaces documents, never deletes).
+ * required — this script creates/replaces documents, and with --cleanup
+ * also deletes stale documents within the run's scope(s)).
  *
  * WHAT THIS DOES NOT DO (see the migration report for full reasoning):
  * - Does not create any `author` documents — no mock source data exists
@@ -427,12 +461,56 @@ function buildAboutPageDoc(): SeedDoc {
 }
 
 // ---------------------------------------------------------------------------
+// Seed scopes — the single source of truth for both "what a full seed
+// writes" and "what --only=<name> can select." Each row is one content
+// type: its mock collection feeds its builder, and `sanityType` is the
+// `_type` used to query/reconcile that scope's documents in Sanity. Adding
+// a new mock/content type to the seed means adding a row here — nothing in
+// the CLI parsing below needs to change.
+// ---------------------------------------------------------------------------
+
+interface SeedScope {
+  name: string;
+  sanityType: string;
+  build: () => SeedDoc[];
+}
+
+const SEED_SCOPES: SeedScope[] = [
+  { name: "services", sanityType: "service", build: () => ALL_SERVICES.map(buildServiceDoc) },
+  { name: "projects", sanityType: "project", build: () => ALL_PROJECTS.map(buildProjectDoc) },
+  { name: "blog-posts", sanityType: "blogPost", build: () => LATEST_POSTS.map(buildBlogPostDoc) },
+  { name: "reviews", sanityType: "review", build: () => FEATURED_REVIEWS.map(buildReviewDoc) },
+  {
+    name: "price-categories",
+    sanityType: "priceCategory",
+    build: () => ALL_PRICE_CATEGORIES.map(buildPriceCategoryDoc),
+  },
+  { name: "business-settings", sanityType: "businessSettings", build: () => [buildBusinessSettingsDoc()] },
+  { name: "homepage", sanityType: "homepage", build: () => [buildHomepageDoc()] },
+  { name: "about-page", sanityType: "aboutPage", build: () => [buildAboutPageDoc()] },
+];
+
+// ---------------------------------------------------------------------------
 // Runner
 // ---------------------------------------------------------------------------
 
 async function main() {
-  const write = process.argv.slice(2).includes("--write");
+  const args = process.argv.slice(2);
+  const write = args.includes("--write");
   const dryRun = !write;
+  const cleanup = args.includes("--cleanup");
+
+  const onlyArg = args.find((a) => a.startsWith("--only="))?.slice("--only=".length);
+  let selectedScope: SeedScope | undefined;
+  if (onlyArg !== undefined) {
+    selectedScope = SEED_SCOPES.find((s) => s.name === onlyArg);
+    if (!selectedScope) {
+      throw new Error(
+        `Unknown --only scope "${onlyArg}". Available scopes: ${SEED_SCOPES.map((s) => s.name).join(", ")}.`,
+      );
+    }
+  }
+  const scopes = selectedScope ? [selectedScope] : SEED_SCOPES;
 
   const sanityProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -454,23 +532,61 @@ async function main() {
     ? createClient({ projectId: sanityProjectId, dataset, apiVersion: "2025-01-01", token, useCdn: false })
     : null;
 
-  console.log(`Sanity seed migration — ${dryRun ? "DRY RUN (no writes will be made)" : "WRITE MODE"}`);
+  console.log(
+    `Sanity seed migration — ${dryRun ? "DRY RUN (no writes will be made)" : "WRITE MODE"}` +
+      (onlyArg ? ` — SCOPE: ${onlyArg}` : "") +
+      (cleanup ? " + CLEANUP" : ""),
+  );
   console.log(`Project: ${sanityProjectId}  Dataset: ${dataset}`);
-  console.log(`Author: skipped entirely — no mock data source exists for this content type.\n`);
+  if (selectedScope) {
+    const excludedTypes = SEED_SCOPES.filter((s) => s.name !== selectedScope!.name).map((s) => s.sanityType);
+    console.log(
+      `Scope: only \`${selectedScope.sanityType}\` documents are built/written` +
+        (cleanup ? "/reconciled" : "") +
+        ` in this run. Not touched: ${excludedTypes.join(", ")}.\n`,
+    );
+  } else {
+    console.log(`Author: skipped entirely — no mock data source exists for this content type.\n`);
+  }
 
-  const docs = [
-    ...ALL_SERVICES.map(buildServiceDoc),
-    ...ALL_PROJECTS.map(buildProjectDoc),
-    ...LATEST_POSTS.map(buildBlogPostDoc),
-    ...FEATURED_REVIEWS.map(buildReviewDoc),
-    ...ALL_PRICE_CATEGORIES.map(buildPriceCategoryDoc),
-    buildBusinessSettingsDoc(),
-    buildHomepageDoc(),
-    buildAboutPageDoc(),
-  ];
+  // Each scope's documents are built once and reused for both the write
+  // loop and (when --cleanup is passed) that scope's own reconciliation —
+  // no separate "expected ids" computation to keep in sync with `build()`.
+  const scopeResults = scopes.map((scope) => ({ scope, docs: scope.build() }));
+  const docs = scopeResults.flatMap((r) => r.docs);
 
   let succeeded = 0;
   const failures: { label: string; error: string }[] = [];
+
+  // Stale-document deletion is explicit opt-in (--cleanup), scoped to
+  // whichever scope(s) are in play for this run (all of them by default, or
+  // just the one named by --only). For each such scope, any existing Sanity
+  // document of that scope's `_type` whose `_id` isn't among the documents
+  // just built from the current mock is deleted — e.g. a service removed or
+  // merged into another one in the mock. Without --cleanup this section is
+  // skipped entirely: a normal run only ever creates/replaces documents.
+  if (cleanup) {
+    for (const { scope, docs: scopeDocs } of scopeResults) {
+      const expectedIds = new Set(scopeDocs.map((d) => d._id));
+      if (write) {
+        const existingIds = await client!.fetch<string[]>(`*[_type == $type]._id`, { type: scope.sanityType });
+        const staleIds = existingIds.filter((id) => !expectedIds.has(id));
+        if (staleIds.length > 0) {
+          console.log(
+            `Removing ${staleIds.length} stale ${scope.sanityType} document(s) no longer produced by scope "${scope.name}": ${staleIds.join(", ")}`,
+          );
+          await client!.delete({ query: `*[_id in $ids]`, params: { ids: staleIds } });
+        } else {
+          console.log(`No stale ${scope.sanityType} documents to remove for scope "${scope.name}".`);
+        }
+      } else {
+        console.log(
+          `[dry-run] would check for and remove any existing ${scope.sanityType} document not produced by scope "${scope.name}"`,
+        );
+      }
+    }
+    console.log("");
+  }
 
   for (const doc of docs) {
     const label = `${doc._type} / ${doc._id}`;

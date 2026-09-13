@@ -1,9 +1,13 @@
 import {
-  AlertTriangle,
+  Cog,
   Cpu,
+  Disc,
   Droplets,
   Filter,
+  Fuel,
   Settings,
+  Snowflake,
+  Wind,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -15,10 +19,14 @@ import {
  * selection a presentation-layer mapping maintained in code, not content.
  */
 export const SERVICE_ICONS: Record<string, LucideIcon> = {
-  "dpf-szuro-tisztitas": Filter,
-  "elektronikai-diagnosztika": Cpu,
-  "futomu-beallitas": Settings,
   "altalanos-karbantartas": Wrench,
-  "fekrendszer-szerviz": AlertTriangle,
-  "olajcsere-szerviz": Droplets,
+  "elektronikai-diagnosztika": Cpu,
+  "dpf-szuro-tisztitas": Filter,
+  "futomu-beallitas": Settings,
+  "kuplung-es-kettostomegu-lendkerek-csere": Disc,
+  "motor-mechanikus-javitasa": Cog,
+  "dizel-uzemanyagrendszer": Fuel,
+  "diohejas-tisztitas": Wind,
+  "klimarendszer-javitas": Snowflake,
+  "gepi-atmosasos-automata-valtoolajcsere": Droplets,
 };

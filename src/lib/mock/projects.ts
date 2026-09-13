@@ -199,7 +199,7 @@ export const ALL_PROJECTS: Project[] = [
       { url: "/placeholders/photo-placeholder.svg", alt: "Az M3 Competition az emelőn" },
       { url: "/placeholders/photo-placeholder.svg", alt: "Próbafékezés tesztvezetés közben" },
     ],
-    relatedServices: ["futomu-beallitas", "fekrendszer-szerviz"],
+    relatedServices: ["futomu-beallitas", "altalanos-karbantartas"],
     displayOrder: 2,
   },
   {
