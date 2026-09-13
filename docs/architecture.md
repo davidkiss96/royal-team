@@ -308,6 +308,38 @@ Narrower in scope, but not lower in rigor for what remains:
 
 **Status: v1 requirement — confirmed, no longer an open decision.**
 
+### 17.1 Deployment tooling (implemented)
+
+**`@opennextjs/cloudflare`** (not the older, edge-runtime-only `@cloudflare/next-on-pages`) is the adapter, since it's the only one of the two that supports this app's actual requirements: Server Actions (the contact form), Node-runtime Server Components, and fetch-based ISR (`{ next: { revalidate } }`, used throughout `src/lib/sanity/queries/`).
+
+- `open-next.config.ts` — minimal (`defineCloudflareConfig()`), no incremental-cache override. ISR falls back to OpenNext's default in-memory cache: correct for this app's read-mostly Sanity content, but it does not persist across Worker restarts/redeploys. Revisit with the R2-backed incremental-cache override only if stale-content-after-restart is observed in practice — not needed for the preview.
+- `wrangler.jsonc` — `nodejs_compat` (required — `resend` and `@sanity/client` are plain npm packages, not edge-native), an `ASSETS` binding for static output, and a `WORKER_SELF_REFERENCE` service binding (the Worker calling itself over HTTP, which is how Next's background ISR revalidation actually triggers on Workers). No `images` binding: that requires the separate, paid Cloudflare Images product, and this app's images are already transformed by Sanity's own CDN before `next/image` sees them (Section 12) — omitted images simply pass through unoptimized rather than failing.
+- `npm run cf:build` — builds the OpenNext bundle only (`.open-next/`), for inspecting/validating the output.
+- `npm run cf:preview` — builds and runs the actual Cloudflare Worker locally (via `wrangler`/`workerd`, not `next start`) — the real way to validate a change behaves correctly under the Cloudflare runtime before deploying.
+- `npm run cf:deploy` — builds and deploys via `wrangler`. Requires `wrangler login` (or a Cloudflare API token) locally — not run as part of this task.
+- `.dev.vars` (gitignored, `.dev.vars.example` tracked) — local-only, tells the Cloudflare runtime simulator which Next env-file variant to load; the real Sanity/Resend values still come from `.env.local`.
+
+**Required environment variables** (Cloudflare dashboard → Workers & Pages → this project → Settings → Variables, set separately per environment):
+
+| Variable | Production | Preview | Local (`.env.local`) |
+|---|---|---|---|
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | ✅ | ✅ | ✅ |
+| `NEXT_PUBLIC_SANITY_DATASET` | ✅ | ✅ | ✅ |
+| `RESEND_API_KEY` | ✅ | ✅ (or a test key) | ✅ |
+| `RESEND_FROM_EMAIL` | ✅ | ✅ | ✅ |
+| `NEXT_PUBLIC_SITE_ENV` | `production` | unset | unset |
+| `NEXT_PUBLIC_SITE_URL` | unset (ignored) | optional — this preview's own stable URL, if any | unset |
+
+**Manual, one-time Cloudflare dashboard steps not covered by any file in this repo:** connecting the Worker to a Cloudflare account/project, setting the above environment variables per environment, and (for production) attaching the `royalteamszerviz.hu` custom domain.
+
+### 17.2 Environment-aware indexing (implemented)
+
+`src/lib/site-config.ts` is the single source of truth for both `SITE_URL` (absolute origin) and `IS_PRODUCTION` (`NEXT_PUBLIC_SITE_ENV === "production"`, explicit — never guessed from hostname). Every SEO surface reads from these two exports and nothing else: `robots.ts`, `sitemap.ts`, the root layout's `metadataBase`, and `src/lib/seo.ts`'s `buildPageMetadata` (which every real page uses for its canonical/OG/Twitter/robots metadata).
+
+- **Production** (`NEXT_PUBLIC_SITE_ENV=production`): `robots.txt` allows crawling and links the sitemap; pages are indexable unless individually flagged `seo.noIndex` in Sanity; canonical/OG/Twitter URLs resolve against `https://royalteamszerviz.hu`.
+- **Everything else** (Cloudflare Preview deployments, local `next dev`/`next build`, `NEXT_PUBLIC_SITE_ENV` unset): `robots.txt` disallows everything; every page's `robots` meta is `noindex, nofollow` regardless of content; canonical/OG/Twitter URLs resolve against `NEXT_PUBLIC_SITE_URL` if set, else `http://localhost:3000` — never the production domain. This is the default with no configuration required, so a preview can't become accidentally indexable by omission.
+- Content-level `seo.noIndex` (Sanity) is independent of the above and still applies in production: a page is indexable only when both "this is production" and "not editor-flagged noIndex" are true.
+
 ---
 
 ## 18. Cost Considerations

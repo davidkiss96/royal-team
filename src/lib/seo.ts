@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { BusinessSettings } from "@/lib/sanity/queries/business-settings";
+import { IS_PRODUCTION } from "@/lib/site-config";
 
 export const SITE_NAME = "Royal-Team Autószerviz";
 
@@ -55,8 +56,18 @@ export interface PageMetadataInput {
  * computes (docs/development-guidelines.md Section 8's "centralize repeated
  * fragments", applied to metadata the same way `SEO_PROJECTION` centralizes
  * the GROQ shape). `path` and `image.url` (when relative) are resolved
- * against the root layout's `metadataBase`. `image` overrides the sitewide
- * default (`DEFAULT_SOCIAL_IMAGE`) when a route has a real content photo.
+ * against the root layout's `metadataBase`, which is itself environment-aware
+ * (`src/lib/site-config.ts`'s `SITE_URL`) — so a preview/local build's OG and
+ * Twitter URLs resolve against that build's own origin, never silently
+ * claiming to be the production site. `image` overrides the sitewide default
+ * (`DEFAULT_SOCIAL_IMAGE`) when a route has a real content photo.
+ *
+ * `robots` is always set, never conditionally omitted: a page is indexable
+ * only when this is a genuine production build (`IS_PRODUCTION`) **and** the
+ * content itself isn't editor-flagged `noIndex` — either one blocks
+ * indexing, so a preview/local build can never accidentally index a page
+ * (Section 2 of the release audit), and a `noIndex`-flagged document stays
+ * `noIndex` in production regardless of environment.
  */
 export function buildPageMetadata({
   title,
@@ -67,6 +78,8 @@ export function buildPageMetadata({
   ogType = "website",
   publishedTime,
 }: PageMetadataInput): Metadata {
+  const indexable = IS_PRODUCTION && !noIndex;
+
   return {
     title,
     description,
@@ -87,7 +100,7 @@ export function buildPageMetadata({
       description,
       images: [image.url],
     },
-    ...(noIndex ? { robots: { index: false, follow: false } } : {}),
+    robots: { index: indexable, follow: indexable },
   };
 }
 

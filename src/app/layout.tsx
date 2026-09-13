@@ -3,7 +3,7 @@ import { Rajdhani, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
-import { SITE_URL } from "@/lib/site-config";
+import { IS_PRODUCTION, SITE_URL } from "@/lib/site-config";
 import { buildLocalBusinessJsonLd } from "@/lib/seo";
 import "./globals.css";
 
@@ -40,16 +40,20 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-// Site-wide fallback — every real page overrides title/description via its
-// own `metadata`/`generateMetadata` (docs/development-guidelines.md Section
-// 10). `metadataBase` is the one place this resolves: every page's relative
-// `alternates.canonical`/OG image URL is resolved against it, from the same
-// `SITE_URL` `sitemap.ts`/`robots.ts` already use — never a second domain
-// source, never localhost.
+// Site-wide fallback — every real page overrides title/description (and
+// robots — src/lib/seo.ts's buildPageMetadata) via its own `metadata`/
+// `generateMetadata` (docs/development-guidelines.md Section 10). Pages that
+// don't (not-found.tsx, error.tsx) inherit this `robots` default, so it's
+// environment-aware too — never indexable outside a genuine production
+// build (`IS_PRODUCTION`, src/lib/site-config.ts). `metadataBase` is the one
+// place this resolves: every page's relative `alternates.canonical`/OG image
+// URL is resolved against it, from the same `SITE_URL` `sitemap.ts`/
+// `robots.ts` already use — never a second domain source.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Royal-Team Autószerviz",
   description: "Prémium autószerviz — Ercsi",
+  robots: { index: IS_PRODUCTION, follow: IS_PRODUCTION },
 };
 
 export default async function RootLayout({

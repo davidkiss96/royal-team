@@ -14,3 +14,10 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Makes `next dev` simulate the Cloudflare Workers runtime (bindings from
+// wrangler.jsonc, `getCloudflareContext()`, etc.) instead of only becoming
+// accurate under `opennextjs-cloudflare preview`. A no-op in the actual
+// Cloudflare build/deploy path — see open-next.config.ts.
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+initOpenNextCloudflareForDev();

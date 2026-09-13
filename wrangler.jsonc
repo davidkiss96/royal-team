@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "royal-team",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Self-reference binding OpenNext uses to trigger Next.js's background ISR
+  // revalidation (a Worker calling itself over HTTP) — required for
+  // `{ next: { revalidate } }` in src/lib/sanity/queries/* to actually
+  // refresh stale pages rather than only ever serving the first-rendered copy.
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "royal-team" }]
+
+  // No "images" binding: that requires Cloudflare Images (a separate paid
+  // product) to re-optimize next/image output at the edge. This app's images
+  // are already transformed by Sanity's own CDN (docs/architecture.md
+  // Section 12) before next/image ever sees them, so the extra Workers-side
+  // optimization pass isn't needed — omitted images just pass through
+  // unmodified rather than failing (see OpenNext's image-optimization docs).
+
+  // No "r2_buckets" entry: see open-next.config.ts's comment on the default
+  // in-memory incremental cache.
+}

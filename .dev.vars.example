@@ -1,0 +1,10 @@
+# Local-only config for `wrangler`/`opennextjs-cloudflare preview` (the
+# Cloudflare Workers runtime simulator) — separate from `.env.local`, which
+# only `next dev` reads. Copy to `.dev.vars` (gitignored, like `.env.local`).
+#
+# Tells OpenNext which Next.js env-file variant to load (.env.local here,
+# same as plain `next dev`) when running under the simulated Workers runtime.
+NEXTJS_ENV=development
+
+# The actual Sanity/Resend values still come from .env.local — this file
+# does not duplicate them.

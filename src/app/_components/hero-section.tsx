@@ -102,7 +102,7 @@ export async function HeroSection() {
         </div>
       </Container>
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-svh">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-svh">
         <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 text-gold/50">
           <div className="h-10 w-px bg-gradient-to-b from-transparent to-gold/50" />
           <ChevronDown size={14} className="animate-bounce" />
