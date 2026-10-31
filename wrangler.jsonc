@@ -24,6 +24,16 @@
     { "binding": "WORKER_SELF_REFERENCE", "service": "royal-team", "environment": "production" }
   ],
 
+  // Production hostnames (zone `royalteamszerviz.hu` on Cloudflare DNS).
+  // Custom Domains, not Routes: `wrangler deploy` creates the DNS records
+  // and certificates itself. `www` is attached only so it can answer — it
+  // 301s to the apex in next.config.ts (the apex is the canonical origin,
+  // `PRODUCTION_SITE_URL` in src/lib/site-config.ts).
+  "routes": [
+    { "pattern": "royalteamszerviz.hu", "custom_domain": true },
+    { "pattern": "www.royalteamszerviz.hu", "custom_domain": true }
+  ],
+
   // Non-secret, git-tracked source of truth for this Worker's Dashboard
   // "Variables" — declaring them here means `wrangler deploy` re-asserts
   // these exact values every time instead of trying to delete whatever the
