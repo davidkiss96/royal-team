@@ -158,7 +158,8 @@ function buildOpeningHoursSpecification(rows: OpeningHoursRow[] | null | undefin
  * description in the Studio schema). Only includes properties this
  * project's data can actually support: no `priceRange`, `geo`, ratings, or
  * review counts, since none of that exists here and inventing any of it
- * would be fake structured data.
+ * would be fake structured data. `sameAs` lists the business's own social
+ * profiles (`BusinessSettings.socialLinks`).
  */
 export function buildLocalBusinessJsonLd(
   settings: BusinessSettings,
@@ -183,5 +184,6 @@ export function buildLocalBusinessJsonLd(
       addressCountry: "HU",
     },
     ...(openingHoursSpecification ? { openingHoursSpecification } : {}),
+    ...(settings.socialLinks?.length ? { sameAs: settings.socialLinks.map(({ url }) => url) } : {}),
   };
 }

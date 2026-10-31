@@ -1,5 +1,6 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import { GoogleMapEmbed } from "@/components/google-map-embed";
+import { SocialLinks } from "@/components/social-links";
 import { formatAddress } from "@/lib/format-address";
 import { formatOpeningHours } from "@/lib/format-opening-hours";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
@@ -56,6 +57,13 @@ export async function ContactInfo() {
           </div>
         </div>
       ))}
+
+      {settings.socialLinks?.length ? (
+        <div>
+          <p className="mb-4 text-[10px] tracking-widest text-foreground/50 uppercase">Kövessen minket</p>
+          <SocialLinks links={settings.socialLinks} />
+        </div>
+      ) : null}
 
       <GoogleMapEmbed address={workshopAddress} />
     </div>

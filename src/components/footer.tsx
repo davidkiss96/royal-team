@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PhoneIcon } from "./icons";
 import { Logo } from "./logo";
+import { SocialLinks } from "./social-links";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import { FOOTER_LEGAL_LINKS, getNavLinks } from "@/lib/site-config";
 
@@ -58,6 +59,7 @@ export async function Footer({ services = [] }: FooterProps) {
               <PhoneIcon className="h-[13px] w-[13px]" />
               {settings.phone}
             </a>
+            <SocialLinks links={settings.socialLinks} className="mt-6" />
           </div>
 
           <nav aria-label="Navigáció">

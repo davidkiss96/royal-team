@@ -10,10 +10,10 @@ import { sanityClient } from "../client";
  * (docs/content-model.md Section 7, `src/sanity/schemaTypes/documents/business-settings.ts`),
  * so it's fetched directly by `_id` rather than queried as a document type
  * and picked out in JavaScript. Only the fields the current frontend
- * consumers (contact strip, contact page, legal pages) actually use are
- * requested (docs/development-guidelines.md Section 8) — `businessName`,
- * `addressLine2`, `openingHours`, `logo`, brand colors, and `socialLinks`
- * all exist on the schema but have no consumer yet, so they're omitted here.
+ * consumers (contact strip, contact page, legal pages, footer, JSON-LD)
+ * actually use are requested (docs/development-guidelines.md Section 8) —
+ * `addressLine2`, `logo` and brand colors exist on the schema but have no
+ * consumer yet, so they're omitted here.
  */
 const BUSINESS_SETTINGS_ID = "businessSettings";
 
@@ -53,6 +53,7 @@ const BUSINESS_SETTINGS_QUERY = `*[_id == "${BUSINESS_SETTINGS_ID}"][0]{
     opens,
     closes
   },
+  "socialLinks": socialLinks[defined(platform) && defined(url)]{platform, url},
   ${SITE_FEATURES_PROJECTION},
   "siteNotice": select(
     siteNotice.enabled == true && defined(siteNotice.text) => siteNotice{label, text}
@@ -90,6 +91,12 @@ export interface BusinessSettingsOpeningHoursRow {
   closes: string | null;
 }
 
+export interface SocialLink {
+  /** `facebook` | `instagram` | `youtube` | `tiktok` | `other` (Studio list). */
+  platform: string;
+  url: string;
+}
+
 /** The "under development" notice; `null` when switched off or empty (resolved in GROQ). */
 export interface SiteNotice {
   label: string | null;
@@ -108,6 +115,7 @@ export interface BusinessSettings {
   legalTaxNumber: string;
   managingDirector: string;
   openingHours: BusinessSettingsOpeningHoursRow[] | null;
+  socialLinks: SocialLink[] | null;
   siteFeatures: SiteFeatures;
   siteNotice: SiteNotice | null;
 }
