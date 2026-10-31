@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
@@ -371,18 +372,18 @@ export default async function PrivacyPolicyPage() {
           ))}
 
           <div className="mt-10 flex flex-col gap-4 border-t border-gold/10 pt-6 sm:flex-row">
-            <a
+            <Link
               href="/kapcsolat"
               className="inline-flex items-center justify-center border border-gold/50 px-8 py-3.5 font-heading text-xs font-bold tracking-[0.2em] text-gold uppercase transition-all duration-300 hover:border-gold hover:bg-gold/8"
             >
               Kapcsolatfelvétel →
-            </a>
-            <a
+            </Link>
+            <Link
               href="/impresszum"
               className="text-xs text-foreground/50 transition-colors hover:text-foreground/70"
             >
               Impresszum megtekintése
-            </a>
+            </Link>
           </div>
         </Container>
       </section>

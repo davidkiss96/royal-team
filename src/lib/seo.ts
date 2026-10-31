@@ -122,7 +122,7 @@ const DAY_TO_SCHEMA_ORG: Record<string, string> = {
 };
 
 /**
- * Converts `BusinessSettings.openingHours` (`studio/schemaTypes/documents/business-settings.ts`:
+ * Converts `BusinessSettings.openingHours` (`src/sanity/schemaTypes/documents/business-settings.ts`:
  * `{ day, closed, opens, closes }` rows, `opens`/`closes` already validated
  * `HH:MM` in Studio) into Schema.org `OpeningHoursSpecification` — a format
  * that genuinely maps 1:1, so this is a direct field translation, not

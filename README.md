@@ -26,7 +26,6 @@ Recommended reading order if you're picking this up fresh:
 ## What's NOT decided yet (ask before assuming)
 
 - Production hosting provider (`docs/architecture.md` Section 17).
-- Sanity Studio deployment topology — embedded `/studio` route vs. separate deployment (`docs/architecture.md` Section 6).
 - Transactional email provider for the contact form (`docs/architecture.md` Section 11).
 - Analytics tool (`docs/architecture.md` Section 13).
 - A few small Sanity schema-code safeguards flagged in `docs/content-model.md`'s closing summary (read-only-after-publish slugs, singleton delete-action removal) — recommended, not yet confirmed.
@@ -36,7 +35,10 @@ Recommended reading order if you're picking this up fresh:
 ```
 docs/                       — all product/architecture/content-model/design docs (source of truth)
 design-reference/figma-app/ — the approved Figma-exported prototype (READ-ONLY reference, do not edit or copy its architecture — see docs/design-system.md for what to preserve vs. not)
-src/app/                    — Next.js App Router routes
+src/app/layout.tsx          — minimal root layout (fonts, metadata) shared by site and Studio
+src/app/(site)/             — public website routes (layout: globals.css + SiteShell Header/Footer)
+src/app/studio/             — embedded Sanity Studio at /studio
+src/sanity/                 — Studio schemas and desk structure (config: sanity.config.ts)
 src/components/             — shared, cross-route React components (not yet built)
 src/lib/sanity/             — Sanity client, queries, types (not yet built)
 public/                     — static assets, including the real logo

@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink, MapPin } from "lucide-react";
+import Link from "next/link";
 import { useConsent } from "@/lib/consent/use-consent";
 
 interface GoogleMapEmbedProps {
@@ -75,9 +76,9 @@ export function GoogleMapEmbed({ address, className = "" }: GoogleMapEmbedProps)
       <p className="max-w-xs text-xs leading-relaxed text-foreground/40">
         A térképet a Google Maps szolgáltatja. Betöltéskor a Google adatokat
         (pl. IP-cím) gyűjthet — bővebben az{" "}
-        <a href="/adatvedelem" className="text-gold hover:underline">
+        <Link href="/adatvedelem" className="text-gold hover:underline">
           Adatvédelmi tájékoztatóban
-        </a>
+        </Link>
         .
       </p>
       <button

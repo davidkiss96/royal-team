@@ -7,7 +7,7 @@ import { resolveImage, type SanityImageWithAlt } from "../image";
 /**
  * `AboutPage` query module (docs/development-guidelines.md Section 19).
  * Singleton with a deterministic `_id` (docs/content-model.md Section 9,
- * `studio/schemaTypes/documents/about-page.ts`), fetched directly by `_id`
+ * `src/sanity/schemaTypes/documents/about-page.ts`), fetched directly by `_id`
  * exactly like `Homepage`/`BusinessSettings` — never queried as "the first
  * `aboutPage` document".
  *

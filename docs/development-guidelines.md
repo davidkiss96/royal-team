@@ -71,7 +71,7 @@ Scope: engineering rules and conventions for building the approved v1 product �
 - Content is fetched via Sanity's official client library and GROQ queries — no hand-rolled REST calls against Sanity's HTTP API.
 - Only the read path is used by the public-facing application; no write-capable Sanity token is ever present in code the public app executes, consistent with `architecture.md` Section 15.
 - Sanity project ID and dataset name are read from environment variables in one central place (Section 15), not hardcoded per call site.
-- **Content-fetching code should not assume a specific Sanity Studio deployment topology.** `architecture.md` Section 6 leaves embedded-vs-separate Studio as an open decision — implementation should not bake in an assumption that only holds under one of those two outcomes.
+- **Content-fetching code stays independent of Studio.** Studio is embedded at `/studio` (`architecture.md` Section 6), but public pages never import from `sanity`/`next-sanity` — only `src/lib/sanity/` (plain `@sanity/client`), so Studio's bundle stays confined to its own route.
 - GROQ queries are defined once per genuine content need, in a clearly organized location (Section 19), not inlined and duplicated across every page that happens to need a similar shape of data.
 
 ---
@@ -282,12 +282,11 @@ None outright, between this scope restatement and the four current approved docu
 
 ### Engineering decisions that remain open
 As of the legal-pages/Contact-page implementation step, hosting, transactional email, receiving mailbox, analytics, and map/location are all **confirmed** (`docs/architecture.md` Sections 9.1, 11, 13, 16, 17) — no longer open. What's still genuinely open:
-- Sanity Studio deployment topology (`architecture.md` Section 6).
 - Testing framework selection (Section 22) — deliberately deferred until real logic exists to justify it.
 - ISR revalidation windows per content type (Section 3) — a real decision, but one better made against real content-update cadence once Sanity is wired in, not speculatively now.
 - The Contact form's real Server Action + Resend integration itself (the form's client-side UI/validation is implemented; the actual send is intentionally not yet wired up, per this step's explicit scope limits).
 
 ### Recommended next steps
 1. Wire up the Contact form's Server Action (validate server-side, send via Resend to the Google Workspace mailbox) — the one piece of this step intentionally left as a UI-only boundary.
-2. Resolve the Sanity Studio deployment topology (embedded vs. separate) once Sanity itself is introduced.
+2. ~~Resolve the Sanity Studio deployment topology~~ — **done:** embedded at `/studio` (`architecture.md` Section 6).
 3. Initialize the Sanity project/schema and replace the hand-written mock data (`src/lib/mock/`) with real Sanity-sourced content and generated types.

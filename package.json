@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "studio": "npm --prefix studio run dev",
     "seed:sanity": "node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts",
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "echo '--- Cloudflare PREVIEW upload (staging alias) -- production traffic is NOT affected ---' && NEXT_PUBLIC_SITE_ENV=preview NEXT_PUBLIC_SITE_URL=https://preview.royalteamszerviz.hu opennextjs-cloudflare build && opennextjs-cloudflare upload --preview-alias staging",
@@ -22,11 +21,15 @@
     "@portabletext/types": "^4.0.2",
     "@sanity/client": "^8.6.1",
     "@sanity/image-url": "^2.1.1",
+    "@sanity/vision": "^6.21.0",
     "lucide-react": "^1.41.0",
     "next": "^16.3.4",
+    "next-sanity": "^13.4.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "resend": "^6.27.0"
+    "resend": "^6.27.0",
+    "sanity": "^6.21.0",
+    "styled-components": "^6.6.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

@@ -147,7 +147,7 @@ export interface BlogPostDetail {
  * blog/knowledge-center listing (docs/product.md Section 8's "Blog /
  * Knowledge Center"), and the only ordering field `BlogPost` actually has
  * (no `displayOrder`-style manual curation field exists on this type, per
- * `studio/schemaTypes/documents/blog-post.ts`).
+ * `src/sanity/schemaTypes/documents/blog-post.ts`).
  */
 const BLOG_POSTS_LIST_QUERY = `*[_type == "blogPost"] | order(publishedAt desc) {
   title,

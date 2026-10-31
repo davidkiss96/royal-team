@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import {
   submitContactForm,
@@ -194,9 +195,9 @@ export function ContactForm() {
             </span>
             <span className="text-xs leading-relaxed text-foreground/50">
               Elolvastam és tudomásul veszem az{" "}
-              <a href="/adatvedelem" className="text-gold hover:underline">
+              <Link href="/adatvedelem" className="text-gold hover:underline">
                 Adatvédelmi tájékoztatót
-              </a>
+              </Link>
               . *
             </span>
           </label>

@@ -6,7 +6,7 @@ import { sanityClient } from "../client";
  * created now that a page actually needs it).
  *
  * `BusinessSettings` is a singleton with a deterministic `_id`
- * (docs/content-model.md Section 7, `studio/schemaTypes/documents/business-settings.ts`),
+ * (docs/content-model.md Section 7, `src/sanity/schemaTypes/documents/business-settings.ts`),
  * so it's fetched directly by `_id` rather than queried as a document type
  * and picked out in JavaScript. Only the fields the current frontend
  * consumers (contact strip, contact page, legal pages) actually use are

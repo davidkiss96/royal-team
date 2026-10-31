@@ -99,7 +99,7 @@ export interface HomepageFeaturedProject {
 export interface HomepageFeaturedReview {
   authorName: string;
   /** 1–5, integer — `Review.rating` is Studio-required and range-validated
-   * (`studio/schemaTypes/documents/review.ts`); still clamped when mapped
+   * (`src/sanity/schemaTypes/documents/review.ts`); still clamped when mapped
    * below as a minimal defensive guard, not a validation framework. */
   rating: number;
   text: string;
