@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "seed:sanity": "node --no-warnings --env-file=.env.local src/scripts/seed-sanity.ts",
+    "seed:page-copy": "node --no-warnings --env-file=.env.local src/scripts/seed-page-copy.ts",
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "echo '--- Cloudflare PREVIEW upload (staging alias) -- production traffic is NOT affected ---' && NEXT_PUBLIC_SITE_ENV=preview NEXT_PUBLIC_SITE_URL=https://preview.royalteamszerviz.hu opennextjs-cloudflare build && opennextjs-cloudflare upload --preview-alias staging",
     "cf:preview:local": "opennextjs-cloudflare build && opennextjs-cloudflare preview",

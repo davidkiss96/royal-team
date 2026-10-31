@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { AccentHeading } from "@/components/accent-heading";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
 import { buildPageMetadata } from "@/lib/seo";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 import { getProjects } from "@/lib/sanity/queries/projects";
 import { ProjectCard } from "./_components/project-card";
 
-export const metadata: Metadata = buildPageMetadata({
-  title: "Projektek — Royal-Team Autószerviz",
-  description:
-    "Válogatott szervizprojektek — részletes dokumentációval, technikai leírással és valódi eredményekkel.",
-  path: "/projektek",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { meta } = await getPageCopy("projectsPage");
+  return buildPageMetadata({ title: meta.title, description: meta.description, path: "/projektek" });
+}
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
+  const [projects, { header, cta }] = await Promise.all([getProjects(), getPageCopy("projectsPage")]);
 
   return (
     <>
@@ -31,15 +31,12 @@ export default async function ProjectsPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/40" />
         <Container className="relative">
-          <SectionLabel>Automotive portfolio</SectionLabel>
+          <SectionLabel>{header.label}</SectionLabel>
           <h1 className="font-heading text-5xl font-black text-foreground md:text-7xl">
-            Projektek
+            <AccentHeading value={header.title} />
           </h1>
           <GoldDivider className="mt-4" />
-          <p className="mt-6 max-w-xl text-sm leading-relaxed text-foreground/45">
-            Válogatott szervizprojektek — részletes dokumentációval, technikai
-            leírással és valódi eredményekkel.
-          </p>
+          <p className="mt-6 max-w-xl text-sm leading-relaxed text-foreground/45">{header.intro}</p>
         </Container>
       </section>
 
@@ -62,12 +59,9 @@ export default async function ProjectsPage() {
       <section className="border-t border-gold/8 bg-card/30 py-12">
         <Container className="text-center">
           <h2 className="mb-2 font-heading text-2xl font-black text-foreground">
-            Hasonló munkát szeretne elvégeztetni?
+            {cta.title}
           </h2>
-          <p className="mb-5 text-sm text-foreground/40">
-            Keressen minket — szívesen megbeszéljük az Ön autójához szükséges
-            munkát.
-          </p>
+          <p className="mb-5 text-sm text-foreground/40">{cta.text}</p>
           <Button href="/kapcsolat">Kapcsolatfelvétel →</Button>
         </Container>
       </section>

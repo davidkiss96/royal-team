@@ -1,37 +1,17 @@
 import { Award, Cpu, Shield, Zap, type LucideIcon } from "lucide-react";
+import { AccentHeading } from "@/components/accent-heading";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 
-/**
- * Static site copy — no content-model field covers this section (not on
- * `Homepage`, not elsewhere). Kept as a fixed local constant rather than
- * "mock Sanity data", since there's no schema to shape it against yet.
- */
-const WHY_US_FEATURES: { icon: LucideIcon; title: string; description: string }[] = [
-  {
-    icon: Cpu,
-    title: "OEM Diagnosztika",
-    description: "Gyári szintű diagnosztikai rendszerek minden márkához",
-  },
-  {
-    icon: Shield,
-    title: "Minőség Garancia",
-    description: "Munkánkra és az alkatrészekre teljes körű garancia",
-  },
-  {
-    icon: Award,
-    title: "Certified Technikusok",
-    description: "Képzett és folyamatosan fejlődő szakember csapat",
-  },
-  {
-    icon: Zap,
-    title: "Gyors Átfutás",
-    description: "Értékeli az idejét — minimális várakozással dolgozunk",
-  },
-];
+/** Card icons by position — the copy (`whyUsSection.features`) is in
+ * Sanity, the icons stay a design decision; extra cards reuse them in order. */
+const FEATURE_ICONS: LucideIcon[] = [Cpu, Shield, Award, Zap];
 
-export function WhyUsSection() {
+export async function WhyUsSection() {
+  const { whyUsSection } = await getPageCopy("homepage");
+
   return (
     <section
       className="bg-secondary py-24"
@@ -43,24 +23,18 @@ export function WhyUsSection() {
       <Container>
         <div className="grid items-center gap-16 lg:grid-cols-2">
           <div>
-            <SectionLabel>Miért válasszon minket</SectionLabel>
+            <SectionLabel>{whyUsSection.label}</SectionLabel>
             <h2 className="mb-6 font-heading text-4xl font-black text-foreground md:text-5xl">
-              Precizitás.
-              <br />
-              <span className="text-gold">Teljesítmény.</span>
-              <br />
-              Megbízhatóság.
+              <AccentHeading value={whyUsSection.title} />
             </h2>
-            <p className="mb-8 max-w-md text-sm leading-relaxed text-foreground/50">
-              Nem egy átlagos autószerviz vagyunk. Prémium felszerelésünkkel
-              és tapasztalt technikusainkkal a legtöbb problémát egyetlen
-              látogatással megoldjuk.
-            </p>
+            <p className="mb-8 max-w-md text-sm leading-relaxed text-foreground/50">{whyUsSection.text}</p>
             <Button href="/rolunk">Rólunk bővebben →</Button>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {WHY_US_FEATURES.map(({ icon: Icon, title, description }) => (
+            {whyUsSection.features.map(({ title, description }, index) => {
+              const Icon = FEATURE_ICONS[index % FEATURE_ICONS.length] ?? Cpu;
+              return (
               <div
                 key={title}
                 className="border border-gold/10 bg-background/60 p-6 transition-all duration-300 hover:border-gold/35"
@@ -73,7 +47,8 @@ export function WhyUsSection() {
                   {description}
                 </p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </Container>

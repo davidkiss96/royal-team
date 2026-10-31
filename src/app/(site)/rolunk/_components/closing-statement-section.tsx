@@ -3,6 +3,7 @@ import { Container } from "@/components/container";
 import { PortableTextContent } from "@/components/portable-text";
 import { SectionLabel } from "@/components/section-label";
 import { getAboutPage } from "@/lib/sanity/queries/about-page";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 import { splitOwnerStory } from "./owner-story-content";
 
 /**
@@ -17,7 +18,10 @@ import { splitOwnerStory } from "./owner-story-content";
  * doesn't appear verbatim anywhere in `ownerStory` itself.
  */
 export async function ClosingStatementSection() {
-  const { ownerStory, philosophyValues } = await getAboutPage();
+  const [{ ownerStory, philosophyValues }, { closingLabel }] = await Promise.all([
+    getAboutPage(),
+    getPageCopy("aboutPage"),
+  ]);
   const { closing, extra } = splitOwnerStory(ownerStory);
   if (!closing) return null;
 
@@ -25,13 +29,11 @@ export async function ClosingStatementSection() {
   const closingLine =
     philosophyValues.length > 0 ? `${philosophyValues.map((value) => value.title).join(". ")}.` : null;
 
-  console.log(closingLine);
-
   return (
     <section className="border-t border-gold/8 bg-background py-24">
       <Container className="text-center">
         <div className="mx-auto max-w-3xl">
-          <SectionLabel>A filozófiánk</SectionLabel>
+          <SectionLabel>{closingLabel}</SectionLabel>
           <h2 className="mt-4 mb-8 font-heading text-3xl font-black text-foreground md:text-4xl">{heading}</h2>
           <div className="space-y-4 text-sm leading-relaxed text-foreground/55">
             <PortableTextContent value={closing.body} />

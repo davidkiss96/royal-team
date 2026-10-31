@@ -1,26 +1,29 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { AccentHeading } from "@/components/accent-heading";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 import { SERVICE_ICONS } from "@/lib/service-icons";
 
 export async function ServicesOverview() {
-  const { featuredServices } = await getHomepageContent();
+  const [{ featuredServices }, { servicesSection }] = await Promise.all([
+    getHomepageContent(),
+    getPageCopy("homepage"),
+  ]);
   if (featuredServices.length === 0) return null;
 
   return (
     <section className="bg-background py-24">
       <Container>
         <div className="mb-14">
-          <SectionLabel>Szolgáltatásaink</SectionLabel>
+          <SectionLabel>{servicesSection.label}</SectionLabel>
           <h2 className="font-heading text-4xl font-black text-foreground md:text-5xl">
-            Minden, amit
-            <br />
-            autójának szüksége van.
+            <AccentHeading value={servicesSection.title} />
           </h2>
           <GoldDivider className="mt-4" />
         </div>

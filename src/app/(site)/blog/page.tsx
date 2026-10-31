@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
+import { AccentHeading } from "@/components/accent-heading";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
 import { buildPageMetadata } from "@/lib/seo";
 import { getBlogPosts } from "@/lib/sanity/queries/blog-posts";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 import { BlogPostCard } from "./_components/blog-post-card";
 
-export const metadata: Metadata = buildPageMetadata({
-  title: "Blog — Royal-Team Autószerviz",
-  description:
-    "Szakmai tartalmak, tippek és útmutatók autótulajdonosoknak — a Royal-Team szakembereinek tollából.",
-  path: "/blog",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { meta } = await getPageCopy("blogPage");
+  return buildPageMetadata({ title: meta.title, description: meta.description, path: "/blog" });
+}
 
 /**
  * Structure/copy match the Figma prototype's `App.tsx` (git `28d95d4`)
@@ -21,21 +21,18 @@ export const metadata: Metadata = buildPageMetadata({
  * No closing CTA banner either: the reference has none on this page.
  */
 export default async function BlogPage() {
-  const posts = await getBlogPosts();
+  const [posts, { header }] = await Promise.all([getBlogPosts(), getPageCopy("blogPage")]);
 
   return (
     <>
       <section className="bg-background pt-40 pb-16">
         <Container>
-          <SectionLabel>Tudástár</SectionLabel>
+          <SectionLabel>{header.label}</SectionLabel>
           <h1 className="font-heading text-5xl font-black text-foreground md:text-6xl">
-            Blog & <span className="text-gold">Cikkek</span>
+            <AccentHeading value={header.title} />
           </h1>
           <GoldDivider className="mt-4" />
-          <p className="mt-6 max-w-xl text-sm leading-relaxed text-foreground/40">
-            Szakmai tartalmak, tippek és útmutatók autótulajdonosoknak — a
-            Royal-Team szakembereinek tollából.
-          </p>
+          <p className="mt-6 max-w-xl text-sm leading-relaxed text-foreground/40">{header.intro}</p>
         </Container>
       </section>
 

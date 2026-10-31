@@ -3,6 +3,7 @@ import { PhoneIcon } from "./icons";
 import { Logo } from "./logo";
 import { SocialLinks } from "./social-links";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 import { FOOTER_LEGAL_LINKS, getNavLinks } from "@/lib/site-config";
 
 interface FooterServiceLink {
@@ -29,7 +30,7 @@ export async function Footer({ services = [] }: FooterProps) {
   // Sourced from the real BusinessSettings Sanity singleton, same pattern as
   // ContactStrip — phone/company/address can't drift from the Contact and
   // legal pages, since all read from the same document.
-  const settings = await getBusinessSettings();
+  const [settings, { footerTagline }] = await Promise.all([getBusinessSettings(), getPageCopy("siteCopy")]);
   const phoneHref = `tel:${settings.phone.replace(/\s+/g, "")}`;
 
   return (
@@ -48,10 +49,7 @@ export async function Footer({ services = [] }: FooterProps) {
                 <div className="mt-0.5 text-[10px] uppercase tracking-wider text-foreground/40">Autószerviz Kft.</div>
               </div>
             </div>
-            <p className="mb-6 max-w-xs text-sm leading-relaxed text-foreground/50">
-              Prémium autószerviz Ercsi szívében. Diagnosztika, teljesítményfejlesztés, karbantartás — kompromisszumok
-              nélkül.
-            </p>
+            <p className="mb-6 max-w-xs text-sm leading-relaxed text-foreground/50">{footerTagline}</p>
             <a
               href={phoneHref}
               className={`flex items-center gap-2 font-mono-label text-xs text-gold transition-colors hover:text-gold-bright ${focusRing}`}
@@ -102,7 +100,9 @@ export async function Footer({ services = [] }: FooterProps) {
         <div className="mb-8 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent" />
 
         <div className="flex flex-col items-center justify-between gap-4 text-[10px] text-foreground/50 sm:flex-row">
-          <p>© {new Date().getFullYear()} {settings.legalCompanyName} · Minden jog fenntartva.</p>
+          <p>
+            © {new Date().getFullYear()} {settings.legalCompanyName} · Minden jog fenntartva.
+          </p>
           <div className="flex items-center gap-5">
             {FOOTER_LEGAL_LINKS.map(({ label, href }) => (
               <Link

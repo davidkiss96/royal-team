@@ -1,30 +1,33 @@
 import { Clock, MapPin, Phone, type LucideIcon } from "lucide-react";
 import { Container } from "@/components/container";
+import { formatOpeningHours } from "@/lib/format-opening-hours";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 
 /**
  * Sourced from the real `BusinessSettings` Sanity singleton
  * (docs/content-model.md Section 7) — phone and address can't drift from
  * the Contact page/legal pages, since all read from the same document.
- * Opening hours aren't part of the seeded business data yet
- * (`BusinessSettings.openingHours` has no source content — see
- * `src/scripts/seed-sanity.ts`), so that copy stays as placeholder text
- * pending a real value, unchanged from before this migration.
+ * Opening hours come from `BusinessSettings.openingHours` too (same
+ * formatting as the Contact page); while they're not filled in, the hours
+ * card and the phone card's hours line are left out rather than showing
+ * made-up times.
  */
 export async function ContactStrip() {
   const settings = await getBusinessSettings();
+  // "H–P: 8:00–18:00, Szo: 8:00–13:00" → first range as the headline, the rest below.
+  const [firstHours, ...otherHours] = formatOpeningHours(settings.openingHours)?.split(", ") ?? [];
 
   const items: {
     icon: LucideIcon;
     label: string;
     value: string;
-    detail: string;
+    detail?: string;
   }[] = [
     {
       icon: Phone,
       label: "Telefon",
       value: settings.phone,
-      detail: "H-P: 8:00 – 18:00",
+      detail: firstHours,
     },
     {
       icon: MapPin,
@@ -32,18 +35,15 @@ export async function ContactStrip() {
       value: `${settings.address.city}, ${settings.address.addressLine1}`,
       detail: `${settings.address.postalCode} ${settings.address.city}`,
     },
-    {
-      icon: Clock,
-      label: "Nyitvatartás",
-      value: "H–P: 8:00–18:00",
-      detail: "Szo: 8:00–13:00",
-    },
+    ...(firstHours
+      ? [{ icon: Clock, label: "Nyitvatartás", value: firstHours, detail: otherHours.join(", ") || undefined }]
+      : []),
   ];
 
   return (
     <section className="bg-background py-14">
       <Container>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className={`grid grid-cols-1 gap-6 ${items.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
           {items.map(({ icon: Icon, label, value, detail }) => (
             <div
               key={label}
@@ -57,7 +57,7 @@ export async function ContactStrip() {
                 <p className="font-heading text-sm font-semibold text-foreground">
                   {value}
                 </p>
-                <p className="mt-0.5 text-xs text-foreground/50">{detail}</p>
+                {detail && <p className="mt-0.5 text-xs text-foreground/50">{detail}</p>}
               </div>
             </div>
           ))}

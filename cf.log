@@ -1,0 +1,166 @@
+npm notice run royal-team@0.1.0 npx
+npm notice run 'opennextjs-cloudflare' preview --port 8790
+
+┌───────────────────────────────┐
+│ OpenNext — Cloudflare preview │
+└───────────────────────────────┘
+
+Using secrets defined in .dev.vars
+Incremental cache does not need populating
+Tag cache does not need populating
+
+ ⛅️ wrangler 4.131.1 (update available 4.156.0)
+───────────────────────────────────────────────
+Using secrets defined in .dev.vars
+Your Worker has access to the following bindings:
+Binding                                               Resource                  Mode
+env.WORKER_SELF_REFERENCE (royal-team)                Worker                    local [connected]
+env.ASSETS                                            Assets                    local
+env.NEXT_PUBLIC_SANITY_PROJECT_ID ("zgo9rr84")        Environment Variable      local
+env.NEXT_PUBLIC_SANITY_DATASET ("production")         Environment Variable      local
+env.NEXTJS_ENV ("(hidden)")                           Environment Variable      local
+
+
+Service bindings, Durable Object bindings, and Tail consumers connect to other Wrangler or Vite dev processes running locally, with their connection status indicated by [connected] or [not connected]. For more details, refer to https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/#local-development
+
+Wrangler detected this dev session is running in an AI agent.
+The Local Explorer API is available at http://localhost:8790/cdn-cgi/local/explorer/api
+Useful routes:
+  GET http://localhost:8790/cdn-cgi/local/explorer/api/local/workers - local Workers and bindings
+  GET http://localhost:8790/cdn-cgi/local/explorer/api/storage/kv/namespaces - KV namespaces
+  GET http://localhost:8790/cdn-cgi/local/explorer/api/d1/database - D1 databases
+  GET http://localhost:8790/cdn-cgi/local/explorer/api/r2/buckets - R2 buckets
+  GET http://localhost:8790/cdn-cgi/local/explorer/api/workers/durable_objects/namespaces - Durable Object namespaces
+  GET http://localhost:8790/cdn-cgi/local/explorer/api/workflows - Workflows
+  POST http://localhost:8790/cdn-cgi/local/explorer/api/local/observability/query - run a read-only SQL query (SELECT/WITH only) over captured request traces and console logs. Tables: spans, logs (read attributes via json(attributes)). Example:
+    curl -X POST http://localhost:8790/cdn-cgi/local/explorer/api/local/observability/query -H 'Content-Type: application/json' -d '{"sql":"SELECT service, name, outcome, duration_ms FROM spans WHERE parent_id IS NULL LIMIT 20"}'
+If the routes above don't cover what you need, fetch the full OpenAPI schema (large - use only as a last resort):
+  GET http://localhost:8790/cdn-cgi/local/explorer/api - OpenAPI schema
+⎔ Starting local server...
+[wrangler:info] ✨ Parsed 1 valid header rule.
+[wrangler:info] Ready on http://localhost:8790
+[wrangler:info] GET / 200 OK (1766ms)
+[wrangler:info] GET / 200 OK (2063ms)
+[wrangler:info] GET /_next/static/media/051742360c26797e-s.p.1bkzbscqrt8rl.woff2 200 OK (299ms)
+[wrangler:info] GET /_next/static/media/10bd139a632d728f-s.p.0hy6nmzga_x0y.woff2 200 OK (292ms)
+[wrangler:info] GET /_next/static/media/3206eb66b875a5b3-s.p.201eoo3y6c5_i.woff2 200 OK (315ms)
+[wrangler:info] GET /_next/static/media/35f9213b86bccda4-s.p.377uc50_4-xo_.woff2 200 OK (314ms)
+[wrangler:info] GET /_next/static/media/124b7a75a76bd55c-s.p.1kana50idwxik.woff2 200 OK (317ms)
+[wrangler:info] GET /_next/static/media/278cbb97e75e04e2-s.p.3frbiw4nltldc.woff2 200 OK (319ms)
+[wrangler:info] GET /_next/static/chunks/25yl-n7z3ccqj.css 200 OK (47ms)
+[wrangler:info] GET /_next/static/media/7334b8b05e61def8-s.p.215jpmv1pn-uj.woff2 200 OK (36ms)
+[wrangler:info] GET /_next/static/chunks/0ml0duln_uodw.css 200 OK (38ms)
+[wrangler:info] GET /_next/static/media/6a5386fd6038edbe-s.p.3_z45zcoc-xoz.woff2 200 OK (37ms)
+[wrangler:info] GET /_next/static/media/5c285b27cdda1fe8-s.p.2_mbdogr7ni8i.woff2 200 OK (37ms)
+[wrangler:info] GET /_next/static/media/5e50e46ec4da0455-s.p.3w4dz-7w_7xvr.woff2 200 OK (37ms)
+[wrangler:info] GET /_next/static/media/c3cb240f9c892514-s.p.3z_x6eowsw16y.woff2 200 OK (14ms)
+[wrangler:info] GET /_next/static/media/d23f31b94ad01e54-s.p.0teq8rsbqpt0q.woff2 200 OK (12ms)
+[wrangler:info] GET /_next/static/chunks/0ri7snrlm0vzr.js 200 OK (20ms)
+[wrangler:info] GET /placeholders/photo-placeholder.svg 200 OK (22ms)
+[wrangler:info] GET /_next/static/media/a079e02bba5bf7ab-s.p.3f6zc4f4lqyuc.woff2 200 OK (58ms)
+[wrangler:info] GET /_next/static/media/dc822924a6b60314-s.p.0ctr8_5dz3nr_.woff2 200 OK (23ms)
+[wrangler:info] GET /_next/static/chunks/2-vk07ciac-9t.js 200 OK (31ms)
+[wrangler:info] GET /_next/static/chunks/0j214kr9cycy1.js 200 OK (30ms)
+[wrangler:info] GET /_next/static/chunks/33t46atd3n2zd.js 200 OK (56ms)
+[wrangler:info] GET /_next/static/chunks/3rfv__g9orw47.js 200 OK (35ms)
+[wrangler:info] GET /_next/static/chunks/0-4srap-ffvu1.js 200 OK (58ms)
+[wrangler:info] GET /_next/static/chunks/0xsqm3wu08c-2.js 200 OK (57ms)
+[wrangler:info] GET /_next/static/chunks/turbopack-3dhmg--ezzxsf.js 200 OK (57ms)
+[wrangler:info] GET /_next/static/chunks/0_92yjjz2gtd2.js 200 OK (49ms)
+[wrangler:info] GET /_next/static/chunks/3kn113bcylxfp.js 200 OK (12ms)
+[wrangler:info] GET /logos/icon-gradient-light.svg 200 OK (5ms)
+[wrangler:info] GET /favicon.ico 200 OK (20ms)
+[wrangler:info] GET /szolgaltatasok 200 OK (675ms)
+[wrangler:info] GET /placeholders/photo-placeholder.svg 304 Not Modified (34ms)
+[wrangler:info] GET /_next/static/chunks/068roq0x4zumd.js 200 OK (36ms)
+[wrangler:info] GET /logos/icon-gradient-light.svg 304 Not Modified (7ms)
+[wrangler:info] GET /favicon.ico 304 Not Modified (9ms)
+[wrangler:info] GET /rolunk 200 OK (253ms)
+[wrangler:info] GET /placeholders/photo-placeholder.svg 304 Not Modified (6ms)
+[wrangler:info] GET /logos/icon-gradient-light.svg 304 Not Modified (6ms)
+[wrangler:info] GET /_next/image 200 OK (285ms)
+[wrangler:info] GET /favicon.ico 304 Not Modified (3ms)
+[wrangler:info] GET /blog 200 OK (379ms)
+[wrangler:info] GET /logos/icon-gradient-light.svg 304 Not Modified (16ms)
+[wrangler:info] GET /placeholders/photo-placeholder.svg 304 Not Modified (6ms)
+[wrangler:info] GET /logos/full-gradient-light.svg 200 OK (9ms)
+[wrangler:info] GET /favicon.ico 304 Not Modified (10ms)
+[wrangler:info] GET /kapcsolat 200 OK (319ms)
+[wrangler:info] GET /_next/static/chunks/2dalnf2wyfb7j.js 200 OK (11ms)
+[wrangler:info] GET /logos/icon-gradient-light.svg 304 Not Modified (4ms)
+[wrangler:info] GET /logos/full-gradient-light.svg 304 Not Modified (4ms)
+[wrangler:info] GET /favicon.ico 304 Not Modified (22ms)
+[wrangler:info] GET /nincs-ilyen-oldal 404 Not Found (229ms)
+[wrangler:info] GET /logos/icon-gradient-light.svg 304 Not Modified (9ms)
+[wrangler:info] GET /logos/full-gradient-light.svg 304 Not Modified (9ms)
+[wrangler:info] GET /favicon.ico 304 Not Modified (6ms)
+[wrangler:info] GET /szolgaltatasok/dpf-tisztitas 200 OK (472ms)
+[wrangler:info] GET /placeholders/photo-placeholder.svg 304 Not Modified (5ms)
+[wrangler:info] GET /_next/static/chunks/1gnsz92pz86-h.js 200 OK (9ms)
+[wrangler:info] GET /logos/icon-gradient-light.svg 304 Not Modified (5ms)
+[wrangler:info] GET /favicon.ico 304 Not Modified (14ms)
+[wrangler:info] GET /studio 200 OK (322ms)
+[wrangler:info] GET /_next/static/media/051742360c26797e-s.p.1bkzbscqrt8rl.woff2 200 OK (25ms)
+[wrangler:info] GET /_next/static/media/10bd139a632d728f-s.p.0hy6nmzga_x0y.woff2 200 OK (23ms)
+[wrangler:info] GET /_next/static/media/124b7a75a76bd55c-s.p.1kana50idwxik.woff2 200 OK (35ms)
+[wrangler:info] GET /_next/static/media/278cbb97e75e04e2-s.p.3frbiw4nltldc.woff2 200 OK (36ms)
+[wrangler:info] GET /_next/static/media/3206eb66b875a5b3-s.p.201eoo3y6c5_i.woff2 200 OK (38ms)
+[wrangler:info] GET /_next/static/media/35f9213b86bccda4-s.p.377uc50_4-xo_.woff2 200 OK (36ms)
+[wrangler:info] GET /_next/static/chunks/25yl-n7z3ccqj.css 200 OK (21ms)
+[wrangler:info] GET /_next/static/media/6a5386fd6038edbe-s.p.3_z45zcoc-xoz.woff2 200 OK (33ms)
+[wrangler:info] GET /_next/static/media/7334b8b05e61def8-s.p.215jpmv1pn-uj.woff2 200 OK (33ms)
+[wrangler:info] GET /_next/static/chunks/0ml0duln_uodw.css 200 OK (35ms)
+[wrangler:info] GET /_next/static/media/5c285b27cdda1fe8-s.p.2_mbdogr7ni8i.woff2 200 OK (35ms)
+[wrangler:info] GET /_next/static/media/5e50e46ec4da0455-s.p.3w4dz-7w_7xvr.woff2 200 OK (37ms)
+[wrangler:info] GET /_next/static/media/a079e02bba5bf7ab-s.p.3f6zc4f4lqyuc.woff2 200 OK (68ms)
+[wrangler:info] GET /_next/static/media/c3cb240f9c892514-s.p.3z_x6eowsw16y.woff2 200 OK (50ms)
+[wrangler:info] GET /_next/static/chunks/0ri7snrlm0vzr.js 200 OK (24ms)
+[wrangler:info] GET /_next/static/media/d23f31b94ad01e54-s.p.0teq8rsbqpt0q.woff2 200 OK (32ms)
+[wrangler:info] GET /_next/static/chunks/2-vk07ciac-9t.js 200 OK (25ms)
+[wrangler:info] GET /_next/static/media/dc822924a6b60314-s.p.0ctr8_5dz3nr_.woff2 200 OK (28ms)
+[wrangler:info] GET /_next/static/chunks/0j214kr9cycy1.js 200 OK (27ms)
+[wrangler:info] GET /_next/static/chunks/0-4srap-ffvu1.js 200 OK (28ms)
+[wrangler:info] GET /_next/static/chunks/turbopack-3dhmg--ezzxsf.js 200 OK (28ms)
+[wrangler:info] GET /_next/static/chunks/33t46atd3n2zd.js 200 OK (23ms)
+[wrangler:info] GET /_next/static/chunks/0xsqm3wu08c-2.js 200 OK (29ms)
+[wrangler:info] GET /_next/static/chunks/0ych40rg3zckc.js 200 OK (27ms)
+[wrangler:info] GET /_next/static/chunks/3rfv__g9orw47.js 200 OK (20ms)
+[wrangler:info] GET /_next/static/chunks/0_92yjjz2gtd2.js 200 OK (25ms)
+[wrangler:info] GET /favicon.ico 200 OK (6ms)
+[wrangler:info] GET /_next/static/chunks/3ecfn812tbhju.css 200 OK (38ms)
+[wrangler:info] GET /_next/static/chunks/2x2b70kcc-7zs.css 200 OK (22ms)
+[wrangler:info] GET /_next/static/chunks/3owy4pd_ckm0c.css 200 OK (29ms)
+[wrangler:info] GET /_next/static/chunks/3yoxw17sf3quq.js 200 OK (28ms)
+[wrangler:info] GET /_next/static/chunks/0-qjf3jkqxs_c.css 200 OK (40ms)
+[wrangler:info] GET /_next/static/chunks/3s4zeki9vzjip.css 200 OK (38ms)
+[wrangler:info] GET /_next/static/chunks/07dpdgabnqo2u.js 200 OK (20ms)
+[wrangler:info] GET /_next/static/chunks/3_-4pf1n6k-jf.js 200 OK (19ms)
+[wrangler:info] GET /_next/static/chunks/2eqn69gttn8q4.js 200 OK (22ms)
+[wrangler:info] GET /_next/static/chunks/41wpfxfyhpflq.js 200 OK (18ms)
+[wrangler:info] GET /_next/static/chunks/066q36tzw9rr6.js 200 OK (23ms)
+[wrangler:info] GET /_next/static/chunks/1w6w_n7rs6ml1.js 200 OK (27ms)
+[wrangler:info] GET /_next/static/chunks/3q91kwmq0t42n.js 200 OK (26ms)
+[wrangler:info] GET /_next/static/chunks/0g1vygkx3jco6.js 200 OK (36ms)
+[wrangler:info] GET /_next/static/chunks/1o0tsv-44ezni.js 200 OK (28ms)
+[wrangler:info] GET /_next/static/chunks/3gihlgm16ygz8.js 200 OK (28ms)
+[wrangler:info] GET /_next/static/chunks/1et244rf8jwug.js 200 OK (31ms)
+[wrangler:info] GET /_next/static/chunks/0lu9ee6nuogee.js 200 OK (107ms)
+[wrangler:info] GET /_next/static/chunks/43a7mjop9evik.js 200 OK (104ms)
+[wrangler:info] GET /_next/static/chunks/3wqwf3a8pq0t6.js 200 OK (130ms)
+[wrangler:info] GET /_next/static/chunks/1_qgjj6crdad9.js 200 OK (129ms)
+[wrangler:info] GET /_next/static/chunks/44_mnom1rphrt.js 200 OK (127ms)
+[wrangler:info] GET /_next/static/chunks/1fi2pxcu_58nk.js 200 OK (30ms)
+[wrangler:info] GET /_next/static/chunks/3fadmrz46u_p3.js 200 OK (26ms)
+[wrangler:info] GET /_next/static/chunks/3qohzk694c30c.js 200 OK (37ms)
+npm notice run royal-team@0.1.0 npx
+npm notice run 'wrangler' dev --port 8790
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1menv.IMAGES binding is not defined[0m
+
+
+ERROR Wrangler dev command failed:
+npm notice run royal-team@0.1.0 npx
+npm notice run 'wrangler' dev --port 8790
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1menv.IMAGES binding is not defined[0m
+
+
+

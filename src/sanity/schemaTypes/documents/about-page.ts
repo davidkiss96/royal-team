@@ -22,9 +22,15 @@ export const aboutPage = defineType({
   ],
   fields: [
     defineField({
+      name: 'heroLabel',
+      title: 'Hero kis felirat (arany, a cím felett)',
+      type: 'string',
+      group: 'hero',
+    }),
+    defineField({
       name: 'heroHeadline',
       title: 'Hero cím',
-      type: 'string',
+      type: 'accentHeading',
       group: 'hero',
     }),
     defineField({
@@ -122,6 +128,30 @@ export const aboutPage = defineType({
       type: 'array',
       group: 'gallery',
       of: [defineArrayMember({type: 'imageWithAlt'})],
+    }),
+    defineField({
+      name: 'servicesLabel',
+      title: 'Kis felirat – Szolgáltatások rész',
+      type: 'string',
+      group: 'story',
+    }),
+    defineField({
+      name: 'closingLabel',
+      title: 'Kis felirat – záró gondolat',
+      type: 'string',
+      group: 'story',
+    }),
+    defineField({
+      name: 'philosophyLabel',
+      title: 'Kis felirat – értékek',
+      type: 'string',
+      group: 'philosophy',
+    }),
+    defineField({
+      name: 'ctaSection',
+      title: 'Záró sáv szövege',
+      type: 'ctaSection',
+      group: 'cta',
     }),
     defineField({
       name: 'cta',

@@ -1,8 +1,10 @@
 import { Star } from "lucide-react";
+import { AccentHeading } from "@/components/accent-heading";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
 import { formatHungarianMonthYear } from "@/lib/format-date";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 
 /** Renders the real stored `rating` (1–5) as filled stars, with the
  * remainder up to 5 shown unfilled — never a fixed 5-star row. */
@@ -21,16 +23,19 @@ function StarRow({ rating, size }: { rating: number; size: number }) {
 }
 
 export async function ReviewsSection() {
-  const { featuredReviews } = await getHomepageContent();
+  const [{ featuredReviews }, { reviewsSection }] = await Promise.all([
+    getHomepageContent(),
+    getPageCopy("homepage"),
+  ]);
   if (featuredReviews.length === 0) return null;
 
   return (
     <section className="bg-card/40 py-24">
       <Container>
         <div className="mb-14 text-center">
-          <SectionLabel>Ügyfeleink mondták</SectionLabel>
+          <SectionLabel>{reviewsSection.label}</SectionLabel>
           <h2 className="font-heading text-4xl font-black text-foreground md:text-5xl">
-            Vásárlói <span className="text-gold">vélemények.</span>
+            <AccentHeading value={reviewsSection.title} />
           </h2>
         </div>
 

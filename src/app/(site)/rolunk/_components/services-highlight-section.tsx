@@ -3,6 +3,7 @@ import { Container } from "@/components/container";
 import { PortableTextContent } from "@/components/portable-text";
 import { SectionLabel } from "@/components/section-label";
 import { getAboutPage } from "@/lib/sanity/queries/about-page";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 import { splitOwnerStory } from "./owner-story-content";
 
 /**
@@ -18,7 +19,7 @@ import { splitOwnerStory } from "./owner-story-content";
  * nothing is truncated server-side.
  */
 export async function ServicesHighlightSection() {
-  const { ownerStory } = await getAboutPage();
+  const [{ ownerStory }, { servicesLabel }] = await Promise.all([getAboutPage(), getPageCopy("aboutPage")]);
   const { services } = splitOwnerStory(ownerStory);
   if (!services || services.items.length === 0) return null;
 
@@ -28,7 +29,7 @@ export async function ServicesHighlightSection() {
     <section className="bg-secondary py-20">
       <Container>
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <SectionLabel>Szolgáltatások</SectionLabel>
+          <SectionLabel>{servicesLabel}</SectionLabel>
           <h2 className="mt-4 mb-4 font-heading text-4xl font-black text-foreground">{heading}</h2>
           {services.body.length > 0 && (
             <div className="text-sm leading-relaxed text-foreground/55">

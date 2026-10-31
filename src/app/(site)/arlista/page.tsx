@@ -1,22 +1,25 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { AccentHeading } from "@/components/accent-heading";
 import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
 import { buildPageMetadata } from "@/lib/seo";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 import { getPriceCategories } from "@/lib/sanity/queries/price-categories";
 import { PriceCategorySection } from "./_components/price-category-section";
 
-export const metadata: Metadata = buildPageMetadata({
-  title: "Árlista — Royal-Team Autószerviz",
-  description:
-    "Áttekinthető, tájékoztató jellegű árlista — DPF tisztítás, diagnosztika, futómű- és fékszerviz, karbantartás.",
-  path: "/arlista",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { meta } = await getPageCopy("priceListPage");
+  return buildPageMetadata({ title: meta.title, description: meta.description, path: "/arlista" });
+}
 
 export default async function PriceListPage() {
-  const categories = await getPriceCategories();
+  const [categories, { header, footnote, cta }] = await Promise.all([
+    getPriceCategories(),
+    getPageCopy("priceListPage"),
+  ]);
 
   return (
     <>
@@ -31,16 +34,12 @@ export default async function PriceListPage() {
         />
         <div className="absolute inset-0 bg-background/92" />
         <Container className="relative">
-          <SectionLabel>Átlátható árazás</SectionLabel>
+          <SectionLabel>{header.label}</SectionLabel>
           <h1 className="font-heading text-5xl font-black text-foreground md:text-7xl">
-            Árlista
+            <AccentHeading value={header.title} />
           </h1>
           <GoldDivider className="mt-4" />
-          <p className="mt-6 max-w-xl text-sm leading-relaxed text-foreground/45">
-            Az alábbi árak tájékoztató jellegűek és a megjelölt összegtől
-            kezdődő díjakat jelölnek. A pontos ár az elvégzett munkától, az
-            alkatrész igénytől és a jármű típusától függ.
-          </p>
+          <p className="mt-6 max-w-xl text-sm leading-relaxed text-foreground/45">{header.intro}</p>
         </Container>
       </section>
 
@@ -55,10 +54,7 @@ export default async function PriceListPage() {
           ))}
 
           <div className="mt-10 border border-gold/15 bg-card p-6 text-xs leading-relaxed text-foreground/45">
-            * Az árak tájékoztató jellegűek és az ÁFÁ-t nem tartalmazzák. A
-            végső ár az elvégzett munkától, a felhasznált alkatrészektől és a
-            jármű típusától függően eltérhet. Alkatrészek ára külön
-            számítódik.
+            {footnote}
           </div>
         </Container>
       </section>
@@ -66,11 +62,9 @@ export default async function PriceListPage() {
       <section className="bg-gold py-14">
         <Container className="text-center">
           <h2 className="mb-3 font-heading text-3xl font-black text-black">
-            Pontos árajánlatért keressen minket
+            {cta.title}
           </h2>
-          <p className="mb-7 text-sm text-black/55">
-            Ingyenes előzetes helyszíni felmérés — rejtett költségek nélkül.
-          </p>
+          <p className="mb-7 text-sm text-black/55">{cta.text}</p>
           <Link
             href="/kapcsolat"
             className="inline-block bg-black px-10 py-4 font-heading text-xs font-black tracking-[0.2em] text-gold uppercase transition-all duration-300 hover:bg-[#111111]"

@@ -1,49 +1,19 @@
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import { AccentHeading } from "@/components/accent-heading";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
 import { SiteNoticeBadge } from "@/components/site-notice";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
-
-/**
- * The approved hero headline's per-line breaks and gold-accent words
- * ("Autószerviz." / "Teljesítmény.") are a fixed presentational rule tied
- * to this specific curated copy — `Homepage.heroHeadline` is a plain
- * string field with no per-line/inline-highlight structure
- * (docs/content-model.md Section 8), so this multi-line treatment can't be
- * data-driven any more than it could from the pre-Sanity mock. Kept as a
- * local constant, same treatment as `WHY_US_FEATURES`/`WORKSHOP_EQUIPMENT`
- * (`why-us-section.tsx`/`workshop-tech-section.tsx`) for design elements
- * with no matching content-model shape — see the migration report's
- * content-model gap note.
- */
-const HERO_HEADLINE_LINES = [
-  "Prémium",
-  "Autószerviz.",
-  "Precíz Munka.",
-  "Maximális",
-  "Teljesítmény.",
-];
-const GOLD_LINE_INDEXES = new Set([1, 4]);
-
-/** Same rationale as `HERO_HEADLINE_LINES` above — no content-model field
- * covers these trust stats (not on `Homepage`, not on `BusinessSettings`).
- * A "4.9★ Google értékelés" stat previously appeared here too — removed
- * alongside the matching fake aggregate rating in `reviews-section.tsx`
- * (same issue: an unverified rating attributed to a named third-party
- * platform, not the kind of generic stat this list is otherwise used for). */
-const HERO_STATS = [
-  { value: "15+", label: "Év tapasztalat" },
-  { value: "3000+", label: "Elégedett ügyfél" },
-  { value: "100%", label: "Garancia" },
-];
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 
 export async function HeroSection() {
-  const [{ heroSubheadline, heroImage, secondaryCtas }, { siteNotice }] = await Promise.all([
+  const [{ heroSubheadline, heroImage, secondaryCtas }, { siteNotice }, copy] = await Promise.all([
     getHomepageContent(),
     getBusinessSettings(),
+    getPageCopy("homepage"),
   ]);
 
   return (
@@ -63,18 +33,9 @@ export async function HeroSection() {
       <Container className="relative w-full pt-32 pb-24">
         <div className="max-w-xl">
           {siteNotice && <SiteNoticeBadge notice={siteNotice} />}
-          <SectionLabel>Prémium Autószerviz · Ercsi</SectionLabel>
+          <SectionLabel>{copy.heroLabel}</SectionLabel>
           <h1 className="mb-6 font-heading text-5xl leading-[1.0] font-black text-foreground sm:text-6xl lg:text-[clamp(4.5rem,0.5rem+8.9svh,5.5rem)] lg:[@media(max-height:850px)]:mb-4">
-            {HERO_HEADLINE_LINES.map((line, index) => (
-              <span key={line}>
-                {GOLD_LINE_INDEXES.has(index) ? (
-                  <span className="text-gold">{line}</span>
-                ) : (
-                  line
-                )}
-                {index < HERO_HEADLINE_LINES.length - 1 && <br />}
-              </span>
-            ))}
+            <AccentHeading value={copy.heroHeadline} />
           </h1>
           <p className="mb-10 max-w-md text-base leading-relaxed text-foreground/55 lg:[@media(min-height:781px)_and_(max-height:850px)]:mb-7 lg:[@media(max-height:780px)]:mb-6">
             {heroSubheadline}
@@ -94,8 +55,8 @@ export async function HeroSection() {
           </div>
 
           <div className="mt-12 flex flex-wrap gap-8 border-t border-gold/20 pt-10 lg:[@media(min-height:781px)_and_(max-height:850px)]:mt-7 lg:[@media(min-height:781px)_and_(max-height:850px)]:pt-6 lg:[@media(max-height:780px)]:mt-4 lg:[@media(max-height:780px)]:pt-4">
-            {HERO_STATS.map(({ value, label }) => (
-              <div key={label}>
+            {copy.heroStats.map(({ value, label }) => (
+              <div key={`${value}-${label}`}>
                 <div className="font-heading text-2xl leading-none font-black text-gold">
                   {value}
                 </div>

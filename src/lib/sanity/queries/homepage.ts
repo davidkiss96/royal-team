@@ -115,14 +115,12 @@ export interface HomepageBlogPost {
   heroImage: ImageWithAlt;
 }
 
-/** The homepage's full data shape — mirrors the fields `HeroSection`,
+/** The homepage's content data — mirrors the fields `HeroSection`,
  * `ServicesOverview`, `ProjectsPreview`, `ReviewsSection`, and
- * `BlogPreview` actually read. `heroHeadline` is intentionally not
- * included — see the migration report's content-model gap note: the
- * schema's plain-string field can't carry the approved hero's per-line /
- * per-word gold-accent treatment, so that headline stays presentational
- * copy in `HeroSection`, same as `HERO_STATS`. `introText` is also
- * omitted — no current homepage section renders it. */
+ * `BlogPreview` actually read. The section copy (hero label/headline/stats,
+ * section headings, CTA band) comes from `getPageCopy("homepage")`
+ * (`page-copy.ts`) instead. `introText` is omitted — no current homepage
+ * section renders it. */
 export interface HomepageData {
   heroSubheadline: string;
   heroImage: ImageWithAlt;

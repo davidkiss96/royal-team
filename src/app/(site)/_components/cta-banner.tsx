@@ -3,9 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/container";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 
 export async function CtaBanner() {
-  const { phone } = await getBusinessSettings();
+  const [{ phone }, { ctaSection }] = await Promise.all([getBusinessSettings(), getPageCopy("homepage")]);
   const phoneHref = `tel:${phone.replace(/\s+/g, "")}`;
 
   return (
@@ -19,11 +20,9 @@ export async function CtaBanner() {
       />
       <Container className="relative text-center">
         <h2 className="mb-4 font-heading text-4xl font-black text-black md:text-5xl">
-          Kérdése van? Lépjen kapcsolatba.
+          {ctaSection.title}
         </h2>
-        <p className="mx-auto mb-8 max-w-lg text-sm text-black/55">
-          Szívesen adunk árajánlatot vagy válaszolunk kérdéseire — keressen minket telefonon vagy írjon üzenetet.
-        </p>
+        <p className="mx-auto mb-8 max-w-lg text-sm text-black/55">{ctaSection.text}</p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href="/kapcsolat"

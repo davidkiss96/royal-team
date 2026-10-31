@@ -1,14 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AccentHeading } from "@/components/accent-heading";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
 import { formatHungarianDate } from "@/lib/format-date";
 import { estimateReadingMinutes } from "@/lib/reading-time";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 
 export async function BlogPreview() {
-  const { latestBlogPosts } = await getHomepageContent();
+  const [{ latestBlogPosts }, { blogSection }] = await Promise.all([
+    getHomepageContent(),
+    getPageCopy("homepage"),
+  ]);
   if (latestBlogPosts.length === 0) return null;
 
   return (
@@ -16,9 +21,9 @@ export async function BlogPreview() {
       <Container>
         <div className="mb-12 flex items-end justify-between">
           <div>
-            <SectionLabel>Tudástár</SectionLabel>
+            <SectionLabel>{blogSection.label}</SectionLabel>
             <h2 className="font-heading text-3xl font-black text-foreground md:text-4xl">
-              Legújabb <span className="text-gold">cikkeink.</span>
+              <AccentHeading value={blogSection.title} />
             </h2>
           </div>
           <Button href="/blog" variant="outline" className="hidden md:inline-flex">

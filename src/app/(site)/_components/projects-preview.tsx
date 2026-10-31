@@ -1,14 +1,19 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { AccentHeading } from "@/components/accent-heading";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
 import { getIsoYear } from "@/lib/format-date";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
+import { getPageCopy } from "@/lib/sanity/queries/page-copy";
 
 export async function ProjectsPreview() {
-  const { featuredProjects } = await getHomepageContent();
+  const [{ featuredProjects }, { projectsSection }] = await Promise.all([
+    getHomepageContent(),
+    getPageCopy("homepage"),
+  ]);
   const [featured, ...rest] = featuredProjects;
   if (!featured) return null;
 
@@ -17,9 +22,9 @@ export async function ProjectsPreview() {
       <Container>
         <div className="mb-12 flex items-end justify-between">
           <div>
-            <SectionLabel>Automotive portfolio</SectionLabel>
+            <SectionLabel>{projectsSection.label}</SectionLabel>
             <h2 className="font-heading text-3xl font-black text-foreground md:text-4xl">
-              Kiemelt <span className="text-gold">projektek.</span>
+              <AccentHeading value={projectsSection.title} />
             </h2>
           </div>
           <Button href="/projektek" variant="outline" className="hidden md:inline-flex">
