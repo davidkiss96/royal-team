@@ -45,6 +45,14 @@ const addressFields = (title: string) => [
  * `registeredOffice` = the company's official legal address ("székhely").
  * These are deliberately separate fields/objects so they can never be
  * confused with each other in the Studio UI — see each field's description.
+ *
+ * `siteFeatures` switches whole pages/sections on or off at runtime
+ * (`src/lib/features.ts`, enforced by `src/middleware.ts`) — no deploy needed.
+ *
+ * `siteNotice` is the owner-controlled "under development" notice — a
+ * site-wide operational state (like opening hours), so it lives here rather
+ * than on `Homepage`. Rendered as the hero badge on `/` and as a slim bar
+ * above the header everywhere else.
  */
 export const businessSettings = defineType({
   name: 'businessSettings',
@@ -56,6 +64,7 @@ export const businessSettings = defineType({
     {name: 'branding', title: 'Márka'},
     {name: 'legal', title: 'Jogi adatok'},
     {name: 'social', title: 'Közösségi média'},
+    {name: 'website', title: 'Weboldal'},
   ],
   fields: [
     defineField({
@@ -242,6 +251,70 @@ export const businessSettings = defineType({
             }),
           ],
           preview: {select: {title: 'platform', subtitle: 'url'}},
+        }),
+      ],
+    }),
+    defineField({
+      name: 'siteFeatures',
+      title: 'Oldalak és szekciók megjelenítése',
+      description:
+        'Kikapcsolt oldal nem jelenik meg a menüben és a keresőkben, a címe pedig „nem található” oldalt ad. A változás kb. egy-két percen belül él, újratelepítés nélkül.',
+      type: 'object',
+      group: 'website',
+      fields: [
+        defineField({
+          name: 'priceList',
+          title: 'Árlista oldal',
+          description:
+            'FIGYELEM: csak akkor kapcsolja be, ha az árlistában minden ár valós és ellenőrzött. Jelenleg tájékoztató, nem végleges árak szerepelnek benne.',
+          type: 'boolean',
+          initialValue: false,
+        }),
+        defineField({
+          name: 'projects',
+          title: 'Projektek oldal és főoldali projektek',
+          description: 'Csak valódi fotókkal és leírással feltöltött projektek mellett kapcsolja be.',
+          type: 'boolean',
+          initialValue: false,
+        }),
+        defineField({
+          name: 'reviews',
+          title: 'Ügyfélvélemények a főoldalon',
+          description: 'Csak valódi, ügyfelektől származó véleményekkel kapcsolja be.',
+          type: 'boolean',
+          initialValue: false,
+        }),
+      ],
+    }),
+    defineField({
+      name: 'siteNotice',
+      title: '„Fejlesztés alatt” jelzés',
+      description:
+        'A főoldalon a nyitókép felett, a többi oldalon a fejléc feletti vékony sávban jelenik meg. Kikapcsolás után legfeljebb kb. egy percen belül eltűnik az oldalról.',
+      type: 'object',
+      group: 'website',
+      fields: [
+        defineField({
+          name: 'enabled',
+          title: 'Megjelenítés',
+          type: 'boolean',
+          initialValue: false,
+        }),
+        defineField({
+          name: 'label',
+          title: 'Címke',
+          description: 'Rövid, kiemelt felirat, pl. „Új weboldal” vagy „Fejlesztés alatt”.',
+          type: 'string',
+          initialValue: 'Új weboldal',
+          validation: (Rule) => Rule.max(24),
+        }),
+        defineField({
+          name: 'text',
+          title: 'Szöveg',
+          description: 'Egy rövid mondat — mobilon is olvasható maradjon.',
+          type: 'string',
+          initialValue: 'Weboldalunk fejlesztés alatt áll, tartalmát folyamatosan bővítjük.',
+          validation: (Rule) => Rule.max(110),
         }),
       ],
     }),

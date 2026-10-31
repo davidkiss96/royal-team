@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
+import { isRouteEnabled } from "@/lib/features";
 import { SITE_URL } from "@/lib/site-config";
 import { getAboutPage } from "@/lib/sanity/queries/about-page";
 import { getBlogPostSlugs } from "@/lib/sanity/queries/blog-posts";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 import { getProjectSlugs } from "@/lib/sanity/queries/projects";
 import { getActiveServiceSlugs } from "@/lib/sanity/queries/services";
@@ -39,10 +41,15 @@ const ALWAYS_INDEXABLE_STATIC_ROUTES = [
  * `robots: { index: false }` tag (`src/lib/seo.ts`'s `buildPageMetadata`).
  * A page marked `noIndex` is filtered out here too, so the sitemap can never
  * disagree with a page's own robots meta tag.
+ *
+ * Routes switched off in Sanity (`BusinessSettings.siteFeatures`, see
+ * `src/lib/features.ts`) — static and their `[slug]` children alike — are
+ * dropped by the final `isRouteEnabled` filter.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [homepage, aboutPage, serviceEntries, projectEntries, blogPostEntries] =
+  const [settings, homepage, aboutPage, serviceEntries, projectEntries, blogPostEntries] =
     await Promise.all([
+      getBusinessSettings(),
       getHomepageContent(),
       getAboutPage(),
       getActiveServiceSlugs(),
@@ -68,5 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .map(({ slug }) => ({ url: `${SITE_URL}/blog/${slug}` })),
   ];
 
-  return [...staticEntries, ...dynamicEntries];
+  return [...staticEntries, ...dynamicEntries].filter(({ url }) =>
+    isRouteEnabled(url.slice(SITE_URL.length), settings.siteFeatures),
+  );
 }

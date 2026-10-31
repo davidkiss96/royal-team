@@ -3,6 +3,8 @@ import Image from "next/image";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { SectionLabel } from "@/components/section-label";
+import { SiteNoticeBadge } from "@/components/site-notice";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 
 /**
@@ -39,7 +41,10 @@ const HERO_STATS = [
 ];
 
 export async function HeroSection() {
-  const { heroSubheadline, heroImage, secondaryCtas } = await getHomepageContent();
+  const [{ heroSubheadline, heroImage, secondaryCtas }, { siteNotice }] = await Promise.all([
+    getHomepageContent(),
+    getBusinessSettings(),
+  ]);
 
   return (
     <section className="relative flex min-h-svh items-center overflow-hidden">
@@ -57,6 +62,7 @@ export async function HeroSection() {
 
       <Container className="relative w-full pt-32 pb-24">
         <div className="max-w-xl">
+          {siteNotice && <SiteNoticeBadge notice={siteNotice} />}
           <SectionLabel>Prémium Autószerviz · Ercsi</SectionLabel>
           <h1 className="mb-6 font-heading text-5xl leading-[1.0] font-black text-foreground sm:text-6xl lg:text-[clamp(4.5rem,0.5rem+8.9svh,5.5rem)] lg:[@media(max-height:850px)]:mb-4">
             {HERO_HEADLINE_LINES.map((line, index) => (

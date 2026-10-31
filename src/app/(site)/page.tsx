@@ -9,6 +9,7 @@ import { ServicesOverview } from "./_components/services-overview";
 import { WhyUsSection } from "./_components/why-us-section";
 import { WorkshopTechSection } from "./_components/workshop-tech-section";
 import { buildPageMetadata, isRealImage } from "@/lib/seo";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import { getHomepageContent } from "@/lib/sanity/queries/homepage";
 
 const FALLBACK_META_TITLE = "Royal-Team Autószerviz — Prémium autószerviz Ercsiben";
@@ -33,15 +34,17 @@ export async function generateMetadata(): Promise<Metadata> {
  * content lives strictly on `Service.faq`, not as a generic homepage-level
  * set, so it isn't reproduced here.
  */
-export default function HomePage() {
+export default async function HomePage() {
+  const { siteFeatures } = await getBusinessSettings();
+
   return (
     <>
       <HeroSection />
       <ServicesOverview />
       <WhyUsSection />
       <WorkshopTechSection />
-      <ReviewsSection />
-      <ProjectsPreview />
+      {siteFeatures.reviews && <ReviewsSection />}
+      {siteFeatures.projects && <ProjectsPreview />}
       <BlogPreview />
       <CtaBanner />
       <ContactStrip />

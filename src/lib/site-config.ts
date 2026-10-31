@@ -1,3 +1,5 @@
+import { isRouteEnabled, type SiteFeatures } from "./features";
+
 export interface NavLink {
   label: string;
   href: string;
@@ -45,7 +47,9 @@ export const SITE_URL = IS_PRODUCTION
 /**
  * Primary navigation, matching the confirmed Hungarian route list
  * (README.md, docs/design-system.md Section 8) and the reference app's
- * NAV_LINKS/FOOTER_NAV arrays, which are identical lists.
+ * NAV_LINKS/FOOTER_NAV arrays, which are identical lists. Read it through
+ * `getNavLinks()` so pages switched off in Sanity drop out of Header,
+ * mobile menu and Footer together.
  */
 export const NAV_LINKS: NavLink[] = [
   { label: "Főoldal", href: "/" },
@@ -56,6 +60,11 @@ export const NAV_LINKS: NavLink[] = [
   { label: "Blog", href: "/blog" },
   { label: "Kapcsolat", href: "/kapcsolat" },
 ];
+
+/** `NAV_LINKS` minus the routes switched off in `BusinessSettings.siteFeatures`. */
+export function getNavLinks(features: SiteFeatures): NavLink[] {
+  return NAV_LINKS.filter(({ href }) => isRouteEnabled(href, features));
+}
 
 export const FOOTER_LEGAL_LINKS: NavLink[] = [
   { label: "Impresszum", href: "/impresszum" },

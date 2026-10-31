@@ -5,6 +5,7 @@ import { Container } from "@/components/container";
 import { GoldDivider } from "@/components/gold-divider";
 import { SectionLabel } from "@/components/section-label";
 import { buildPageMetadata } from "@/lib/seo";
+import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
 import { getServices } from "@/lib/sanity/queries/services";
 import { ServiceRow } from "./_components/service-row";
 
@@ -16,7 +17,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default async function ServicesPage() {
-  const activeServices = await getServices();
+  const [activeServices, { siteFeatures }] = await Promise.all([
+    getServices(),
+    getBusinessSettings(),
+  ]);
 
   return (
     <>
@@ -62,18 +66,20 @@ export default async function ServicesPage() {
         </Container>
       </section>
 
-      <section className="border-t border-gold/8 bg-card/40 py-12">
-        <Container className="text-center">
-          <h2 className="mb-2 font-heading text-xl font-black text-foreground">
-            Áttekinthető tájékoztató árak
-          </h2>
-          <p className="mb-5 text-sm text-foreground/40">
-            Tekintse meg árlistánkat — tájékoztató jellegű, alkatrész nélküli
-            munkadíjakkal.
-          </p>
-          <Button href="/arlista">Árlista megtekintése →</Button>
-        </Container>
-      </section>
+      {siteFeatures.priceList && (
+        <section className="border-t border-gold/8 bg-card/40 py-12">
+          <Container className="text-center">
+            <h2 className="mb-2 font-heading text-xl font-black text-foreground">
+              Áttekinthető tájékoztató árak
+            </h2>
+            <p className="mb-5 text-sm text-foreground/40">
+              Tekintse meg árlistánkat — tájékoztató jellegű, alkatrész nélküli
+              munkadíjakkal.
+            </p>
+            <Button href="/arlista">Árlista megtekintése →</Button>
+          </Container>
+        </section>
+      )}
     </>
   );
 }

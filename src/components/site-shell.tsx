@@ -1,7 +1,7 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
-import { SITE_URL } from "@/lib/site-config";
+import { getNavLinks, SITE_URL } from "@/lib/site-config";
 import { buildLocalBusinessJsonLd } from "@/lib/seo";
 
 /**
@@ -43,7 +43,12 @@ export async function SiteShell({
       >
         Ugrás a tartalomhoz
       </a>
-      <Header phone={settings.phone} phoneHref={phoneHref} />
+      <Header
+        phone={settings.phone}
+        phoneHref={phoneHref}
+        notice={settings.siteNotice}
+        navLinks={getNavLinks(settings.siteFeatures)}
+      />
       <main id="main-content" className="flex-1">
         {children}
       </main>

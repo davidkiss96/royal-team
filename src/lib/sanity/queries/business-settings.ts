@@ -1,3 +1,4 @@
+import type { SiteFeatures } from "@/lib/features";
 import { sanityClient } from "../client";
 
 /**
@@ -15,6 +16,17 @@ import { sanityClient } from "../client";
  * all exist on the schema but have no consumer yet, so they're omitted here.
  */
 const BUSINESS_SETTINGS_ID = "businessSettings";
+
+/**
+ * `siteFeatures` projected with every switch defaulting to off, so a missing
+ * object/field (never set in Studio) behaves like an explicit `false`.
+ * Mirrored in `route-visibility.ts` (the middleware's own query).
+ */
+const SITE_FEATURES_PROJECTION = `"siteFeatures": {
+    "priceList": coalesce(siteFeatures.priceList, false),
+    "projects": coalesce(siteFeatures.projects, false),
+    "reviews": coalesce(siteFeatures.reviews, false)
+  }`;
 
 const BUSINESS_SETTINGS_QUERY = `*[_id == "${BUSINESS_SETTINGS_ID}"][0]{
   businessName,
@@ -40,7 +52,11 @@ const BUSINESS_SETTINGS_QUERY = `*[_id == "${BUSINESS_SETTINGS_ID}"][0]{
     closed,
     opens,
     closes
-  }
+  },
+  ${SITE_FEATURES_PROJECTION},
+  "siteNotice": select(
+    siteNotice.enabled == true && defined(siteNotice.text) => siteNotice{label, text}
+  )
 }`;
 
 /**
@@ -74,6 +90,12 @@ export interface BusinessSettingsOpeningHoursRow {
   closes: string | null;
 }
 
+/** The "under development" notice; `null` when switched off or empty (resolved in GROQ). */
+export interface SiteNotice {
+  label: string | null;
+  text: string;
+}
+
 export interface BusinessSettings {
   businessName: string;
   phone: string;
@@ -86,6 +108,8 @@ export interface BusinessSettings {
   legalTaxNumber: string;
   managingDirector: string;
   openingHours: BusinessSettingsOpeningHoursRow[] | null;
+  siteFeatures: SiteFeatures;
+  siteNotice: SiteNotice | null;
 }
 
 /**

@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CloseIcon, MenuIcon, PhoneIcon } from "./icons";
 import { Logo } from "./logo";
-import { NAV_LINKS } from "@/lib/site-config";
+import { SiteNoticeBar } from "./site-notice";
+import type { SiteNotice } from "@/lib/sanity/queries/business-settings";
+import type { NavLink } from "@/lib/site-config";
 
 // Scroll-linked nav background threshold, and the nav-link breakpoint below,
 // both preserved exactly from the approved Figma reference (docs/design-system.md
@@ -28,9 +30,15 @@ interface HeaderProps {
    */
   phone: string;
   phoneHref: string;
+  /** `BusinessSettings.siteNotice` — shown as a bar above the nav row on
+   * every page except `/` (the homepage hero shows it as a badge instead).
+   * Collapses once scrolled, like the header's own transparent state. */
+  notice: SiteNotice | null;
+  /** `getNavLinks()` — already filtered by the Sanity page switches. */
+  navLinks: NavLink[];
 }
 
-export function Header({ phone, phoneHref }: HeaderProps) {
+export function Header({ phone, phoneHref, notice, navLinks }: HeaderProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -79,9 +87,27 @@ export function Header({ phone, phoneHref }: HeaderProps) {
         scrolled ? "border-b border-border bg-background/95 backdrop-blur-xl" : "bg-transparent"
       }`}
     >
+      {notice && pathname !== "/" && (
+        <div
+          className={`grid transition-[grid-template-rows] duration-500 ${
+            scrolled ? "grid-rows-[0fr]" : "grid-rows-[1fr]"
+          }`}
+        >
+          <div className="overflow-hidden" inert={scrolled}>
+            <SiteNoticeBar notice={notice} />
+          </div>
+        </div>
+      )}
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
         <Link href="/" aria-label="Royal-Team Autószerviz – Főoldal" className={`flex items-center gap-3 ${focusRing}`}>
-          <Logo size={50} priority />
+          {/*
+            Deliberately not `priority`: an eager <img> makes React suspend
+            the commit until it decodes, and on a 404 (Next client-renders
+            `notFound()` from an empty "recovery shell", where this Header
+            is the only eager image) that commit never landed — every
+            `[slug]` 404 rendered blank. Lazy is fine for a 50px in-view logo.
+          */}
+          <Logo size={50} />
           <span className="hidden leading-none sm:block">
             <span className="block font-heading text-sm font-bold uppercase tracking-[0.18em] text-gold">
               Royal-Team
@@ -101,7 +127,7 @@ export function Header({ phone, phoneHref }: HeaderProps) {
           for the doc to be corrected separately.
         */}
         <nav aria-label="Fő navigáció" className="hidden items-center gap-6 xl:flex">
-          {NAV_LINKS.map(({ label, href }) => {
+          {navLinks.map(({ label, href }) => {
             const active = isActive(pathname, href);
             return (
               <Link
@@ -144,7 +170,7 @@ export function Header({ phone, phoneHref }: HeaderProps) {
       {menuOpen && (
         <div id="mobile-nav" className="border-b border-border bg-background/98 backdrop-blur-xl xl:hidden">
           <nav aria-label="Fő navigáció" className="space-y-1 px-6 py-6">
-            {NAV_LINKS.map(({ label, href }, index) => {
+            {navLinks.map(({ label, href }, index) => {
               const active = isActive(pathname, href);
               return (
                 <Link

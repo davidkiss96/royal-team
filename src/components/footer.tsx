@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PhoneIcon } from "./icons";
 import { Logo } from "./logo";
 import { getBusinessSettings } from "@/lib/sanity/queries/business-settings";
-import { FOOTER_LEGAL_LINKS, NAV_LINKS } from "@/lib/site-config";
+import { FOOTER_LEGAL_LINKS, getNavLinks } from "@/lib/site-config";
 
 interface FooterServiceLink {
   title: string;
@@ -63,7 +63,7 @@ export async function Footer({ services = [] }: FooterProps) {
           <nav aria-label="Navigáció">
             <h2 className="mb-5 font-heading text-xs font-bold uppercase tracking-widest text-foreground">Navigáció</h2>
             <ul className="space-y-3">
-              {NAV_LINKS.map(({ label, href }) => (
+              {getNavLinks(settings.siteFeatures).map(({ label, href }) => (
                 <li key={href}>
                   <Link
                     href={href}
