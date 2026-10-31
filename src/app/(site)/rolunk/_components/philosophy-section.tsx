@@ -21,8 +21,7 @@ export async function PhilosophySection() {
     <section className="bg-secondary py-20">
       <Container>
         <div className="mb-12 text-center">
-          <SectionLabel>Filozofiánk</SectionLabel>
-          <h2 className="font-heading text-4xl font-black text-foreground">Értékeink</h2>
+          <SectionLabel>Értékeink</SectionLabel>
         </div>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {philosophyValues.map(({ icon, title, description }) => {

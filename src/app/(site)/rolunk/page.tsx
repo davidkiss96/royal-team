@@ -3,9 +3,11 @@ import { buildPageMetadata, isRealImage } from "@/lib/seo";
 import { getAboutPage } from "@/lib/sanity/queries/about-page";
 import { AboutCta } from "./_components/about-cta";
 import { AboutHero } from "./_components/about-hero";
+import { ClosingStatementSection } from "./_components/closing-statement-section";
 import { OwnerStorySection } from "./_components/owner-story-section";
 import { PhilosophySection } from "./_components/philosophy-section";
 import { PhotoGallerySection } from "./_components/photo-gallery-section";
+import { ServicesHighlightSection } from "./_components/services-highlight-section";
 import { StatsSection } from "./_components/stats-section";
 
 const FALLBACK_META_TITLE = "Rólunk — Royal-Team Autószerviz";
@@ -29,6 +31,8 @@ export default function AboutPage() {
     <>
       <AboutHero />
       <OwnerStorySection />
+      <ServicesHighlightSection />
+      <ClosingStatementSection />
       <PhilosophySection />
       <StatsSection />
       <PhotoGallerySection />
