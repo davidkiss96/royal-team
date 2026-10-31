@@ -14,7 +14,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 /**
- * Structure/copy match `design-reference/figma-app/src/app/App.tsx`'s
+ * Structure/copy match the Figma prototype's `App.tsx` (git `28d95d4`)
  * `// ─── Blog Page` section exactly: a plain (imageless) hero, then a
  * vertical stack of horizontal article cards — not the image-hero-overlay
  * pattern `/szolgaltatasok`/`/projektek` use, and not a 3-column card grid.

@@ -13,7 +13,7 @@ interface BlogPostCardProps {
 
 /**
  * The horizontal article-card layout from the reference's `// ─── Blog
- * Page` section (`design-reference/figma-app/src/app/App.tsx`) — image on
+ * Page` section (the Figma prototype's `App.tsx`, git `28d95d4`) — image on
  * the left (2/5 columns), content on the right (3/5), not a vertical
  * image-top card. The reference's single `category` badge is played by
  * `tags[0]` here (docs/content-model.md Section 0 item 11) — no badge

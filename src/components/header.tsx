@@ -122,7 +122,7 @@ export function Header({ phone, phoneHref, notice, navLinks }: HeaderProps) {
           NOTE: the approved reference app gates the desktop nav / hamburger
           at the `xl` breakpoint (1280px), not `lg` (1024px) as
           docs/design-system.md Section 6 states — verified directly in
-          design-reference/figma-app/src/app/App.tsx (Navigation component).
+          the Figma prototype's App.tsx (git 28d95d4), Navigation component.
           Reproduced here as actually built, with the discrepancy flagged
           for the doc to be corrected separately.
         */}

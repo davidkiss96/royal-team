@@ -10,7 +10,7 @@ Recommended reading order if you're picking this up fresh:
 1. `docs/product.md` — what this is and why (business goals, scope, what's explicitly out of scope).
 2. `docs/architecture.md` — the technical architecture (Next.js + Sanity CMS, no custom database, no auth, no booking system).
 3. `docs/content-model.md` — the full Sanity content model (nine content types, all field-level decisions and their reasoning).
-4. `docs/design-system.md` — the approved visual design system, reverse-engineered from the approved Figma prototype in `design-reference/figma-app/`. Read this before building any UI.
+4. `docs/design-system.md` — the approved visual design system, reverse-engineered from the approved Figma prototype (removed from the tree after implementation; last present at commit `28d95d4` under `design-reference/figma-app/`). Read this before building any UI.
 5. `docs/development-guidelines.md` — engineering conventions, and the AI-assisted workflow this project has followed throughout.
 
 **`docs/database.md` and `docs/schema-design.md` are explicitly marked as deferred/future scope** (a possible future appointment-booking platform). They do not apply to this v1 build — do not let them influence current implementation decisions.
@@ -21,7 +21,7 @@ Recommended reading order if you're picking this up fresh:
 - **Stack:** Next.js (App Router) + Sanity CMS. Content types: `Homepage`, `BusinessSettings`, `Service`, `BlogPost`, `Project`, `Review`, `Author`, `AboutPage`, `PriceCategory`.
 - **Design:** dark-only, no light mode, no theme toggle. Gold (`#C9A84C`) as the fixed brand accent. See `docs/design-system.md` for the full token set.
 - **Routes are Hungarian:** `/`, `/szolgaltatasok`, `/szolgaltatasok/[slug]`, `/arlista`, `/projektek`, `/projektek/[slug]`, `/rolunk`, `/blog`, `/blog/[slug]`, `/kapcsolat`, `/impresszum`, `/adatvedelem`.
-- **The real logo** is at `public/logo.svg` (also in `design-reference/figma-app/`) — use this, not a placeholder.
+- **The real logo**: web SVGs in `public/logos/` (see its README); original print files (EPS/PDF) in `brand/logo-sources/` — use these, not a placeholder.
 
 ## What's NOT decided yet (ask before assuming)
 
@@ -34,7 +34,7 @@ Recommended reading order if you're picking this up fresh:
 
 ```
 docs/                       — all product/architecture/content-model/design docs (source of truth)
-design-reference/figma-app/ — the approved Figma-exported prototype (READ-ONLY reference, do not edit or copy its architecture — see docs/design-system.md for what to preserve vs. not)
+brand/logo-sources/        — original logo files from the designer (EPS/PDF, every color/composition variant) for print
 src/app/layout.tsx          — minimal root layout (fonts, metadata) shared by site and Studio
 src/app/(site)/             — public website routes (layout: globals.css + SiteShell Header/Footer)
 src/app/studio/             — embedded Sanity Studio at /studio

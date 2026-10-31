@@ -6,7 +6,7 @@ import { estimateReadingMinutes } from "@/lib/reading-time";
 import type { BlogPostDetail } from "@/lib/sanity/queries/blog-posts";
 
 /**
- * Matches `design-reference/figma-app/src/app/App.tsx`'s `// ─── Blog
+ * Matches the Figma prototype's `App.tsx` (git `28d95d4`) `// ─── Blog
  * Article Page` hero: a dark, cropped hero image with a bottom-anchored
  * heading, no excerpt subheading (the excerpt renders as the article's
  * lead paragraph instead, per the reference's content layout).

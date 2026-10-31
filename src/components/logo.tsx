@@ -10,7 +10,7 @@ const TEXT_TAGLINE_ASPECT_RATIO = 35.739384 / 315; // text-tagline-gradient-ligh
 const TEXT_LOGONAME_ASPECT_RATIO = 20.144535 / 315; // text-logoname-gradient-light.svg — viewBox 0 0 315 20.144535
 
 /**
- * Every logo asset in public/logos/ (design-reference/figma-app/brand-assets/generated/README.md
+ * Every logo asset in public/logos/ (public/logos/README.md
  * has the full source analysis). Each entry pairs the asset with the aspect
  * ratio of its own artwork, so adding a variant here without its real ratio
  * is a type error rather than a silently distorted image.
@@ -36,8 +36,7 @@ export type LogoVariant = keyof typeof LOGO_VARIANTS;
 
 interface LogoProps {
   /**
-   * Which reviewed asset from public/logos/ to render (design-reference/figma-app/
-   * brand-assets/generated/README.md). Defaults to the icon-only mark — the full
+   * Which reviewed asset from public/logos/ to render (public/logos/README.md). Defaults to the icon-only mark — the full
    * circular badge (ring + arc tagline + ribbon wordmark) is too fine-lined to
    * read at small nav sizes, so it's opt-in via an explicit "full-*" variant for
    * contexts with real room (e.g. a hero section), not the default.

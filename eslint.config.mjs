@@ -16,7 +16,7 @@ const eslintConfig = [
     // Section 17.1) — the same kind of build output `.next/` already is,
     // just not covered by eslint-config-next's default ignores since it
     // predates the Cloudflare adapter.
-    ignores: ["design-reference/**",".open-next/**", ".wrangler/**"],
+    ignores: [".open-next/**", ".wrangler/**"],
   },
 ];
 

@@ -37,7 +37,7 @@ export async function generateMetadata({
 }
 
 /**
- * Structure matches `design-reference/figma-app/src/app/App.tsx`'s
+ * Structure matches the Figma prototype's `App.tsx` (git `28d95d4`)
  * `// ─── Blog Article Page` section: hero, then a two-column content grid
  * (article body + sidebar), tags at the end of the article column, no
  * closing CTA banner (the sidebar's related-service card is the

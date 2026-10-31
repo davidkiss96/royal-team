@@ -1,13 +1,13 @@
 # Royal-Team logo — web SVG candidates
 
 Analysis + candidate generation only. Nothing in the application was changed.
-Source of truth: `design-reference/figma-app/brand-assets/` (note: the actual
+Source of truth: `brand/logo-sources/` (note: the actual
 path has a `figma-app/` segment the task brief omitted — `IMPORTANT Advice.txt`
 confirms this is the intended package).
 
 ## 1. Source files inspected
 
-All EPS/PDF files under `design-reference/figma-app/brand-assets/`, both
+All EPS/PDF files under `brand/logo-sources/`, both
 `.txt` instruction files, and the current `public/logo.svg` plus every
 runtime reference to it (`src/components/logo.tsx`, `header.tsx`, `footer.tsx`).
 
